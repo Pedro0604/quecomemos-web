@@ -1,1 +1,53 @@
-<p>login works!</p>
+<div class="container mx-auto flex justify-center items-center min-h-screen bg-gray-100">
+  <div class="card shadow-lg p-8 w-96 bg-white rounded-lg">
+    <h2 class="text-center text-2xl font-semibold text-gray-800 mb-6">Iniciar Sesión</h2>
+
+    <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)">
+      <!-- DNI -->
+      <div class="mb-4">
+        <label for="dni" class="block text-sm font-medium text-gray-700">DNI</label>
+        <input
+          type="text"
+          id="dni"
+          name="dni"
+          class="mt-2 p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Ingrese su DNI"
+          ngModel
+          required
+        />
+      </div>
+
+      <!-- Clave -->
+      <div class="mb-4">
+        <label for="clave" class="block text-sm font-medium text-gray-700">Clave</label>
+        <input
+          type="password"
+          id="clave"
+          name="clave"
+          class="mt-2 p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Ingrese su clave"
+          ngModel
+          required
+          minlength="4"
+        />
+      </div>
+
+      <!-- Botón de envío -->
+      <button
+        type="submit"
+        class="w-full py-2 px-4 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+      >
+        Ingresar
+      </button>
+    </form>
+
+    <!-- Mensaje de error -->
+    <div
+      *ngIf="loginError"
+      class="mt-4 text-center text-sm text-red-600 bg-red-100 p-2 rounded-md"
+    >
+      Usuario o clave incorrectos. Inténtelo nuevamente.
+    </div>
+  </div>
+</div>
+
