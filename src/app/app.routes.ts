@@ -6,5 +6,13 @@ export const appRoutes: Routes = [
   {
     path: 'login',
     component: LoginComponent,
-  }, {path: '**', component: PageNotFoundComponent}
+  },
+  {
+    path: 'hola',
+    component: LoginComponent,
+    title: 'Hola'
+  },
+  {
+    path: '**', component: PageNotFoundComponent
+  }
 ];
