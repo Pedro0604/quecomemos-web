@@ -7,42 +7,6 @@
 
 <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
   @for (menu of menus; track menu) {
-    <div>
-      <mat-card class="w-full h-full" appearance="outlined">
-        <mat-card-header class="flex justify-between">
-          <mat-card-title>{{ menu.nombre }}</mat-card-title>
-          <mat-card-subtitle>${{ menu.precio }}</mat-card-subtitle>
-          @if (menu.vegetariano) {
-            <mat-icon class="text-green-600">eco</mat-icon>
-          }
-        </mat-card-header>
-        <mat-card-content class="my-4">
-          <div class="flex flex-col gap-4">
-            @for (comida of menu.comidas; track comida.id) {
-              <div class="flex justify-between gap-2">
-                <div>
-                  <p class="text-sm">{{ comida.tipoComida.replace("_", " ") }}</p>
-                  <p class="text-lg">{{ comida.nombre }}</p>
-                </div>
-                <div class="flex justify-center items-center w-20 h-20 border image-container">
-                  @if (comida.urlImagen) {
-                    <img class="object-cover aspect-square" [src]="comida.urlImagen" [alt]="comida.nombre">
-                  } @else {
-                    <mat-icon class="text-5xl !w-fit !h-fit">no_photography</mat-icon>
-                  }
-                </div>
-              </div>
-              @if (!$last) {
-                <mat-divider class="comida-divider"></mat-divider>
-              }
-            }
-          </div>
-        </mat-card-content>
-        <mat-card-actions class="mt-auto">
-          <button mat-button>MODIFICAR</button>
-          <button mat-button color="error">ELIMINAR</button>
-        </mat-card-actions>
-      </mat-card>
-    </div>
+    <app-menu [menu]="menu"></app-menu>
   }
 </div>

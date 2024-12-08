@@ -1,14 +1,11 @@
 import {AfterViewInit, Component, TemplateRef, ViewChild} from '@angular/core';
-import {MatCardModule} from '@angular/material/card';
-import {MatButton} from '@angular/material/button';
-import {MatGridList, MatGridTile} from '@angular/material/grid-list';
 import {MatIcon} from '@angular/material/icon';
-import {MatDivider} from '@angular/material/divider';
 import {LayoutService} from '../layout/layout.service';
+import {Menu, MenuComponent} from '../menu/menu.component';
 
 type TipoComida = 'OTRO' | 'POSTRE' | 'ENTRADA' | 'BEBIDA' | 'PLATO_PRINCIPAL';
 
-type Comida = {
+export type Comida = {
   id: number;
   nombre: string;
   urlImagen: string | null;
@@ -17,23 +14,11 @@ type Comida = {
   vegetariana: boolean;
 }
 
-type Menu = {
-  id: number
-  nombre: string;
-  precio: number;
-  vegetariano: boolean;
-  comidas: Comida[];
-}
-
 @Component({
   selector: 'app-menu-list',
   imports: [
-    MatCardModule,
-    MatButton,
-    MatGridTile,
-    MatGridList,
     MatIcon,
-    MatDivider
+    MenuComponent
   ],
   templateUrl: './menu-list.component.html',
   standalone: true,
@@ -377,7 +362,7 @@ export class MenuListComponent implements AfterViewInit{
   @ViewChild('extra') extraTemplate!: TemplateRef<any>;
 
   ngAfterViewInit(): void {
-    this.layoutService.setTitle('Menús disponibles');
+    this.layoutService.setTitle('Todos los menús');
     this.layoutService.setExtra(this.extraTemplate);
   }
 }
