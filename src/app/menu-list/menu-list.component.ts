@@ -1,18 +1,9 @@
 import {AfterViewInit, Component, TemplateRef, ViewChild} from '@angular/core';
 import {MatIcon} from '@angular/material/icon';
 import {LayoutService} from '../layout/layout.service';
-import {Menu, MenuComponent} from '../menu/menu.component';
-
-type TipoComida = 'OTRO' | 'POSTRE' | 'ENTRADA' | 'BEBIDA' | 'PLATO_PRINCIPAL';
-
-export type Comida = {
-  id: number;
-  nombre: string;
-  urlImagen: string | null;
-  tipoComida: TipoComida;
-  precio: number;
-  vegetariana: boolean;
-}
+import {MenuComponent} from '../menu/menu.component';
+import {Menu} from '../menu/menu.model';
+import {TipoComida} from '../comida/comida.model';
 
 @Component({
   selector: 'app-menu-list',

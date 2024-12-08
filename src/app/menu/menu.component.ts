@@ -1,17 +1,9 @@
 import {Component, Input} from '@angular/core';
-import {Comida} from '../menu-list/menu-list.component';
 import {MatCardModule} from '@angular/material/card';
 import {MatIcon} from '@angular/material/icon';
 import {MatDivider} from '@angular/material/divider';
 import {MatButton} from '@angular/material/button';
-
-export type Menu = {
-  id: number
-  nombre: string;
-  precio: number;
-  vegetariano: boolean;
-  comidas: Comida[];
-}
+import {Menu} from './menu.model';
 
 @Component({
   selector: 'app-menu',
