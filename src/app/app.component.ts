@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import {RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
-import {MatAnchor} from '@angular/material/button';
+import {RouterOutlet} from '@angular/router';
 import {LayoutComponent} from './layout/layout.component';
 
 @Component({

@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, TemplateRef, ViewChild} from '@angular/core';
 import {MatCardModule} from '@angular/material/card';
 import {MatButton} from '@angular/material/button';
 import {MatGridList, MatGridTile} from '@angular/material/grid-list';

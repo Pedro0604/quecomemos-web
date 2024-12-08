@@ -26,7 +26,7 @@
                 </div>
                 <div class="flex justify-center items-center w-20 h-20 border image-container">
                   @if (comida.urlImagen) {
-                    <img class="object-cover aspect-square" [src]="comida.urlImagen">
+                    <img class="object-cover aspect-square" [src]="comida.urlImagen" [alt]="comida.nombre">
                   } @else {
                     <mat-icon class="text-5xl !w-fit !h-fit">no_photography</mat-icon>
                   }
