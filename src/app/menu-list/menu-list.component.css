@@ -1,0 +1,11 @@
+.image-container {
+  border-color: var(--mat-sys-outline-variant);
+}
+
+mat-card-actions {
+  border-top: 1px solid var(--mat-sys-outline);
+}
+
+.comida-divider {
+  border-color: var(--mat-sys-outline-variant);
+}
