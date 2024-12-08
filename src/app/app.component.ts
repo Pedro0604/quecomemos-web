@@ -5,7 +5,7 @@ import {LayoutComponent} from './layout/layout.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, MatAnchor, LayoutComponent],
+  imports: [RouterOutlet, LayoutComponent],
   templateUrl: './app.component.html',
   standalone: true
 })

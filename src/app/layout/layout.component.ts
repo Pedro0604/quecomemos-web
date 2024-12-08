@@ -1,6 +1,6 @@
-import { Component, inject } from '@angular/core';
+import {Component, inject, OnInit, TemplateRef} from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { AsyncPipe } from '@angular/common';
+import {AsyncPipe, NgTemplateOutlet} from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -10,6 +10,7 @@ import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import {RouterLink, RouterLinkActive} from '@angular/router';
 import {appRoutes} from '../app.routes';
+import {LayoutService} from './layout.service';
 
 @Component({
   selector: 'app-layout',
@@ -24,10 +25,11 @@ import {appRoutes} from '../app.routes';
     MatIconModule,
     AsyncPipe,
     RouterLink,
-    RouterLinkActive
+    RouterLinkActive,
+    NgTemplateOutlet
   ]
 })
-export class LayoutComponent {
+export class LayoutComponent implements OnInit {
   private breakpointObserver = inject(BreakpointObserver);
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
@@ -39,4 +41,19 @@ export class LayoutComponent {
   excludedRoutes = ['login', '**'];
 
   rootRoutes = appRoutes.filter(r => r.path && !this.excludedRoutes.includes(r.path) )
+
+  title: string = '';
+  extra: TemplateRef<any> | null = null;
+
+  constructor(private layoutService: LayoutService) {}
+
+  ngOnInit(): void {
+    this.layoutService.currentTitle$.subscribe((title) => {
+      this.title = title;
+    });
+
+    this.layoutService.currentExtra$.subscribe((extra) => {
+      this.extra = extra;
+    });
+  }
 }
