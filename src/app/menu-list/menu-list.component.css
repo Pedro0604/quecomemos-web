@@ -9,3 +9,7 @@ mat-card-actions {
 .comida-divider {
   border-color: var(--mat-sys-outline-variant);
 }
+
+.error {
+  color: var(--mat-sys-error);
+}

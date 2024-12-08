@@ -5,8 +5,22 @@
       </span>
 </ng-template>
 
-<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-  @for (menu of menus; track menu) {
-    <app-menu [menu]="menu"></app-menu>
-  }
-</div>
+@if (error || loading || menus.length === 0) {
+  <div class="flex justify-center items-center mt-12 text-2xl">
+    @if (error) {
+      <mat-icon class="error">error</mat-icon>
+      <span class="ml-2">Error al cargar los menús</span>
+    } @else if (loading) {
+      <mat-spinner></mat-spinner>
+    } @else if (menus.length === 0) {
+      <mat-icon class="error">warning</mat-icon>
+      <span class="ml-2">No hay menús disponibles</span>
+    }
+  </div>
+} @else {
+  <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+    @for (menu of menus; track menu) {
+      <app-menu [menu]="menu"></app-menu>
+    }
+  </div>
+}

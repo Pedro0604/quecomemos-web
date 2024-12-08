@@ -3,7 +3,8 @@ import { provideRouter } from '@angular/router';
 import { AppComponent } from './app/app.component';
 import { appRoutes } from './app/app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
 
 bootstrapApplication(AppComponent, {
-  providers: [provideRouter(appRoutes), provideAnimationsAsync()],
+  providers: [provideRouter(appRoutes), provideAnimationsAsync(), provideHttpClient(withInterceptorsFromDi())],
 }).catch((err) => console.error(err));
