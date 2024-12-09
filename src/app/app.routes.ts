@@ -8,6 +8,7 @@ export const appRoutes: Routes = [
   {
     path: 'login',
     component: LoginComponent,
+    title: 'Inicio de sesión'
   },
   {
     path: 'menu',
@@ -17,14 +18,16 @@ export const appRoutes: Routes = [
   {
     path: 'menu/create',
     component: MenuFormComponent,
-    title: 'Crear un menú'
+    title: 'Crear un menú',
   },
   {
-    path: 'menu/edit:id',
+    path: 'menu/edit/:id',
     component: MenuFormComponent,
     title: 'Editar un menú'
   },
   {
-    path: '**', component: PageNotFoundComponent
+    path: '**',
+    component: PageNotFoundComponent,
+    title: 'No encontrado'
   }
 ];
