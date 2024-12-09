@@ -12,6 +12,7 @@
           #link="routerLinkActive"
           routerLinkActive
           [activated]="link.isActive"
+          [routerLinkActiveOptions]="{exact: true}"
         >
           {{ item.title }}
         </a>
