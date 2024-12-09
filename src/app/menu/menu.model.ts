@@ -1,7 +1,7 @@
 import {Comida} from '../comida/comida.model';
 
 export type Menu = {
-  id: number
+  id: number | null
   nombre: string;
   precio: number;
   vegetariano: boolean;

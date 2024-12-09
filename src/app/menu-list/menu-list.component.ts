@@ -22,7 +22,7 @@ import {MatProgressSpinner} from '@angular/material/progress-spinner';
 export class MenuListComponent implements AfterViewInit, OnInit {
   menus: Menu[] = [];
 
-  ordenComidas: TipoComida[] = ['ENTRADA', 'PLATO_PRINCIPAL', 'POSTRE', 'BEBIDA'];
+  ordenComidas: TipoComida[] = [TipoComida.ENTRADA, TipoComida.PLATO_PRINCIPAL, TipoComida.ENTRADA, TipoComida.BEBIDA];
 
   error = false;
   loading = true;

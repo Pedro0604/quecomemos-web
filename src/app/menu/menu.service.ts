@@ -16,4 +16,16 @@ export class MenuService {
   getMenus(): Observable<Menu[]> {
     return this.http.get<Menu[]>(this.apiUrl + "/menus");
   }
+
+  getMenuById(id: string): Observable<Menu> {
+    return this.http.get<Menu>(this.apiUrl + "/menus/" + id);
+  }
+
+  createMenu(menu: Menu): Observable<Menu> {
+    return this.http.post<Menu>(this.apiUrl + "/menus", menu);
+  }
+
+  updateMenu(menu: Menu): Observable<Menu> {
+    return this.http.put<Menu>(this.apiUrl + "/menus/" + menu.id, menu);
+  }
 }
