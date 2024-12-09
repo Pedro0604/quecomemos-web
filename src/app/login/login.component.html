@@ -2,40 +2,45 @@
   <div class="card shadow-lg p-8 w-96 bg-white rounded-lg">
     <h2 class="text-center text-2xl font-semibold text-gray-800 mb-6">Iniciar Sesión</h2>
 
-    <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)">
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
       <!-- DNI -->
       <div class="mb-4">
-        <label for="dni" class="block text-sm font-medium text-gray-700">DNI</label>
-        <input
-          type="text"
-          id="dni"
-          name="dni"
-          class="mt-2 p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Ingrese su DNI"
-          ngModel
-          required
-        />
+        <mat-form-field appearance="fill">
+          <mat-label>Ingrese su DNI</mat-label>
+          <input matInput formControlName="dni" placeholder="12345678" />
+          <mat-error *ngIf="loginForm.get('dni')?.hasError('required')">Debe ingresar un DNI</mat-error>
+          <mat-error *ngIf="loginForm.get('dni')?.hasError('minlength')">Debe tener al menos 7 dígitos</mat-error>
+          <mat-error *ngIf="loginForm.get('dni')?.hasError('maxlength')">Debe tener como máximo 8 dígitos</mat-error>
+        </mat-form-field>
       </div>
 
       <!-- Clave -->
       <div class="mb-4">
-        <label for="clave" class="block text-sm font-medium text-gray-700">Clave</label>
-        <input
-          type="password"
-          id="clave"
-          name="clave"
-          class="mt-2 p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Ingrese su clave"
-          ngModel
-          required
-          minlength="4"
-        />
+        <mat-form-field appearance="fill">
+          <mat-label>Ingrese su contraseña</mat-label>
+          <input matInput [type]="hide() ? 'password' : 'text'" formControlName="clave" />
+          <button
+            mat-icon-button
+            matSuffix
+            (click)="toggleHide()"
+            [attr.aria-label]="'Toggle password visibility'"
+          >
+            <mat-icon>{{ hide() ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          <mat-error *ngIf="loginForm.get('clave')?.hasError('required')">Debe ingresar una contraseña</mat-error>
+          <mat-error *ngIf="loginForm.get('clave')?.hasError('minlength')">
+            La contraseña debe tener al menos 4 caracteres
+          </mat-error>
+        </mat-form-field>
       </div>
 
       <!-- Botón de envío -->
       <button
         type="submit"
-        class="w-full py-2 px-4 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        mat-raised-button
+        color="primary"
+        class="w-full"
+        [disabled]="loginForm.invalid"
       >
         Ingresar
       </button>
@@ -50,4 +55,3 @@
     </div>
   </div>
 </div>
-
