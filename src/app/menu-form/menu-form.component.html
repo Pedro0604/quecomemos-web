@@ -38,7 +38,7 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         @for (campo of camposDeComida; track campo.nombre) {
           <mat-form-field>
-            <mat-label>{{ campo.label }}</mat-label>
+            <mat-label>{{ loading ? 'Cargando...' : (error ? 'Error' : campo.label) }}</mat-label>
             <input type="text"
                    [placeholder]="('Seleccioná un' + (campo.masculino ? '' : 'a') + ' ' + campo.label.toLowerCase())"
                    matInput
@@ -46,6 +46,7 @@
                    [matAutocomplete]="auto"
                    (blur)="updateErrorMessage(campo.nombre)"
                    (input)="selectComidaIfNameMatches(campo.nombre)"
+                   [disabled]="error || loading"
             >
             <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]="displayFn"
                               autoSelectActiveOption>
@@ -70,10 +71,14 @@
         }
       </div>
       <div class="ms-4">
-        @if (mostrarErrorSinComidas) {
+        @if (error) {
+          <mat-error>Ha ocurrido un error al obtener las comidas</mat-error>
+          <mat-error>Por favor, intente nuevamente más tarde</mat-error>
+        }
+        @else if (mostrarErrorSinComidas) {
           <mat-error>No hay ninguna comida (entrada, plato principal, postre o bebida)</mat-error>
           <!--  TODO - MODIFICAR LINK A CREACION DE COMIDAS  -->
-          <a routerLink="/login" mat-button>Creá alguna antes de crear un menú </a>
+          <a routerLink="/login" mat-button>Creá alguna para poder continuar</a>
         } @else if (form.errors ? deberiaMostrarErrorAlMenosUnaComida() && form.errors['ningunaSeleccionada'] : false) {
           <mat-error>Debe seleccionar al menos una comida (entrada, plato principal, postre o bebida)</mat-error>
         }

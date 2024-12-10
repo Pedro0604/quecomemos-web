@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
-import {Menu} from '../menu/menu.model';
+import {Menu, MenuDTO} from '../menu/menu.model';
 import {MenuService} from '../menu/menu.service';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {LayoutService} from '../layout/layout.service';
@@ -28,6 +28,8 @@ import {
   MatCardTitle
 } from '@angular/material/card';
 import {MatDivider} from '@angular/material/divider';
+import {ComidaService} from '../comida/comida.service';
+import {firstValueFrom} from 'rxjs';
 
 type CampoComida = {
   nombre: string,
@@ -41,6 +43,16 @@ type CampoComida = {
 type PossibleErrorFunction = { (control: AbstractControl): string; }
 
 type PossibleError = { name: string, errorFunction: PossibleErrorFunction }
+
+type MenuFormData = {
+  nombre: string,
+  precio: number,
+  vegetariano: boolean,
+  entrada: Comida | null,
+  principal: Comida | null,
+  postre: Comida | null,
+  bebida: Comida | null,
+}
 
 @Component({
   selector: 'app-menu-form',
@@ -74,47 +86,16 @@ type PossibleError = { name: string, errorFunction: PossibleErrorFunction }
 })
 export class MenuFormComponent implements OnInit, AfterViewInit {
   menu: Menu | null = null;
+  comidas: Comida[] = []
+
+  error: boolean = false;
+  loading: boolean = true;
+
+  form: FormGroup
+
   errorMessages: { [key: string]: string } = {};
   hints: { [key: string]: string } = {}
-  form: FormGroup
   mostrarErrorSinComidas = false;
-  comidas: Comida[] = [
-    {
-      id: 1, nombre: 'Principal',
-      urlImagen: null,
-      tipoComida: 'PLATO_PRINCIPAL',
-      precio: 234,
-      vegetariana: true
-    },
-    {
-      id: 2, nombre: 'Postre',
-      urlImagen: null,
-      tipoComida: 'POSTRE',
-      precio: 3435,
-      vegetariana: false
-    },
-    {
-      id: 3, nombre: 'Entrada',
-      urlImagen: null,
-      tipoComida: 'ENTRADA',
-      precio: 3434,
-      vegetariana: false
-    },
-    {
-      id: 4, nombre: 'Otro',
-      urlImagen: null,
-      tipoComida: 'OTRO',
-      precio: 123123,
-      vegetariana: false
-    },
-    {
-      id: 5, nombre: 'Bebida',
-      urlImagen: null,
-      tipoComida: 'ENTRADA',
-      precio: 12323,
-      vegetariana: true
-    },
-  ]
 
   camposDeComida: CampoComida[] = [
     {
@@ -193,7 +174,8 @@ export class MenuFormComponent implements OnInit, AfterViewInit {
     private route: ActivatedRoute,
     private router: Router,
     private layoutService: LayoutService,
-    private notificationService: NotificationService) {
+    private notificationService: NotificationService,
+    private comidaService: ComidaService) {
     this.form = new FormGroup({
         nombre: new FormControl('', [Validators.required, Validators.maxLength(255)]),
         precio: new FormControl('', [Validators.required, Validators.min(0)]),
@@ -204,13 +186,6 @@ export class MenuFormComponent implements OnInit, AfterViewInit {
         bebida: new FormControl(''),
       },
       {validators: this.alMenosUnaComidaSeleccionadaValidator()})
-  }
-
-  deberiaMostrarErrorAlMenosUnaComida(): boolean {
-    return this.camposDeComida.some(campo => {
-      const field = this.form.get(campo.nombre);
-      return field?.dirty;
-    });
   }
 
   comidaSeleccionadaValidator(comidasFiltradas: Comida[]): ValidatorFn {
@@ -261,7 +236,20 @@ export class MenuFormComponent implements OnInit, AfterViewInit {
     }
   }
 
-  ngOnInit(): void {
+  async cargarComidas(): Promise<void> {
+    try {
+      this.loading = true;
+      this.comidas = await firstValueFrom(this.comidaService.getComidas());
+    } catch (error) {
+      console.error('Error al obtener las comidas');
+      console.error(error);
+      this.error = true;
+    } finally {
+      this.loading = false;
+    }
+  }
+
+  async ngOnInit(): Promise<void> {
     const id = this.route.snapshot.params['id'];
     if (id) {
       this.menuService.getMenuById(id).subscribe((data) => (this.menu = data));
@@ -269,6 +257,8 @@ export class MenuFormComponent implements OnInit, AfterViewInit {
     } else {
       this.layoutService.setTitle('Crear Menú');
     }
+
+    await this.cargarComidas();
 
     this.camposDeComida.forEach(campo => {
       campo.comidasIniciales = this.comidas.filter(comida => comida.tipoComida == campo.tipoComida);
@@ -295,6 +285,13 @@ export class MenuFormComponent implements OnInit, AfterViewInit {
     });
   }
 
+  deberiaMostrarErrorAlMenosUnaComida(): boolean {
+    return this.camposDeComida.some(campo => {
+      const field = this.form.get(campo.nombre);
+      return field?.dirty;
+    });
+  }
+
   displayFn(comida: Comida): string {
     return comida && comida.nombre ? comida.nombre : '';
   }
@@ -310,45 +307,6 @@ export class MenuFormComponent implements OnInit, AfterViewInit {
     }
   }
 
-  saveMenu(menuData: Menu): void {
-    if (this.menu) {
-      this.menuService.updateMenu(menuData).subscribe({
-        complete: () => {
-          this.notificationService.show('Menú creado exitosamente');
-          this.router.navigate(['/menus'])
-        },
-        error: error => {
-          this.notificationService.show('Error al crear el menú');
-          console.error("Error al crear el menú");
-          console.error(error);
-        }
-      });
-    } else {
-      this.menuService.createMenu(menuData).subscribe({
-        complete: () => {
-          this.notificationService.show('Menú modificado exitosamente');
-          this.router.navigate(['/menus'])
-        },
-        error: error => {
-          this.notificationService.show('Error al modificar el menú');
-          console.error("Error al modificar el menú");
-          console.error(error);
-        }
-      });
-    }
-  }
-
-  onSubmit(): void {
-    if (this.form.valid) {
-      const menuData = this.form.value;
-      this.notificationService.show('Guardar');
-      console.log(menuData);
-      // this.saveMenu(menuData);
-    } else {
-      this.notificationService.show('Error en el formulario. Vuelva a intentarlo');
-    }
-  }
-
   updateErrorMessage(controlName: string) {
     const control = this.form.get(controlName);
     if (control && control.touched && control.invalid) {
@@ -357,6 +315,64 @@ export class MenuFormComponent implements OnInit, AfterViewInit {
           this.errorMessages[controlName] = error.errorFunction(control);
         }
       })
+    }
+  }
+
+  saveMenu(menuData: MenuFormData): void {
+    const comidaIds = [];
+    if (menuData.entrada){
+      comidaIds.push(menuData.entrada.id);
+    }
+    if (menuData.principal){
+      comidaIds.push(menuData.principal.id);
+    }
+    if (menuData.postre){
+      comidaIds.push(menuData.postre.id);
+    }
+    if (menuData.bebida){
+      comidaIds.push(menuData.bebida.id);
+    }
+
+    const dto: MenuDTO = {
+      nombre: menuData.nombre,
+      precio: menuData.precio,
+      vegetariano: menuData.vegetariano,
+      comidaIds: comidaIds,
+    }
+
+    if (this.menu?.id) {
+      this.menuService.updateMenu(this.menu.id, dto).subscribe({
+        complete: () => {
+          this.notificationService.show('Menú modificado exitosamente');
+          this.router.navigate(['/menu'])
+        },
+        error: error => {
+          this.notificationService.show('Error al modificar el menú. Por favor, intente nuevamente');
+          console.error("Error al modificar el menú");
+          console.error(error);
+        }
+      });
+    } else {
+      this.menuService.createMenu(dto).subscribe({
+        complete: () => {
+          this.notificationService.show('Menú creado exitosamente');
+          this.router.navigate(['/menu'])
+        },
+        error: error => {
+          this.notificationService.show('Error al crear el menú. Por favor, intente nuevamente');
+          console.error("Error al crear el menú");
+          console.error(error);
+        }
+      });
+    }
+  }
+
+  onSubmit(): void {
+    if (this.form.valid) {
+      const menuData: MenuFormData = this.form.value;
+      this.saveMenu(menuData);
+    } else {
+      this.notificationService.show('Error en el formulario. Vuelva a intentarlo');
     }
   }
 
