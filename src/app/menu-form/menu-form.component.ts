@@ -18,7 +18,16 @@ import {MatButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
 import {MatCheckbox} from '@angular/material/checkbox';
 import {MatAutocomplete, MatAutocompleteTrigger, MatOption} from '@angular/material/autocomplete';
-import {Comida} from '../comida/comida.model';
+import {Comida, TipoComida} from '../comida/comida.model';
+
+type CampoComida = {
+  nombre: string,
+  label: string,
+  masculino: boolean,
+  comidasFiltradas: Comida[],
+  comidasIniciales: Comida[],
+  tipoComida: TipoComida
+}
 
 @Component({
   selector: 'app-menu-form',
@@ -44,48 +53,79 @@ import {Comida} from '../comida/comida.model';
 export class MenuFormComponent implements OnInit, AfterViewInit {
   menu: Menu | null = null;
   errorMessages: { [key: string]: string } = {};
+  hints: { [key: string]: string } = {}
   form: FormGroup
   comidas: Comida[] = [
     {
-      id: 1, nombre: 'Entrada 1',
+      id: 1, nombre: 'Principal',
       urlImagen: null,
       tipoComida: 'PLATO_PRINCIPAL',
       precio: 234,
       vegetariana: true
     },
     {
-      id: 2, nombre: 'Entrada 2',
+      id: 2, nombre: 'Postre',
       urlImagen: null,
       tipoComida: 'POSTRE',
       precio: 3435,
-      vegetariana: true
+      vegetariana: false
     },
     {
-      id: 3, nombre: 'Entrada 3',
+      id: 3, nombre: 'Entrada',
       urlImagen: null,
       tipoComida: 'ENTRADA',
       precio: 3434,
       vegetariana: false
     },
     {
-      id: 4, nombre: 'Entrada 4',
+      id: 4, nombre: 'Otro',
       urlImagen: null,
       tipoComida: 'OTRO',
       precio: 123123,
       vegetariana: false
     },
+    {
+      id: 5, nombre: 'Bebida',
+      urlImagen: null,
+      tipoComida: 'ENTRADA',
+      precio: 12323,
+      vegetariana: true
+    },
   ]
 
-  camposDeComida: {
-    nombre: string,
-    label: string,
-    masculino: boolean,
-    comidasFiltradas: Comida[]
-  }[] = [
-    {nombre: 'entrada', label: 'Entrada', masculino: false, comidasFiltradas: []},
-    {nombre: 'principal', label: 'Plato Principal', masculino: true, comidasFiltradas: []},
-    {nombre: 'postre', label: 'Postre', masculino: true, comidasFiltradas: []},
-    {nombre: 'bebida', label: 'Bebida', masculino: false, comidasFiltradas: []},
+  camposDeComida: CampoComida[] = [
+    {
+      nombre: 'entrada',
+      label: 'Entrada',
+      masculino: false,
+      comidasFiltradas: [],
+      comidasIniciales: [],
+      tipoComida: 'ENTRADA'
+    },
+    {
+      nombre: 'principal',
+      label: 'Plato Principal',
+      masculino: true,
+      comidasFiltradas: [],
+      comidasIniciales: [],
+      tipoComida: 'PLATO_PRINCIPAL'
+    },
+    {
+      nombre: 'postre',
+      label: 'Postre',
+      masculino: true,
+      comidasFiltradas: [],
+      comidasIniciales: [],
+      tipoComida: 'POSTRE'
+    },
+    {
+      nombre: 'bebida',
+      label: 'Bebida',
+      masculino: false,
+      comidasFiltradas: [],
+      comidasIniciales: [],
+      tipoComida: 'BEBIDA'
+    },
   ];
 
   constructor(
@@ -94,7 +134,6 @@ export class MenuFormComponent implements OnInit, AfterViewInit {
     private router: Router,
     private layoutService: LayoutService,
     private notificationService: NotificationService) {
-
     this.form = new FormGroup({
       nombre: new FormControl('', [Validators.required, Validators.maxLength(255)]),
       precio: new FormControl('', [Validators.required, Validators.min(0)]),
@@ -109,11 +148,49 @@ export class MenuFormComponent implements OnInit, AfterViewInit {
   comidaSeleccionadaValidator(comidasFiltradas: Comida[]): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const comidaSeleccionada = control.value;
-
-      const comidaValida = comidasFiltradas.some(comida => comida.id === comidaSeleccionada?.id);
-
-      return comidaValida ? null : {comidaInvalida: true};
+      if (comidaSeleccionada) {
+        const comidaValida = comidasFiltradas.some(comida => comida.id === comidaSeleccionada?.id);
+        return comidaValida ? null : {comidaInvalida: true};
+      }
+      return null;
     };
+  }
+
+  private filtrarComidas(campo: CampoComida): void {
+    const field = this.form.get(campo.nombre)
+    const valorCampo = field?.value;
+    const menuVegetariano = this.form.get('vegetariano')?.value;
+    const nombre = valorCampo ? typeof valorCampo == 'string' ? valorCampo : valorCampo.nombre : '';
+
+    campo.comidasFiltradas = campo.comidasIniciales.filter(comida => {
+      const coincideEntrada = comida.nombre.toLowerCase().includes(nombre.toLowerCase());
+      const esVegetariana = menuVegetariano ? comida.vegetariana : true;
+
+      return coincideEntrada && esVegetariana;
+    });
+
+    field?.setValidators([
+      this.comidaSeleccionadaValidator(campo.comidasFiltradas),
+    ]);
+    field?.updateValueAndValidity({emitEvent: false});
+    this.updateErrorMessage(campo.nombre);
+  }
+
+  disableSiNoTieneComidasVegetarianas(menuVegetariano: boolean, campo: CampoComida) {
+    if (campo.comidasIniciales.length === 0) {
+      return;
+    }
+    const field = this.form.get(campo.nombre);
+    if (menuVegetariano) {
+      const tieneComidasVegetarianas = this.comidas.some(comida => comida.tipoComida === campo.tipoComida && comida.vegetariana);
+      if (!tieneComidasVegetarianas) {
+        this.hints[campo.nombre] = 'No hay comidas vegetarianas de este tipo';
+        field?.disable();
+      }
+    } else {
+      this.hints[campo.nombre] = '';
+      field?.enable();
+    }
   }
 
   ngOnInit(): void {
@@ -126,43 +203,26 @@ export class MenuFormComponent implements OnInit, AfterViewInit {
     }
 
     this.camposDeComida.forEach(campo => {
-      campo.comidasFiltradas = [...this.comidas];
-      const field = this.form.get(campo.nombre)
+      campo.comidasIniciales = this.comidas.filter(comida => comida.tipoComida == campo.tipoComida);
+
+      const field = this.form.get(campo.nombre);
+      this.filtrarComidas(campo);
       field?.valueChanges.subscribe(() => {
         this.filtrarComidas(campo);
       });
+
+      if (campo.comidasIniciales.length === 0) {
+        this.hints[campo.nombre] = 'No hay comidas de este tipo';
+        field?.disable();
+      }
     });
 
-    this.form.get('vegetariano')?.valueChanges.subscribe(() => {
+    this.form.get('vegetariano')?.valueChanges.subscribe(menuVegetariano => {
       this.camposDeComida.forEach(campo => {
         this.filtrarComidas(campo);
+        this.disableSiNoTieneComidasVegetarianas(menuVegetariano, campo);
       })
     });
-  }
-
-  private filtrarComidas(campo: {
-    nombre: string,
-    label: string,
-    masculino: boolean,
-    comidasFiltradas: Comida[]
-  }): void {
-    const valorCampo = this.form.get(campo.nombre)?.value;
-    const menuVegetariano = this.form.get('vegetariano')?.value;
-
-    campo.comidasFiltradas = this.comidas.filter(comida => {
-      const nombre = valorCampo ? typeof valorCampo == 'string' ? valorCampo : valorCampo.nombre : '';
-      const coincideEntrada = comida.nombre.toLowerCase().includes(nombre.toLowerCase());
-      const esVegetariana = menuVegetariano ? comida.vegetariana : true;
-
-      return coincideEntrada && esVegetariana;
-    });
-
-    const field = this.form.get(campo.nombre)
-    field?.setValidators([
-      this.comidaSeleccionadaValidator(campo.comidasFiltradas)
-    ]);
-    field?.updateValueAndValidity({emitEvent: false});
-    this.updateErrorMessage(campo.nombre);
   }
 
   displayFn(comida: Comida): string {
@@ -170,12 +230,13 @@ export class MenuFormComponent implements OnInit, AfterViewInit {
   }
 
   selectComidaIfNameMatches(nombreCampo: string): void {
-    const inputValue = this.form.get(nombreCampo)?.value;
+    const field = this.form.get(nombreCampo);
+    const inputValue = field?.value || '';
 
     const comidaSeleccionada = this.comidas.find(comida => comida.nombre.toLowerCase() === inputValue.toLowerCase());
 
     if (comidaSeleccionada) {
-      this.form.get(nombreCampo)?.setValue(comidaSeleccionada);
+      field?.setValue(comidaSeleccionada);
     }
   }
 
@@ -188,7 +249,8 @@ export class MenuFormComponent implements OnInit, AfterViewInit {
         },
         error: error => {
           this.notificationService.show('Error al crear el menú');
-          console.error("Error al crear el menú", error);
+          console.error("Error al crear el menú");
+          console.error(error);
         }
       });
     } else {
@@ -199,7 +261,8 @@ export class MenuFormComponent implements OnInit, AfterViewInit {
         },
         error: error => {
           this.notificationService.show('Error al modificar el menú');
-          console.error("Error al actualizar el menú", error);
+          console.error("Error al modificar el menú");
+          console.error(error);
         }
       });
     }
@@ -212,7 +275,7 @@ export class MenuFormComponent implements OnInit, AfterViewInit {
       console.log(menuData);
       // this.saveMenu(menuData);
     } else {
-      this.notificationService.show('Error en el formulario');
+      this.notificationService.show('Error en el formulario. Vuelva a intentarlo');
     }
   }
 
@@ -235,8 +298,8 @@ export class MenuFormComponent implements OnInit, AfterViewInit {
         }
       } else if (control.hasError('max')) {
         this.errorMessages[controlName] = `El valor máximo es: ${control.errors?.['max'].max}`;
-      } else if (control.hasError('comidaInvalida') && control.value) {
-        this.errorMessages[controlName] = 'La comida seleccionada no es válida';
+      } else if (control.hasError('comidaInvalida')) {
+        this.errorMessages[controlName] = 'La comida ingresada no es válida';
       }
     }
   }

@@ -54,6 +54,9 @@
       @if (errorMessages[campo.nombre]) {
         <mat-error>{{ errorMessages[campo.nombre] }}</mat-error>
       }
+      @if (hints[campo.nombre]) {
+        <mat-hint>{{ hints[campo.nombre] }}</mat-hint>
+      }
     </mat-form-field>
   }
   <button mat-button type="submit" [disabled]="form.invalid">Enviar</button>
