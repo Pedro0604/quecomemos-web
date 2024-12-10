@@ -16,12 +16,12 @@ export const appRoutes: Routes = [
     title: 'Todos los menús'
   },
   {
-    path: '**', component: PageNotFoundComponent
-  },
-  {
     path: 'home',
     component: HomeComponent,
     title: 'Home',
     canActivate: [AuthGuard]
-  }
+  },
+  {
+    path: '**', component: PageNotFoundComponent
+  },
 ];
