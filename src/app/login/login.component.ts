@@ -41,51 +41,59 @@ export class LoginComponent {
 
   onSubmit() {
     if (this.loginForm.valid) {
+      let encontrado = false;
       const credenciales = {
         dni: this.loginForm.get('dni')?.value,
         clave: this.loginForm.get('clave')?.value,
       };
       console.log("credenciales: " + this.loginForm.get('dni')?.value + " " + this.loginForm.get('clave')?.value);
       this.http
-        .post('/clientes/autenticacion', credenciales, { observe: 'response' })
+        .post('http://localhost:8080/clientes/autenticacion', credenciales, {observe: 'response'})
         .subscribe(
           (response) => {
-            const token = response.headers.get('Authorization');
+            console.log("headers " + response.headers.keys());
+            console.log("Authorization header: " + response.headers.get('authorization'));
+            console.log("length header: " + response.headers.get('content-length'));
+            const token = response.headers.get('authorization');
+            console.log("token: " + token);
             if (token) {
+              encontrado = true;
               localStorage.setItem('authToken', token);
               this.router.navigate(['/home']);
             }
-          },
-          () => {
-            this.http
-              .post('/responsables/autenticacion', credenciales, { observe: 'response' })
-              .subscribe(
-                (response) => {
-                  const token = response.headers.get('Authorization');
-                  if (token) {
-                    localStorage.setItem('authToken', token);
-                    this.router.navigate(['/home']);
-                  }
-                },
-                () => {
-                  this.http
-                    .post('/administradores/autenticacion', credenciales, { observe: 'response' })
-                    .subscribe(
-                      (response) => {
-                        const token = response.headers.get('Authorization');
-                        if (token) {
-                          localStorage.setItem('authToken', token);
-                          this.router.navigate(['/home']);
-                        }
-                      },
-                      () => {
-                        this.loginError = true;
-                      }
-                    );
-                }
-              );
           }
         );
+      if (!encontrado) {
+        this.http
+          .post('http://localhost:8080/responsables/autenticacion', credenciales, {observe: 'response'})
+          .subscribe(
+            (response) => {
+              const token = response.headers.get('Authorization');
+              if (token) {
+                encontrado = true;
+                localStorage.setItem('authToken', token);
+                this.router.navigate(['/home']);
+              }
+            }
+          );
+      }
+      if (!encontrado) {
+        this.http
+          .post('http://localhost:8080/administradores/autenticacion', credenciales, {observe: 'response'})
+          .subscribe(
+            (response) => {
+              const token = response.headers.get('Authorization');
+              if (token) {
+                encontrado = true;
+                localStorage.setItem('authToken', token);
+                this.router.navigate(['/home']);
+              }
+            }
+          );
+      }
+      if (!encontrado) {
+        this.loginError = true;
+      }
     }
   }
 }
