@@ -29,6 +29,10 @@ type CampoComida = {
   tipoComida: TipoComida
 }
 
+type PossibleErrorFunction = { (control: AbstractControl): string; }
+
+type PossibleError = { name: string, errorFunction: PossibleErrorFunction }
+
 @Component({
   selector: 'app-menu-form',
   imports: [
@@ -127,6 +131,30 @@ export class MenuFormComponent implements OnInit, AfterViewInit {
       tipoComida: 'BEBIDA'
     },
   ];
+
+  possibleErrors: PossibleError[] = [
+    {name: 'required', errorFunction: (control: AbstractControl) => 'El campo es obligatorio'},
+    {name: 'email', errorFunction: (control: AbstractControl) => 'El email no es válido'},
+    {
+      name: 'minlength',
+      errorFunction: (control: AbstractControl) => `La longitud mínima es: ${control.errors?.['minlength'].requiredLength} caracteres`
+    },
+    {
+      name: 'maxlength',
+      errorFunction: (control: AbstractControl) => `La longitud máxima es: ${control.errors?.['maxlength'].requiredLength} caracteres`
+    },
+    {
+      name: 'min', errorFunction: (control: AbstractControl) => {
+        if (control.errors?.['min'].min === 0) {
+          return 'El valor no puede ser negativo';
+        } else {
+          return `El valor mínimo es: ${control.errors?.['min'].min}`;
+        }
+      }
+    },
+    {name: 'max', errorFunction: (control: AbstractControl) => `El valor máximo es: ${control.errors?.['max'].max}`},
+    {name: 'comidaInvalida', errorFunction: (control: AbstractControl) => `La comida ingresada no es válida`},
+  ]
 
   constructor(
     private menuService: MenuService,
@@ -282,25 +310,11 @@ export class MenuFormComponent implements OnInit, AfterViewInit {
   updateErrorMessage(controlName: string) {
     const control = this.form.get(controlName);
     if (control && control.touched && control.invalid) {
-      if (control.hasError('required')) {
-        this.errorMessages[controlName] = 'El campo es obligatorio';
-      } else if (control.hasError('email')) {
-        this.errorMessages[controlName] = 'El email no es válido';
-      } else if (control.hasError('minlength')) {
-        this.errorMessages[controlName] = `La longitud mínima es: ${control.errors?.['minlength'].requiredLength} caracteres`;
-      } else if (control.hasError('maxlength')) {
-        this.errorMessages[controlName] = `La longitud máxima es: ${control.errors?.['maxlength'].requiredLength} caracteres`;
-      } else if (control.hasError('min')) {
-        if (control.errors?.['min'].min === 0) {
-          this.errorMessages[controlName] = 'El valor no puede ser negativo';
-        } else {
-          this.errorMessages[controlName] = `El valor mínimo es: ${control.errors?.['min'].min}`;
+      this.possibleErrors.forEach(error => {
+        if (control.hasError(error.name)) {
+          this.errorMessages[controlName] = error.errorFunction(control);
         }
-      } else if (control.hasError('max')) {
-        this.errorMessages[controlName] = `El valor máximo es: ${control.errors?.['max'].max}`;
-      } else if (control.hasError('comidaInvalida')) {
-        this.errorMessages[controlName] = 'La comida ingresada no es válida';
-      }
+      })
     }
   }
 
