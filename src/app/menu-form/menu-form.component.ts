@@ -19,6 +19,15 @@ import {MatIcon} from '@angular/material/icon';
 import {MatCheckbox} from '@angular/material/checkbox';
 import {MatAutocomplete, MatAutocompleteTrigger, MatOption} from '@angular/material/autocomplete';
 import {Comida, TipoComida} from '../comida/comida.model';
+import {
+  MatCard,
+  MatCardActions,
+  MatCardContent,
+  MatCardHeader,
+  MatCardSubtitle,
+  MatCardTitle
+} from '@angular/material/card';
+import {MatDivider} from '@angular/material/divider';
 
 type CampoComida = {
   nombre: string,
@@ -51,6 +60,13 @@ type PossibleError = { name: string, errorFunction: PossibleErrorFunction }
     MatOption,
     RouterLink,
     MatAnchor,
+    MatCard,
+    MatCardActions,
+    MatCardContent,
+    MatCardHeader,
+    MatCardSubtitle,
+    MatCardTitle,
+    MatDivider,
   ],
   templateUrl: './menu-form.component.html',
   standalone: true,
