@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {Menu} from '../menu/menu.model';
 import {MenuService} from '../menu/menu.service';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {LayoutService} from '../layout/layout.service';
 import {NotificationService} from '../notification.service';
 import {
@@ -14,7 +14,7 @@ import {
   Validators
 } from '@angular/forms';
 import {MatError, MatFormField, MatHint, MatInput, MatLabel, MatPrefix} from '@angular/material/input';
-import {MatButton} from '@angular/material/button';
+import {MatAnchor, MatButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
 import {MatCheckbox} from '@angular/material/checkbox';
 import {MatAutocomplete, MatAutocompleteTrigger, MatOption} from '@angular/material/autocomplete';
@@ -49,6 +49,8 @@ type PossibleError = { name: string, errorFunction: PossibleErrorFunction }
     MatAutocompleteTrigger,
     MatAutocomplete,
     MatOption,
+    RouterLink,
+    MatAnchor,
   ],
   templateUrl: './menu-form.component.html',
   standalone: true,
@@ -59,6 +61,7 @@ export class MenuFormComponent implements OnInit, AfterViewInit {
   errorMessages: { [key: string]: string } = {};
   hints: { [key: string]: string } = {}
   form: FormGroup
+  mostrarErrorSinComidas = false;
   comidas: Comida[] = [
     {
       id: 1, nombre: 'Principal',
@@ -133,8 +136,8 @@ export class MenuFormComponent implements OnInit, AfterViewInit {
   ];
 
   possibleErrors: PossibleError[] = [
-    {name: 'required', errorFunction: (control: AbstractControl) => 'El campo es obligatorio'},
-    {name: 'email', errorFunction: (control: AbstractControl) => 'El email no es válido'},
+    {name: 'required', errorFunction: () => 'El campo es obligatorio'},
+    {name: 'email', errorFunction: () => 'El email no es válido'},
     {
       name: 'minlength',
       errorFunction: (control: AbstractControl) => `La longitud mínima es: ${control.errors?.['minlength'].requiredLength} caracteres`
@@ -153,8 +156,21 @@ export class MenuFormComponent implements OnInit, AfterViewInit {
       }
     },
     {name: 'max', errorFunction: (control: AbstractControl) => `El valor máximo es: ${control.errors?.['max'].max}`},
-    {name: 'comidaInvalida', errorFunction: (control: AbstractControl) => `La comida ingresada no es válida`},
+    {name: 'comidaInvalida', errorFunction: () => `La comida ingresada no es válida`},
   ]
+
+  alMenosUnaComidaSeleccionadaValidator(): ValidatorFn {
+    return (group: AbstractControl): ValidationErrors | null => {
+      const controls = group.value;
+
+      const algunoSeleccionado = this.camposDeComida.some(campo => {
+        const valor = controls[campo.nombre];
+        return valor && typeof valor === 'object' && valor.nombre;
+      });
+
+      return algunoSeleccionado ? null : {ningunaSeleccionada: true};
+    };
+  }
 
   constructor(
     private menuService: MenuService,
@@ -163,14 +179,22 @@ export class MenuFormComponent implements OnInit, AfterViewInit {
     private layoutService: LayoutService,
     private notificationService: NotificationService) {
     this.form = new FormGroup({
-      nombre: new FormControl('', [Validators.required, Validators.maxLength(255)]),
-      precio: new FormControl('', [Validators.required, Validators.min(0)]),
-      vegetariano: new FormControl(''),
-      entrada: new FormControl(''),
-      principal: new FormControl(''),
-      postre: new FormControl(''),
-      bebida: new FormControl(''),
-    })
+        nombre: new FormControl('', [Validators.required, Validators.maxLength(255)]),
+        precio: new FormControl('', [Validators.required, Validators.min(0)]),
+        vegetariano: new FormControl(''),
+        entrada: new FormControl(''),
+        principal: new FormControl(''),
+        postre: new FormControl(''),
+        bebida: new FormControl(''),
+      },
+      {validators: this.alMenosUnaComidaSeleccionadaValidator()})
+  }
+
+  deberiaMostrarErrorAlMenosUnaComida(): boolean {
+    return this.camposDeComida.some(campo => {
+      const field = this.form.get(campo.nombre);
+      return field?.dirty;
+    });
   }
 
   comidaSeleccionadaValidator(comidasFiltradas: Comida[]): ValidatorFn {
@@ -244,6 +268,8 @@ export class MenuFormComponent implements OnInit, AfterViewInit {
         field?.disable();
       }
     });
+
+    this.mostrarErrorSinComidas = this.camposDeComida.every(campo => campo.comidasIniciales.length === 0)
 
     this.form.get('vegetariano')?.valueChanges.subscribe(menuVegetariano => {
       this.camposDeComida.forEach(campo => {

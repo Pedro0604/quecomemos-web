@@ -59,5 +59,13 @@
       }
     </mat-form-field>
   }
-  <button mat-button type="submit" [disabled]="form.invalid">Enviar</button>
+  @if (mostrarErrorSinComidas) {
+    <mat-error>No hay ninguna comida (entrada, plato principal, postre o bebida)</mat-error>
+<!--  TODO - MODIFICAR LINK A CREACION DE COMIDAS  -->
+    <a routerLink="/login" mat-button>Creá alguna antes de crear un menú </a>
+  }
+  @else if (form.errors ? deberiaMostrarErrorAlMenosUnaComida() && form.errors['ningunaSeleccionada'] : false) {
+    <mat-error>Debe seleccionar al menos una comida (entrada, plato principal, postre o bebida)</mat-error>
+  }
+  <button mat-button type="submit" [disabled]="form.invalid">{{ form.pending ? 'Enviando' : 'Enviar' }}</button>
 </form>
