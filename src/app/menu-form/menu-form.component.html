@@ -1,1 +1,60 @@
-<p>menu-form works!</p>
+<!-- Template que se renderiza debajo del titulo -->
+<ng-template #extra>
+      <span class="flex items-center justify-end mr-6 z-10">
+        <mat-icon class="text-green-600">eco</mat-icon> = Vegetariana
+      </span>
+</ng-template>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <mat-form-field>
+    <mat-label>Nombre del menú</mat-label>
+    <input matInput type="text" formControlName="nombre" placeholder="Nombre" (blur)="updateErrorMessage('nombre')"
+           required>
+    <mat-hint align="end">{{ form.get('nombre')?.value?.length || 0 }}/255</mat-hint>
+    @if (errorMessages['nombre']) {
+      <mat-error>{{ errorMessages['nombre'] }}</mat-error>
+    }
+  </mat-form-field>
+  <mat-form-field floatLabel="always">
+    <mat-label>Precio del menú</mat-label>
+    <input matInput type="number" class="precio-input" formControlName="precio" placeholder="0"
+           (blur)="updateErrorMessage('precio')" required/>
+    <span matTextPrefix>$&nbsp;</span>
+    @if (errorMessages['precio']) {
+      <mat-error>{{ errorMessages['precio'] }}</mat-error>
+    }
+  </mat-form-field>
+  <mat-checkbox formControlName="vegetariano">¿Es vegetariano?</mat-checkbox>
+  @if (errorMessages['vegetariano']) {
+    <mat-error>{{ errorMessages['vegetariano'] }}</mat-error>
+  }
+  @for (campo of camposDeComida; track campo.nombre) {
+    <mat-form-field>
+      <mat-label>{{ campo.label }}</mat-label>
+      <input type="text"
+             [placeholder]="('Seleccioná un' + (campo.masculino ? '' : 'a') + ' ' + campo.label.toLowerCase())"
+             matInput
+             [formControlName]="campo.nombre"
+             [matAutocomplete]="auto"
+             (blur)="updateErrorMessage(campo.nombre)"
+             (input)="selectComidaIfNameMatches(campo.nombre)"
+      >
+      <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]="displayFn" autoSelectActiveOption >
+        @for (comida of campo.comidasFiltradas; track comida.id) {
+          <mat-option [value]="comida">
+          <span class="flex items-center">
+            <span>{{ comida.nombre }}</span>
+            @if (comida.vegetariana) {
+              <mat-icon class="text-green-600">eco</mat-icon>
+            }
+          </span>
+          </mat-option>
+        }
+      </mat-autocomplete>
+      @if (errorMessages[campo.nombre]) {
+        <mat-error>{{ errorMessages[campo.nombre] }}</mat-error>
+      }
+    </mat-form-field>
+  }
+  <button mat-button type="submit" [disabled]="form.invalid">Enviar</button>
+</form>
