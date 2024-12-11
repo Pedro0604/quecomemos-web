@@ -1,1 +1,57 @@
-<p>login works!</p>
+<div class="container mx-auto flex justify-center items-center min-h-screen bg-gray-100">
+  <div class="card shadow-lg p-8 w-96 bg-white rounded-lg">
+    <h2 class="text-center text-2xl font-semibold text-gray-800 mb-6">Iniciar Sesión</h2>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <!-- DNI -->
+      <div class="mb-4">
+        <mat-form-field appearance="fill">
+          <mat-label>Ingrese su DNI</mat-label>
+          <input matInput formControlName="dni" placeholder="12345678" />
+          <mat-error *ngIf="loginForm.get('dni')?.hasError('required')">Debe ingresar un DNI</mat-error>
+          <mat-error *ngIf="loginForm.get('dni')?.hasError('minlength')">Debe tener al menos 7 dígitos</mat-error>
+          <mat-error *ngIf="loginForm.get('dni')?.hasError('maxlength')">Debe tener como máximo 8 dígitos</mat-error>
+        </mat-form-field>
+      </div>
+
+      <!-- Clave -->
+      <div class="mb-4">
+        <mat-form-field appearance="fill">
+          <mat-label>Ingrese su contraseña</mat-label>
+          <input matInput [type]="hide() ? 'password' : 'text'" formControlName="clave" />
+          <button
+            mat-icon-button
+            matSuffix
+            (click)="toggleHide()"
+            [attr.aria-label]="'Toggle password visibility'"
+          >
+            <mat-icon>{{ hide() ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          <mat-error *ngIf="loginForm.get('clave')?.hasError('required')">Debe ingresar una contraseña</mat-error>
+          <mat-error *ngIf="loginForm.get('clave')?.hasError('minlength')">
+            La contraseña debe tener al menos 4 caracteres
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <!-- Botón de envío -->
+      <button
+        type="submit"
+        mat-raised-button
+        color="primary"
+        class="w-full"
+        [disabled]="loginForm.invalid"
+      >
+        Ingresar
+      </button>
+    </form>
+
+    <!-- Mensaje de error -->
+    <div
+      *ngIf="loginError"
+      class="mt-4 text-center text-sm text-red-600 bg-red-100 p-2 rounded-md"
+    >
+      Usuario o clave incorrectos. Inténtelo nuevamente.
+    </div>
+  </div>
+</div>
