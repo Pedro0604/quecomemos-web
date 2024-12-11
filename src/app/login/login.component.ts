@@ -1,12 +1,13 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
-import { NgIf } from '@angular/common';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
+import {ChangeDetectionStrategy, Component, signal} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {Router} from '@angular/router';
+import {NgIf} from '@angular/common';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {MatButtonModule} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
+import {NotificationService} from '../notification.service';
 
 @Component({
   selector: 'app-login',
@@ -15,7 +16,6 @@ import { MatIconModule } from '@angular/material/icon';
   imports: [
     ReactiveFormsModule,
     NgIf,
-    HttpClientModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
@@ -28,7 +28,7 @@ export class LoginComponent {
   hide = signal(true);
   loginError = false;
 
-  constructor(private fb: FormBuilder, private http: HttpClient, private router: Router) {
+  constructor(private fb: FormBuilder, private http: HttpClient, private router: Router, private notificationService: NotificationService) {
     this.loginForm = this.fb.group({
       dni: ['', [Validators.required, Validators.minLength(7), Validators.maxLength(8)]],
       clave: ['', [Validators.required, Validators.minLength(4)]],
@@ -48,26 +48,42 @@ export class LoginComponent {
       };
       this.http
         .post('http://localhost:8080/clientes/autenticacion', credenciales, {observe: 'response'})
-        .subscribe(
-          (response) => {
-            const token = response.headers.get('authorization');
-            if (token) {
-              encontrado = true;
-              localStorage.setItem('authToken', token);
-              this.router.navigate(['/home']);
+        .subscribe({
+            next: (response) => {
+              const token = response.headers.get('authorization');
+              if (token) {
+                encontrado = true;
+                localStorage.setItem('authToken', token);
+                this.router.navigate(['/home']);
+              }
+            },
+            error: (error) => {
+              console.error('Error al autenticar cliente', error);
+              this.notificationService.show('Error al autenticar el cliente');
+            },
+            complete: () => {
+              this.notificationService.show('Cliente autenticado correctamente');
             }
           }
         );
       if (!encontrado) {
         this.http
           .post('http://localhost:8080/responsables/autenticacion', credenciales, {observe: 'response'})
-          .subscribe(
-            (response) => {
-              const token = response.headers.get('Authorization');
-              if (token) {
-                encontrado = true;
-                localStorage.setItem('authToken', token);
-                this.router.navigate(['/home']);
+          .subscribe({
+              next: (response) => {
+                const token = response.headers.get('Authorization');
+                if (token) {
+                  encontrado = true;
+                  localStorage.setItem('authToken', token);
+                  this.router.navigate(['/home']);
+                }
+              },
+              error: (error) => {
+                console.error('Error al autenticar responsable', error);
+                this.notificationService.show('Error al autenticar el responsable');
+              },
+              complete: () => {
+                this.notificationService.show('Responsable autenticado correctamente');
               }
             }
           );
@@ -75,16 +91,23 @@ export class LoginComponent {
       if (!encontrado) {
         this.http
           .post('http://localhost:8080/administradores/autenticacion', credenciales, {observe: 'response'})
-          .subscribe(
-            (response) => {
+          .subscribe({
+            next: (response) => {
               const token = response.headers.get('Authorization');
               if (token) {
                 encontrado = true;
                 localStorage.setItem('authToken', token);
                 this.router.navigate(['/home']);
               }
+            },
+            error: (error) => {
+              console.error('Error al administrador cliente', error);
+              this.notificationService.show('Error al administrador el cliente');
+            },
+            complete: () => {
+              this.notificationService.show('Administrador autenticado correctamente');
             }
-          );
+          });
       }
       if (!encontrado) {
         this.loginError = true;

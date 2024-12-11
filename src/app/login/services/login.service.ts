@@ -11,8 +11,6 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   login(dni: number, clave: string): Observable<any> {
-    console.log("Estoy en el servicio");
-
     return this.http.post(`${this.apiUrl}/clientes/autenticacion`, { dni, clave }, { observe: 'response' });
   }
 }
