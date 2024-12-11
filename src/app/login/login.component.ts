@@ -8,6 +8,7 @@ import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {NotificationService} from '../notification.service';
+import {MatCard, MatCardContent, MatCardHeader} from '@angular/material/card';
 
 @Component({
   selector: 'app-login',
@@ -20,6 +21,9 @@ import {NotificationService} from '../notification.service';
     MatInputModule,
     MatButtonModule,
     MatIconModule,
+    MatCard,
+    MatCardContent,
+    MatCardHeader,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

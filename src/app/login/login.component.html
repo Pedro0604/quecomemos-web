@@ -1,11 +1,13 @@
-<div class="container mx-auto flex justify-center items-center min-h-screen bg-gray-100">
-  <div class="card shadow-lg p-8 w-96 bg-white rounded-lg">
+<mat-card class="w-full max-w-2xl h-full mx-auto my-28 px-4 sm:px-8 md:px-16" appearance="outlined">
+  <mat-card-header class="flex justify-between">
+  </mat-card-header>
+  <mat-card-content class="my-4">
     <h2 class="text-center text-2xl font-semibold text-gray-800 mb-6">Iniciar Sesión</h2>
 
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="flex flex-col items-center gap-4">
       <!-- DNI -->
-      <div class="mb-4">
-        <mat-form-field appearance="fill">
+      <div class="flex-grow w-full max-w-sm">
+        <mat-form-field appearance="fill" class="w-full">
           <mat-label>Ingrese su DNI</mat-label>
           <input matInput formControlName="dni" placeholder="12345678" />
           <mat-error *ngIf="loginForm.get('dni')?.hasError('required')">Debe ingresar un DNI</mat-error>
@@ -15,11 +17,12 @@
       </div>
 
       <!-- Clave -->
-      <div class="mb-4">
-        <mat-form-field appearance="fill">
+      <div class="flex-grow w-full max-w-sm">
+        <mat-form-field appearance="fill" class="w-full">
           <mat-label>Ingrese su contraseña</mat-label>
           <input matInput [type]="hide() ? 'password' : 'text'" formControlName="clave" />
           <button
+            type="button"
             mat-icon-button
             matSuffix
             (click)="toggleHide()"
@@ -39,7 +42,7 @@
         type="submit"
         mat-raised-button
         color="primary"
-        class="w-full"
+        class="w-full max-w-sm"
         [disabled]="loginForm.invalid"
       >
         Ingresar
@@ -53,5 +56,5 @@
     >
       Usuario o clave incorrectos. Inténtelo nuevamente.
     </div>
-  </div>
-</div>
+  </mat-card-content>
+</mat-card>
