@@ -1,6 +1,6 @@
 import {Component, inject, OnInit, TemplateRef} from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import {AsyncPipe, NgTemplateOutlet} from '@angular/common';
+import {AsyncPipe, NgIf, NgTemplateOutlet} from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -8,7 +8,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
-import {RouterLink, RouterLinkActive} from '@angular/router';
+import {Router, RouterLink, RouterLinkActive} from '@angular/router';
 import {appRoutes} from '../app.routes';
 import {LayoutService} from './layout.service';
 
@@ -26,7 +26,8 @@ import {LayoutService} from './layout.service';
     AsyncPipe,
     RouterLink,
     RouterLinkActive,
-    NgTemplateOutlet
+    NgTemplateOutlet,
+    NgIf
   ]
 })
 export class LayoutComponent implements OnInit {
@@ -38,14 +39,14 @@ export class LayoutComponent implements OnInit {
       shareReplay()
     );
 
-  excludedRoutes = ['login', '**'];
+  excludedRoutes = ['login', 'logout', '**'];
 
   rootRoutes = appRoutes.filter(r => r.path && !this.excludedRoutes.includes(r.path) )
 
   title: string = '';
   extra: TemplateRef<any> | null = null;
 
-  constructor(private layoutService: LayoutService) {}
+  constructor(private layoutService: LayoutService, private router: Router) {}
 
   ngOnInit(): void {
     this.layoutService.currentTitle$.subscribe((title) => {
@@ -56,4 +57,17 @@ export class LayoutComponent implements OnInit {
       this.extra = extra;
     });
   }
+
+  logout() {
+    // Eliminar el token de localStorage
+    localStorage.removeItem('authToken');
+
+    // Redirigir al usuario a la página de inicio de sesión
+    this.router.navigate(['/login']);
+  }
+
+  isLoggedIn(): boolean {
+    return !!localStorage.getItem('authToken'); // Devuelve true si el token existe
+  }
+
 }

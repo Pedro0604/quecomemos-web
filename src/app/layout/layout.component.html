@@ -38,9 +38,20 @@
                 mat-button
                 routerLink="login"
                 routerLinkActive
+                *ngIf="!isLoggedIn()"
               >
                 Iniciar sesión
               </a>
+          </span>
+          <span class="hidden md:block">
+              <Button
+                mat-button
+                routerLink="logout"
+                *ngIf="isLoggedIn()"
+                (click)="logout()"
+              >
+                Cerrar sesión
+              </Button>
           </span>
           <span class="block md:hidden">
             <a
