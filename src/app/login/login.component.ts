@@ -46,16 +46,11 @@ export class LoginComponent {
         dni: this.loginForm.get('dni')?.value,
         clave: this.loginForm.get('clave')?.value,
       };
-      console.log("credenciales: " + this.loginForm.get('dni')?.value + " " + this.loginForm.get('clave')?.value);
       this.http
         .post('http://localhost:8080/clientes/autenticacion', credenciales, {observe: 'response'})
         .subscribe(
           (response) => {
-            console.log("headers " + response.headers.keys());
-            console.log("Authorization header: " + response.headers.get('authorization'));
-            console.log("length header: " + response.headers.get('content-length'));
             const token = response.headers.get('authorization');
-            console.log("token: " + token);
             if (token) {
               encontrado = true;
               localStorage.setItem('authToken', token);
