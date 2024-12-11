@@ -252,7 +252,20 @@ export class MenuFormComponent implements OnInit, AfterViewInit {
   async ngOnInit(): Promise<void> {
     const id = this.route.snapshot.params['id'];
     if (id) {
-      this.menuService.getMenuById(id).subscribe((data) => (this.menu = data));
+      this.menuService.getMenuById(id).subscribe((data) => {
+        this.menu = data
+        this.form.get('nombre')?.setValue(this.menu.nombre)
+        this.form.get('precio')?.setValue(this.menu.precio)
+        this.form.get('vegetariano')?.setValue(this.menu.vegetariano)
+        this.menu.comidas.forEach(comida => {
+          const campoComida = this.camposDeComida.find(campoComida => campoComida.tipoComida === comida.tipoComida)
+          if (campoComida) {
+            const comidaField = this.form.get(campoComida.nombre);
+            comidaField?.setValue(comida);
+            comidaField?.markAsTouched();
+          }
+        })
+      });
       this.layoutService.setTitle('Modificar Menú');
     } else {
       this.layoutService.setTitle('Crear Menú');
@@ -320,16 +333,16 @@ export class MenuFormComponent implements OnInit, AfterViewInit {
 
   saveMenu(menuData: MenuFormData): void {
     const comidaIds = [];
-    if (menuData.entrada){
+    if (menuData.entrada) {
       comidaIds.push(menuData.entrada.id);
     }
-    if (menuData.principal){
+    if (menuData.principal) {
       comidaIds.push(menuData.principal.id);
     }
-    if (menuData.postre){
+    if (menuData.postre) {
       comidaIds.push(menuData.postre.id);
     }
-    if (menuData.bebida){
+    if (menuData.bebida) {
       comidaIds.push(menuData.bebida.id);
     }
 
@@ -381,4 +394,6 @@ export class MenuFormComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     this.layoutService.setExtra(this.extraTemplate);
   }
+
+  protected readonly history = history;
 }
