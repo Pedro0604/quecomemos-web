@@ -56,4 +56,8 @@ export class MenuListComponent implements AfterViewInit, OnInit {
     this.layoutService.setTitle('Todos los menús');
     this.layoutService.setExtra(this.extraTemplate);
   }
+
+  handleDeleteMenu(id: number) {
+    this.menus = this.menus.filter(menu => menu.id !== id);
+  }
 }

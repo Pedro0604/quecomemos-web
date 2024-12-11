@@ -29,4 +29,8 @@ export class MenuService {
   updateMenu(id: number, menu: MenuDTO): Observable<MenuDTO> {
     return this.http.put<MenuDTO>(this.apiUrl + "/" + id, menu);
   }
+
+  deleteMenu(id: number): Observable<void> {
+    return this.http.delete<void>(this.apiUrl + "/" + id);
+  }
 }
