@@ -20,7 +20,7 @@
 } @else {
   <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
     @for (menu of menus; track menu) {
-      <app-menu [menu]="menu"></app-menu>
+      <app-menu [menu]="menu" (onDelete)="handleDeleteMenu(menu.id)"></app-menu>
     }
   </div>
 }
