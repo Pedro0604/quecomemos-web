@@ -9,83 +9,95 @@
 </ng-template>
 
 <mat-card class="w-full max-w-2xl h-full mx-auto" appearance="outlined">
-  <mat-card-content class="my-4">
-    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <mat-form-field>
-          <mat-label>Nombre del menú</mat-label>
-          <input matInput type="text" formControlName="nombre" placeholder="Nombre"
-                 (blur)="updateErrorMessage('nombre')"
-                 required>
-          <mat-hint align="end">{{ form.get('nombre')?.value?.length || 0 }}/255</mat-hint>
-          @if (errorMessages['nombre']) {
-            <mat-error>{{ errorMessages['nombre'] }}</mat-error>
-          }
-        </mat-form-field>
-        <mat-form-field floatLabel="always">
-          <mat-label>Precio del menú</mat-label>
-          <input matInput type="number" class="precio-input" formControlName="precio" placeholder="0"
-                 (blur)="updateErrorMessage('precio')" required/>
-          <span matTextPrefix>$&nbsp;</span>
-          @if (errorMessages['precio']) {
-            <mat-error>{{ errorMessages['precio'] }}</mat-error>
-          }
-        </mat-form-field>
-      </div>
-      <mat-checkbox formControlName="vegetariano">¿Es vegetariano?</mat-checkbox>
-      @if (errorMessages['vegetariano']) {
-        <mat-error>{{ errorMessages['vegetariano'] }}</mat-error>
-      }
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        @for (campo of camposDeComida; track campo.nombre) {
-          <mat-form-field>
-            <mat-label>{{ loading ? 'Cargando...' : (error ? 'Error' : campo.label) }}</mat-label>
-            <input type="text"
-                   [placeholder]="('Seleccioná un' + (campo.masculino ? '' : 'a') + ' ' + campo.label.toLowerCase())"
-                   matInput
-                   [formControlName]="campo.nombre"
-                   [matAutocomplete]="auto"
-                   (blur)="updateErrorMessage(campo.nombre)"
-                   (input)="selectComidaIfNameMatches(campo.nombre)"
-                   [disabled]="error || loading"
-            >
-            <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]="displayFn"
-                              autoSelectActiveOption>
-              @for (comida of campo.comidasFiltradas; track comida.id) {
-                <mat-option [value]="comida">
-                <span class="flex items-center">
-                  <span>{{ comida.nombre }}</span>
-                  @if (comida.vegetariana) {
-                    <mat-icon class="text-green-600">eco</mat-icon>
-                  }
-                </span>
-                </mat-option>
-              }
-            </mat-autocomplete>
-            @if (errorMessages[campo.nombre]) {
-              <mat-error>{{ errorMessages[campo.nombre] }}</mat-error>
+    <mat-card-content class="my-4">
+        <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <mat-form-field>
+                    <mat-label>Nombre del menú</mat-label>
+                    <input matInput type="text" formControlName="nombre" placeholder="Nombre"
+                           (blur)="updateErrorMessage('nombre')"
+                           required>
+                    <mat-hint align="end">{{ form.get('nombre')?.value?.length || 0 }}/255</mat-hint>
+                    @if (errorMessages['nombre']) {
+                        <mat-error>{{ errorMessages['nombre'] }}</mat-error>
+                    }
+                </mat-form-field>
+                <mat-form-field floatLabel="always">
+                    <mat-label>Precio del menú</mat-label>
+                    <input matInput type="number" class="precio-input" formControlName="precio" placeholder="0"
+                           (blur)="updateErrorMessage('precio')" required/>
+                    <span matTextPrefix>$&nbsp;</span>
+                    @if (errorMessages['precio']) {
+                        <mat-error>{{ errorMessages['precio'] }}</mat-error>
+                    }
+                </mat-form-field>
+            </div>
+            <mat-checkbox formControlName="vegetariano">¿Es vegetariano?</mat-checkbox>
+            @if (errorMessages['vegetariano']) {
+                <mat-error>{{ errorMessages['vegetariano'] }}</mat-error>
             }
-            @if (hints[campo.nombre]) {
-              <mat-hint>{{ hints[campo.nombre] }}</mat-hint>
-            }
-          </mat-form-field>
-        }
-      </div>
-      <div class="ms-4">
-        @if (error) {
-          <mat-error>Ha ocurrido un error al obtener las comidas</mat-error>
-          <mat-error>Por favor, intente nuevamente más tarde</mat-error>
-        } @else if (mostrarErrorSinComidas) {
-          <mat-error>No hay ninguna comida (entrada, plato principal, postre o bebida)</mat-error>
-          <!--  TODO - MODIFICAR LINK A CREACION DE COMIDAS  -->
-          <a routerLink="/login" mat-button>Creá alguna para poder continuar</a>
-        } @else if (form.errors ? deberiaMostrarErrorAlMenosUnaComida() && form.errors['ningunaSeleccionada'] : false) {
-          <mat-error>Debe seleccionar al menos una comida (entrada, plato principal, postre o bebida)</mat-error>
-        }
-      </div>
-      <button mat-button class="w-full" type="submit"
-              [disabled]="form.invalid">{{ form.pending ? 'Enviando' : 'Enviar' }}
-      </button>
-    </form>
-  </mat-card-content>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                @for (campo of camposDeComida; track campo.nombre) {
+                    <mat-form-field>
+                        <mat-label>{{ loading ? 'Cargando...' : (error ? 'Error' : campo.label) }}</mat-label>
+                        <input type="text"
+                               [placeholder]="('Seleccioná un' + (campo.masculino ? '' : 'a') + ' ' + campo.label.toLowerCase())"
+                               matInput
+                               [formControlName]="campo.nombre"
+                               [matAutocomplete]="auto"
+                               (blur)="updateErrorMessage(campo.nombre)"
+                               (input)="selectComidaIfNameMatches(campo.nombre)"
+                               [disabled]="error || loading"
+                        >
+                        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]="displayFn"
+                                          autoSelectActiveOption>
+                            @for (comida of campo.comidasFiltradas; track comida.id) {
+                                <mat-option [value]="comida">
+                                    <span class="flex items-center gap-4">
+                                        <div class="flex justify-center items-center w-14 h-14 my-1">
+                                            @if (comida.urlImagen) {
+                                                <img class="object-cover aspect-square image"
+                                                     [src]="comida.urlImagen"
+                                                     [alt]="comida.nombre">
+                                            } @else {
+                                                <mat-icon class="!m-0 text-4xl !w-fit !h-fit">no_photography</mat-icon>
+                                            }
+                                        </div>
+                                        <span class="flex items-center">
+                                            <span>{{ comida.nombre }}</span>
+                                            @if (comida.vegetariana) {
+                                                <mat-icon class="text-green-600">eco</mat-icon>
+                                            }
+                                        </span>
+                                    </span>
+                                </mat-option>
+                            }
+                        </mat-autocomplete>
+                        @if (errorMessages[campo.nombre]) {
+                            <mat-error>{{ errorMessages[campo.nombre] }}</mat-error>
+                        }
+                        @if (hints[campo.nombre]) {
+                            <mat-hint>{{ hints[campo.nombre] }}</mat-hint>
+                        }
+                    </mat-form-field>
+                }
+            </div>
+            <div class="ms-4">
+                @if (error) {
+                    <mat-error>Ha ocurrido un error al obtener las comidas</mat-error>
+                    <mat-error>Por favor, intente nuevamente más tarde</mat-error>
+                } @else if (mostrarErrorSinComidas) {
+                    <mat-error>No hay ninguna comida (entrada, plato principal, postre o bebida)</mat-error>
+                    <!--  TODO - MODIFICAR LINK A CREACION DE COMIDAS  -->
+                    <a routerLink="/login" mat-button>Creá alguna para poder continuar</a>
+                } @else if (form.errors ? deberiaMostrarErrorAlMenosUnaComida() && form.errors['ningunaSeleccionada'] : false) {
+                    <mat-error>Debe seleccionar al menos una comida (entrada, plato principal, postre o bebida)
+                    </mat-error>
+                }
+            </div>
+            <button mat-button class="w-full" type="submit"
+                    [disabled]="form.invalid">{{ form.pending ? 'Enviando' : 'Enviar' }}
+            </button>
+        </form>
+    </mat-card-content>
 </mat-card>
