@@ -1,7 +1,10 @@
 <!-- Template que se renderiza debajo del titulo -->
 <ng-template #extra>
-      <span class="flex items-center justify-end mr-6 z-10">
-        <mat-icon class="text-green-600">eco</mat-icon> = Vegetariana
+      <span class="flex justify-between mx-6">
+        <button mat-button (click)="history.back()">Volver</button>
+        <span class="flex items-center">
+          <mat-icon class="text-green-600">eco</mat-icon> = Vegetariana
+        </span>
       </span>
 </ng-template>
 
@@ -74,8 +77,7 @@
         @if (error) {
           <mat-error>Ha ocurrido un error al obtener las comidas</mat-error>
           <mat-error>Por favor, intente nuevamente más tarde</mat-error>
-        }
-        @else if (mostrarErrorSinComidas) {
+        } @else if (mostrarErrorSinComidas) {
           <mat-error>No hay ninguna comida (entrada, plato principal, postre o bebida)</mat-error>
           <!--  TODO - MODIFICAR LINK A CREACION DE COMIDAS  -->
           <a routerLink="/login" mat-button>Creá alguna para poder continuar</a>
