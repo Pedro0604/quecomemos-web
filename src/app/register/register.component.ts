@@ -1,26 +1,28 @@
-import { Component } from '@angular/core';
+import {AfterViewInit, Component} from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms'; // Importar herramientas de formularios reactivos
+import { CommonModule } from '@angular/common';
+import {LayoutService} from "../layout/layout.service";
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, CommonModule],
 })
-export class RegisterComponent {
-  // Definir el formulario reactivo
+export class RegisterComponent implements AfterViewInit {
+
   registerForm: FormGroup;
 
-  constructor(private fb: FormBuilder) {
-    // Crear el formulario con validaciones
+  constructor(private layoutService: LayoutService, private fb: FormBuilder) {
+
     this.registerForm = this.fb.group({
-      dni: ['', [Validators.required, Validators.pattern('^[0-9]{8}$')]],  // Validación para DNI (8 dígitos)
-      nombre: ['', Validators.required],  // Nombre requerido
-      apellido: ['', Validators.required],  // Apellido requerido
+      dni: ['', [Validators.required, Validators.pattern('^[0-9]{8}$')]],
+      nombre: ['', Validators.required],
+      apellido: ['', Validators.required],
       foto: [null],  // Foto opcional
-      email: ['', [Validators.required, Validators.email]],  // Validación para email
-      password: ['', [Validators.required, Validators.minLength(6)]],  // Contraseña con min. 6 caracteres
-      confirmPassword: ['', Validators.required],  // Confirmar contraseña
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      confirmPassword: ['', Validators.required],
     }, {
       // Validación personalizada para comprobar que las contraseñas coincidan
       validators: this.passwordMatchValidator
@@ -43,5 +45,9 @@ export class RegisterComponent {
     } else {
       console.log('Formulario inválido');
     }
+  }
+
+  ngAfterViewInit(): void {
+    this.layoutService.setTitle('Registro de usuario');
   }
 }

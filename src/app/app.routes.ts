@@ -15,11 +15,9 @@ export const appRoutes: Routes = [
     title: 'Todos los menús'
   },
   {
-    path: '**', component: PageNotFoundComponent
-  },
-  {
     path: 'register',
     component: RegisterComponent,
+    title: 'Registro de usuario'
   },
   {path: '**', component: PageNotFoundComponent}
 ];

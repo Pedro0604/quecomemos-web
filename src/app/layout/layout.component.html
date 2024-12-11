@@ -41,16 +41,36 @@
               >
                 Iniciar sesión
               </a>
-          </span>
+            </span>
+            <span class="block md:hidden">
+              <a
+                mat-icon-button
+                routerLink="login"
+                routerLinkActive
+              >
+                <mat-icon aria-label="Login icon">login</mat-icon>
+              </a>
+            </span>
+        </div>
+        <div>
+            <span class="hidden md:block">
+              <a
+                mat-button
+                routerLink="register"
+                routerLinkActive
+              >
+                Registro
+              </a>
+            </span>
           <span class="block md:hidden">
-            <a
-              mat-icon-button
-              routerLink="login"
-              routerLinkActive
-            >
-              <mat-icon aria-label="Login icon">login</mat-icon>
-            </a>
-          </span>
+              <a
+                mat-icon-button
+                routerLink="register"
+                routerLinkActive
+              >
+                <mat-icon aria-label="Login icon">Registro</mat-icon>
+              </a>
+            </span>
         </div>
       </div>
     </mat-toolbar>
