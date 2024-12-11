@@ -95,8 +95,8 @@
                     </mat-error>
                 }
             </div>
-            <button mat-button class="w-full" type="submit"
-                    [disabled]="form.invalid">{{ form.pending ? 'Enviando' : 'Enviar' }}
+            <button mat-raised-button class="w-full" type="submit"
+                    [disabled]="form.invalid || !form.dirty">{{ form.pending ? 'Enviando' : 'Enviar' }}
             </button>
         </form>
     </mat-card-content>

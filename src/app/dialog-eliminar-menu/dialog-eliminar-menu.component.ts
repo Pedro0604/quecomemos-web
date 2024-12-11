@@ -2,7 +2,6 @@ import {Component, inject} from '@angular/core';
 import {
   MAT_DIALOG_DATA,
   MatDialogActions,
-  MatDialogClose,
   MatDialogContent,
   MatDialogRef, MatDialogTitle
 } from '@angular/material/dialog';
@@ -21,7 +20,6 @@ export type DialogData = {
     MatDialogContent,
     MatDialogActions,
     MatButton,
-    MatDialogClose,
     MatDialogTitle
   ],
   templateUrl: './dialog-eliminar-menu.component.html',
