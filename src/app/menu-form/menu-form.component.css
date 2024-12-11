@@ -6,3 +6,7 @@ input.precio-input::-webkit-inner-spin-button {
 input.precio-input {
   -moz-appearance: textfield;
 }
+
+img.image {
+  vertical-align: middle;
+}

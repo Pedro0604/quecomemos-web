@@ -30,3 +30,13 @@ body {
     @include my-theme.high-contrast-overrides(color-scheme);
   }
 }
+
+.error {
+  @include mat.theme((
+    color: (
+      primary: mat.$violet-palette,
+    ),
+    typography: Roboto,
+    density: 0,
+  ));
+}
