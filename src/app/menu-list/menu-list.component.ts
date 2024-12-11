@@ -28,17 +28,17 @@ export class MenuListComponent implements AfterViewInit, OnInit {
   loading = true;
 
   constructor(private layoutService: LayoutService, private menuService: MenuService) {
-    this.menus.forEach(menu => {
-      menu.comidas.sort((a, b) => {
-        return this.ordenComidas.indexOf(a.tipoComida) - this.ordenComidas.indexOf(b.tipoComida);
-      });
-    });
   }
 
   ngOnInit(): void {
     this.menuService.getMenus().subscribe({
       next: (data) => {
         this.menus = data;
+        this.menus.forEach(menu => {
+          menu.comidas.sort((a, b) => {
+            return this.ordenComidas.indexOf(a.tipoComida) - this.ordenComidas.indexOf(b.tipoComida);
+          });
+        });
       },
       error: (error) => {
         console.error('Error al obtener los menús', error);

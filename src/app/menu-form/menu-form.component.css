@@ -1,0 +1,8 @@
+input.precio-input::-webkit-outer-spin-button,
+input.precio-input::-webkit-inner-spin-button {
+  display: none;
+}
+
+input.precio-input {
+  -moz-appearance: textfield;
+}

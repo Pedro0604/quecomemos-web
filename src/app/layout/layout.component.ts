@@ -11,6 +11,7 @@ import { map, shareReplay } from 'rxjs/operators';
 import {Router, RouterLink, RouterLinkActive} from '@angular/router';
 import {appRoutes} from '../app.routes';
 import {LayoutService} from './layout.service';
+import {NotificationService} from '../notification.service';
 
 @Component({
   selector: 'app-layout',
@@ -39,14 +40,14 @@ export class LayoutComponent implements OnInit {
       shareReplay()
     );
 
-  excludedRoutes = ['login', 'logout', '**'];
+  excludedRoutes = ['login', '**', 'menu/edit/:id', 'logout'];
 
   rootRoutes = appRoutes.filter(r => r.path && !this.excludedRoutes.includes(r.path) )
 
   title: string = '';
   extra: TemplateRef<any> | null = null;
 
-  constructor(private layoutService: LayoutService, private router: Router) {}
+  constructor(private layoutService: LayoutService, private router: Router, private notificationService: NotificationService) {}
 
   ngOnInit(): void {
     this.layoutService.currentTitle$.subscribe((title) => {
@@ -64,10 +65,10 @@ export class LayoutComponent implements OnInit {
 
     // Redirigir al usuario a la página de inicio de sesión
     this.router.navigate(['/login']);
+    this.notificationService.show('Sesión cerrada correctamente');
   }
 
   isLoggedIn(): boolean {
     return !!localStorage.getItem('authToken'); // Devuelve true si el token existe
   }
-
 }
