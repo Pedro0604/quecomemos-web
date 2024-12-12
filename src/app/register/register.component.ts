@@ -2,18 +2,33 @@ import {AfterViewInit, Component} from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms'; // Importar herramientas de formularios reactivos
 import { CommonModule } from '@angular/common';
 import {LayoutService} from "../layout/layout.service";
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon'; // Opcional, para íconos
+import { MatCardModule } from '@angular/material/card';
+import {Router} from '@angular/router';
+import {HttpClient} from '@angular/common/http';
+import {NotificationService} from '../notification.service';
+
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule,
+    CommonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    MatCardModule],
 })
 export class RegisterComponent implements AfterViewInit {
 
   registerForm: FormGroup;
 
-  constructor(private layoutService: LayoutService, private fb: FormBuilder) {
+  constructor(private layoutService: LayoutService, private fb: FormBuilder, private http: HttpClient, private router: Router, private notificationService: NotificationService) {
 
     this.registerForm = this.fb.group({
       dni: ['', [Validators.required, Validators.pattern('^[0-9]{8}$')]],
@@ -41,9 +56,27 @@ export class RegisterComponent implements AfterViewInit {
   // Método para manejar el envío del formulario
   register() {
     if (this.registerForm.valid) {
-      console.log('Formulario enviado', this.registerForm.value);
+      const datosRegistro = this.registerForm.value;
+      this.http
+        .post('http://localhost:8080/clientes', datosRegistro, { observe: 'response' })
+        .subscribe({
+          next: (response) => {
+            this.notificationService.show('Usuario registrado exitosamente');
+            this.router.navigate(['/menu']);
+          },
+          error: (error) => {
+            if (error.status === 400) {
+              const mensaje = error.error?.message || 'El usuario ya existe.';
+              this.notificationService.show(mensaje); // Muestra el mensaje de error
+            } else {
+              this.notificationService.show('Error al registrar el usuario. Por favor, intente más tarde.');
+            }
+          },
+          complete: () => {
+          },
+        });
     } else {
-      console.log('Formulario inválido');
+      this.notificationService.show('El formulario contiene errores. Por favor, revisa los campos.');
     }
   }
 
