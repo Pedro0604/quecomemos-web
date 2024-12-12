@@ -5,7 +5,6 @@ import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 import {MenuListComponent} from './menu-list/menu-list.component';
 import {HomeComponent} from './home/home.component';
 import {AuthGuard} from './guards/auth.guards';
-import {LayoutComponent} from './layout/layout.component';
 import {MenuFormComponent} from './menu-form/menu-form.component';
 import {ComidaFormComponent} from './comida-form/comida-form.component';
 import {ComidaListComponent} from './comida-list/comida-list.component';

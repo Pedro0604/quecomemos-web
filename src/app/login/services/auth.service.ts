@@ -48,7 +48,7 @@ export class AuthService {
     try {
       const decoded = jwtDecode<JwtPayload>(token);
 
-      if (decoded && decoded.exp && decoded.exp * 1000 >= Date.now()) {
+      if (decoded.exp && decoded.exp * 1000 >= Date.now()) {
         this.login(token);
         return true;
       } else {

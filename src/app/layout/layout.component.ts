@@ -8,17 +8,12 @@ import {MatListModule} from '@angular/material/list';
 import {MatIconModule} from '@angular/material/icon';
 import {Observable} from 'rxjs';
 import {map, shareReplay} from 'rxjs/operators';
-import {Router, RouterLink, RouterLinkActive, Routes} from '@angular/router';
+import {RouterLink, RouterLinkActive, Routes} from '@angular/router';
 import {appRoutes} from '../app.routes';
 import {LayoutService} from './layout.service';
-import {NotificationService} from '../notification.service';
-import {jwtDecode} from 'jwt-decode';
 import {AuthGuard} from '../guards/auth.guards';
 import {AuthService} from '../login/services/auth.service';
 
-interface JwtPayload {
-  exp: number; // Tiempo de expiración del token (en segundos desde la época UNIX)
-}
 
 @Component({
   selector: 'app-layout',
