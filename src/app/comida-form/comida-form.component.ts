@@ -56,7 +56,7 @@ type ComidaFormData = {
   standalone: true,
   styleUrl: './comida-form.component.css'
 })
-export class ComidaFormComponent implements OnInit, AfterViewInit {
+export class ComidaFormComponent implements OnInit {
     comida: Comida | null = null;
 
     error: boolean = false;
@@ -199,12 +199,6 @@ export class ComidaFormComponent implements OnInit, AfterViewInit {
       } else {
         this.notificationService.show('Error al enviar el formuladrio. Vuelva a intentarlo.');
       }
-    }
-
-    @ViewChild('extra') extraTemplate!: TemplateRef<any> | null;
-
-    ngAfterViewInit(): void {
-      this.layoutService.setExtra(this.extraTemplate);
     }
 
     protected readonly history = history;
