@@ -1,6 +1,5 @@
 import {Component, EventEmitter, inject, Input, Output} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
-import {DialogEliminarMenuComponent} from '../dialog-eliminar-menu/dialog-eliminar-menu.component';
 import {Comida} from './comida.model';
 import {
   MatCard,
@@ -13,6 +12,7 @@ import {
 import {MatIcon} from '@angular/material/icon';
 import {MatAnchor, MatButton} from '@angular/material/button';
 import {RouterLink} from '@angular/router';
+import {DialogEliminarComidaComponent} from "../dialog-eliminar-comida/dialog-eliminar-comida.component";
 
 @Component({
   selector: 'app-comida',
@@ -43,8 +43,8 @@ export class ComidaComponent {
   }
 
   openDialogEliminar(): void {
-    const dialogRef = this.dialog.open(DialogEliminarMenuComponent, {
-      data: {menu: this.comida},
+    const dialogRef = this.dialog.open(DialogEliminarComidaComponent, {
+      data: {comida: this.comida},
     });
 
     dialogRef.afterClosed().subscribe(result => {

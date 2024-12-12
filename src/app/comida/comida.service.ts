@@ -28,4 +28,8 @@ export class ComidaService {
   updateComida(id: number, comida: ComidaDTO): Observable<Comida> {
     return this.http.put<Comida>(this.apiUrl + "/" + id, comida);
   }
+
+  deleteComida(id: number): Observable<void> {
+    return this.http.delete<void>(this.apiUrl + "/" + id);
+  }
 }
