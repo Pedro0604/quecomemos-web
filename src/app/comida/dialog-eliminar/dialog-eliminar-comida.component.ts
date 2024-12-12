@@ -6,9 +6,9 @@ import {
   MatDialogRef,
   MatDialogTitle
 } from '@angular/material/dialog';
-import {ComidaService} from '../comida/comida.service';
-import {NotificationService} from '../notification.service';
-import {Comida} from '../comida/comida.model';
+import {ComidaService} from '../service/comida.service';
+import {NotificationService} from '../../notification.service';
+import {Comida} from '../comida.model';
 import {MatButton} from '@angular/material/button';
 
 export type DialogData = {

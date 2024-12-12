@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import {jwtDecode, JwtPayload} from 'jwt-decode';
-import {NotificationService} from '../../notification.service';
+import {NotificationService} from '../../../notification.service';
 import {Router} from '@angular/router';
 
 @Injectable({

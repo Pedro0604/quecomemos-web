@@ -1,6 +1,6 @@
 import {Component, EventEmitter, inject, Input, Output} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
-import {Comida} from './comida.model';
+import {Comida} from '../comida.model';
 import {
   MatCard,
   MatCardActions,
@@ -12,7 +12,7 @@ import {
 import {MatIcon} from '@angular/material/icon';
 import {MatAnchor, MatButton} from '@angular/material/button';
 import {RouterLink} from '@angular/router';
-import {DialogEliminarComidaComponent} from "../dialog-eliminar-comida/dialog-eliminar-comida.component";
+import {DialogEliminarComidaComponent} from "../dialog-eliminar/dialog-eliminar-comida.component";
 
 @Component({
   selector: 'app-comida',

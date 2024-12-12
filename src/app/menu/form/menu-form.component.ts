@@ -1,9 +1,9 @@
 import {AfterViewInit, Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
-import {Menu, MenuDTO} from '../menu/menu.model';
-import {MenuService} from '../menu/menu.service';
+import {Menu, MenuDTO} from '../menu.model';
+import {MenuService} from '../service/menu.service';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
-import {LayoutService} from '../layout/layout.service';
-import {NotificationService} from '../notification.service';
+import {LayoutService} from '../../layout/layout.service';
+import {NotificationService} from '../../notification.service';
 import {
     AbstractControl,
     FormControl,
@@ -18,9 +18,9 @@ import {MatAnchor, MatButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
 import {MatCheckbox} from '@angular/material/checkbox';
 import {MatAutocomplete, MatAutocompleteTrigger, MatOption} from '@angular/material/autocomplete';
-import {Comida, TipoComida} from '../comida/comida.model';
+import {Comida, TipoComida} from '../../comida/comida.model';
 import {MatCard, MatCardContent,} from '@angular/material/card';
-import {ComidaService} from '../comida/comida.service';
+import {ComidaService} from '../../comida/service/comida.service';
 import {firstValueFrom} from 'rxjs';
 
 type CampoComida = {

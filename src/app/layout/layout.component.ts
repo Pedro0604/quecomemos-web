@@ -1,6 +1,6 @@
 import {Component, inject, Injector, OnInit, TemplateRef} from '@angular/core';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
-import {AsyncPipe, NgIf, NgTemplateOutlet} from '@angular/common';
+import {AsyncPipe, NgTemplateOutlet} from '@angular/common';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatButtonModule} from '@angular/material/button';
 import {MatSidenavModule} from '@angular/material/sidenav';
@@ -11,8 +11,8 @@ import {map, shareReplay} from 'rxjs/operators';
 import {RouterLink, RouterLinkActive, Routes} from '@angular/router';
 import {appRoutes} from '../app.routes';
 import {LayoutService} from './layout.service';
-import {AuthGuard} from '../guards/auth.guards';
-import {AuthService} from '../login/services/auth.service';
+import {AuthGuard} from '../auth/guards/auth.guards';
+import {AuthService} from '../auth/login/services/auth.service';
 
 
 @Component({
@@ -29,8 +29,7 @@ import {AuthService} from '../login/services/auth.service';
     AsyncPipe,
     RouterLink,
     RouterLinkActive,
-    NgTemplateOutlet,
-    NgIf
+    NgTemplateOutlet
   ]
 })
 export class LayoutComponent implements OnInit {
@@ -42,7 +41,7 @@ export class LayoutComponent implements OnInit {
       shareReplay()
     );
 
-  excludedRoutes = ['login', '**', 'menu/edit/:id', 'comida/edit/:id', 'register'];
+  excludedRoutes = ['login', '**', 'menu/edit/:id', 'comida/edit/:id', 'register', 'menu-diario/edit/:id'];
   rootRoutes: Routes = [];
 
   title: string = '';

@@ -8,14 +8,13 @@ import {
   ValidatorFn,
   Validators
 } from '@angular/forms';
-import {Comida, ComidaDTO, TipoComida} from '../comida/comida.model';
-import {ComidaService} from '../comida/comida.service';
+import {Comida, ComidaDTO, TipoComida} from '../comida.model';
+import {ComidaService} from '../service/comida.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import {LayoutService} from '../layout/layout.service';
-import {NotificationService} from '../notification.service';
+import {LayoutService} from '../../layout/layout.service';
+import {NotificationService} from '../../notification.service';
 import {MatError, MatFormField, MatPrefix} from '@angular/material/form-field';
 import {MatCard, MatCardContent} from '@angular/material/card';
-import {MatIcon} from '@angular/material/icon';
 import {MatInput, MatLabel, MatHint} from '@angular/material/input';
 import {MatButton} from '@angular/material/button';
 import {MatOption} from '@angular/material/core';
@@ -39,7 +38,6 @@ type ComidaFormData = {
   imports: [
     MatError,
     MatCard,
-    MatIcon,
     MatCardContent,
     ReactiveFormsModule,
     MatFormField,

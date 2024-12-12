@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import {environment} from '../../environments/environment';
-import {Comida, ComidaDTO} from './comida.model';
+import {environment} from '../../../environments/environment';
+import {Comida, ComidaDTO} from '../comida.model';
 
 @Injectable({
   providedIn: 'root'
