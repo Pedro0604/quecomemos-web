@@ -30,8 +30,8 @@
   </mat-card-content>
   @if (showButtons) {
     <mat-card-actions class="mt-auto">
-      <button mat-button>MODIFICAR</button>
-      <button mat-button color="error">ELIMINAR</button>
+      <a mat-button [routerLink]="['/menu/edit/', menu.id]">MODIFICAR</a>
+      <button mat-button class="error" (click)="openDialogEliminar()">ELIMINAR</button>
     </mat-card-actions>
   }
 </mat-card>

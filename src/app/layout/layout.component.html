@@ -12,6 +12,7 @@
           #link="routerLinkActive"
           routerLinkActive
           [activated]="link.isActive"
+          [routerLinkActiveOptions]="{exact: true}"
         >
           {{ item.title }}
         </a>
@@ -38,19 +39,30 @@
                 mat-button
                 routerLink="login"
                 routerLinkActive
+                *ngIf="!isLoggedIn()"
               >
                 Iniciar sesión
               </a>
-            </span>
-            <span class="block md:hidden">
-              <a
-                mat-icon-button
-                routerLink="login"
-                routerLinkActive
+          </span>
+          <span class="hidden md:block">
+              <Button
+                mat-button
+                routerLink="logout"
+                *ngIf="isLoggedIn()"
+                (click)="logout()"
               >
-                <mat-icon aria-label="Login icon">login</mat-icon>
-              </a>
-            </span>
+                Cerrar sesión
+              </Button>
+          </span>
+          <span class="block md:hidden">
+            <a
+              mat-icon-button
+              routerLink="login"
+              routerLinkActive
+            >
+              <mat-icon aria-label="Login icon">login</mat-icon>
+            </a>
+          </span>
         </div>
         <div>
             <span class="hidden md:block">
@@ -77,9 +89,9 @@
     <div class="sidenav-scroll-wrapper">
       <div class="sidenav-content">
         @if (title) {
-          <div class="sticky top-0 z-10 pt-8 pb-2">
+          <div class="sticky top-0 z-10 pt-8 pb-2 mb-6">
             <div class="backdrop-glass-filter"></div>
-            <div class="relative z-10 mb-4">
+            <div class="relative z-10">
               <h1 class="text-4xl text-center mb-2">{{ title }}</h1>
               @if (extra) {
                 <ng-container *ngTemplateOutlet="extra"></ng-container>
@@ -87,7 +99,7 @@
             </div>
           </div>
         }
-        <div class="padded-content">
+        <div class="padded-content min-h-48">
           <ng-content></ng-content>
         </div>
       </div>
