@@ -54,7 +54,7 @@ type ComidaFormData = {
   ],
   templateUrl: './comida-form.component.html',
   standalone: true,
-  styles: `comida-form.component.css`
+  styleUrl: './comida-form.component.css'
 })
 export class ComidaFormComponent implements OnInit, AfterViewInit {
     comida: Comida | null = null;

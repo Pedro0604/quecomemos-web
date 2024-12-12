@@ -7,6 +7,7 @@ import {AuthGuard} from './guards/auth.guards';
 import {LayoutComponent} from './layout/layout.component';
 import {MenuFormComponent} from './menu-form/menu-form.component';
 import {ComidaFormComponent} from './comida-form/comida-form.component';
+import {ComidaListComponent} from './comida-list/comida-list.component';
 
 export const appRoutes: Routes = [
   {
@@ -40,6 +41,12 @@ export const appRoutes: Routes = [
     path: 'menu/edit/:id',
     component: MenuFormComponent,
     title: 'Editar un menú',
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'comidas',
+    component: ComidaListComponent,
+    title: 'Todas las comidas',
     canActivate: [AuthGuard]
   },
   {

@@ -45,7 +45,7 @@ export class LayoutComponent implements OnInit {
       shareReplay()
     );
 
-  excludedRoutes = ['login', '**', 'menu/edit/:id', 'logout'];
+  excludedRoutes = ['login', '**', 'menu/edit/:id', 'comida/edit/:id', 'logout'];
 
   rootRoutes = appRoutes.filter(r => r.path && !this.excludedRoutes.includes(r.path) )
 
