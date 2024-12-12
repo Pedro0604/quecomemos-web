@@ -7,7 +7,6 @@
     <mat-nav-list>
       @for (item of rootRoutes; track $index) {
         <a
-          *ngIf="item.title !== 'Registro de usuario'"
           mat-list-item
           [routerLink]="item.path"
           #link="routerLinkActive"
@@ -35,47 +34,56 @@
           }
         </div>
         <div>
+          @if (isLoggedIn()) {
             <span class="hidden md:block">
               <a
-                mat-button
-                routerLink="login"
-                routerLinkActive
-                *ngIf="!isLoggedIn()"
-              >
-                Iniciar sesión
-              </a>
-          </span>
-          <span class="hidden md:block">
-              <Button
                 mat-button
                 routerLink="logout"
-                *ngIf="isLoggedIn()"
-                (click)="logout()"
+                routerLinkActive
               >
                 Cerrar sesión
-              </Button>
-          </span>
-          <span class="block md:hidden">
-            <a
-              mat-icon-button
-              routerLink="login"
-              routerLinkActive
-            >
-              <mat-icon aria-label="Login icon">login</mat-icon>
-            </a>
-          </span>
-        </div>
-        <div>
-            <span class="hidden md:block">
-              <a
-                mat-button
-                routerLink="register"
-                routerLinkActive
-                *ngIf="!isLoggedIn()"
-              >
-                Registro
               </a>
             </span>
+            <span class="block md:hidden">
+              <a
+                mat-icon-button
+                routerLink="logout"
+                routerLinkActive
+              >
+                <mat-icon aria-label="Logout icon">logout</mat-icon>
+              </a>
+            </span>
+          } @else {
+            <div class="flex items-center">
+              <span class="hidden md:block">
+                <a
+                  mat-button
+                  routerLink="login"
+                  routerLinkActive
+                >
+                  Iniciar sesión
+                </a>
+              </span>
+              <span class="block md:hidden">
+                <a
+                  mat-icon-button
+                  routerLink="login"
+                  routerLinkActive
+                >
+                  <mat-icon aria-label="Login icon">login</mat-icon>
+                </a>
+              </span>
+              <span class="block">
+                <a
+                  mat-button
+                  routerLink="register"
+                  routerLinkActive
+                >
+                  Registrarse
+                </a>
+              </span>
+            </div>
+          }
         </div>
       </div>
     </mat-toolbar>

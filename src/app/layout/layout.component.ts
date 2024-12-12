@@ -46,7 +46,7 @@ export class LayoutComponent implements OnInit {
       shareReplay()
     );
 
-  excludedRoutes = ['login', '**', 'menu/edit/:id', 'comida/edit/:id', 'logout'];
+  excludedRoutes = ['login', '**', 'menu/edit/:id', 'comida/edit/:id', 'logout', 'register'];
   rootRoutes: Routes = [];
 
   title: string = '';
