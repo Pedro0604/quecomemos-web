@@ -13,9 +13,14 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <mat-form-field>
           <mat-label>Nombre de la comida</mat-label>
-          <input matInput type="text" formControlName="nombre" placeholder="Nombre"
-                 (blur)="updateErrorMessage('nombre')"
-                 required>
+          <input
+            matInput
+            type="text"
+            formControlName="nombre"
+            placeholder="Nombre"
+            (blur)="updateErrorMessage('nombre')"
+            required
+          >
           <mat-hint align="end">{{ form.get('nombre')?.value?.length || 0 }}/255</mat-hint>
           @if (errorMessages['nombre']) {
             <mat-error>{{ errorMessages['nombre'] }}</mat-error>
@@ -31,25 +36,19 @@
           }
         </mat-form-field>
       </div>
-      <mat-checkbox formControlName="vegetariana">¿Es vegetariana?</mat-checkbox>
-      @if (errorMessages['vegetariana']) {
-        <mat-error>{{ errorMessages['vegetariana'] }}</mat-error>
-      }
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <mat-form-field>
           <mat-label>Tipo de comida</mat-label>
           <mat-select formControlName="tipoComida" placeholder="Seleccione un tipo de comida"
                       (selectionChange)="updateErrorMessage('tipoComida')">
             @for (tipo of tiposDeComida; track tipo) {
-              <mat-option [value]="tipo">{{ tipo }}</mat-option>
+              <mat-option [value]="tipo">{{ tipo.replace("_", " ") }}</mat-option>
             }
           </mat-select>
           @if (errorMessages['tipoComida']) {
             <mat-error>{{ errorMessages['tipoComida'] }}</mat-error>
           }
         </mat-form-field>
-      </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <mat-form-field>
           <mat-label>Url Imagen</mat-label>
           <input
@@ -64,6 +63,10 @@
           }
         </mat-form-field>
       </div>
+      <mat-checkbox formControlName="vegetariana">¿Es vegetariana?</mat-checkbox>
+      @if (errorMessages['vegetariana']) {
+        <mat-error>{{ errorMessages['vegetariana'] }}</mat-error>
+      }
       <div class="ms-4">
         @if (error) {
           <mat-error>Por favor, intente nuevamente más tarde</mat-error>

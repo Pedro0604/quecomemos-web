@@ -130,6 +130,9 @@ export class ComidaFormComponent implements OnInit, AfterViewInit {
           this.form.get('tipoComida')?.setValue(this.comida.tipoComida);
           this.form.get('urlImagen')?.setValue(this.comida.urlImagen);
         });
+
+        this.form.get('nombre')?.disable();
+
         this.layoutService.setTitle('Modificar comida');
       } else {
         this.layoutService.setTitle('Crear comida');
