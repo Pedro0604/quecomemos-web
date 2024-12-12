@@ -12,6 +12,11 @@ import {Router, RouterLink, RouterLinkActive} from '@angular/router';
 import {appRoutes} from '../app.routes';
 import {LayoutService} from './layout.service';
 import {NotificationService} from '../notification.service';
+import { jwtDecode } from "C:/Users/frand/IdeaProjects/quecomemos-web/node_modules/jwt-decode/build/esm/index"
+
+interface JwtPayload {
+  exp: number; // Tiempo de expiración del token (en segundos desde la época UNIX)
+}
 
 @Component({
   selector: 'app-layout',
@@ -69,6 +74,23 @@ export class LayoutComponent implements OnInit {
   }
 
   isLoggedIn(): boolean {
-    return !!localStorage.getItem('authToken'); // Devuelve true si el token existe
+    const token = localStorage.getItem('authToken');
+
+    if (!token) {
+      return false;
+    }
+
+    try {
+      const decoded = jwtDecode<JwtPayload>(token);
+
+      if (decoded.exp * 1000 < Date.now()) {
+        return false;
+      }
+
+      return true;
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return false;
+    }
   }
 }
