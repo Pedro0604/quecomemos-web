@@ -28,10 +28,9 @@ export class AuthService {
     if (!this.userLoggedIn.getValue()) {
       return;
     }
-
     localStorage.removeItem('authToken');
 
-    this.notificationService.show('Sesión cerrada correctamente');
+    this.notificationService.show('Sesión cerrada');
 
     this.userLoggedIn.next(false);
     this.router.navigate(['/login']);
@@ -56,8 +55,8 @@ export class AuthService {
         return false;
       }
     } catch (error) {
-      console.error('Error decoding token:', error);
       this.logout();
+      console.error('Error decoding token:', error);
       return false;
     }
   }
