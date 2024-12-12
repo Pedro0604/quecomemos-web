@@ -1,10 +1,10 @@
 import {AfterViewInit, Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {MatIcon} from '@angular/material/icon';
-import {LayoutService} from '../layout/layout.service';
-import {MenuComponent} from '../menu/menu.component';
-import {Menu} from '../menu/menu.model';
-import {TipoComida} from '../comida/comida.model';
-import {MenuService} from '../menu/menu.service';
+import {LayoutService} from '../../layout/layout.service';
+import {MenuComponent} from '../component/menu.component';
+import {Menu} from '../menu.model';
+import {TipoComida} from '../../comida/comida.model';
+import {MenuService} from '../service/menu.service';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
 
 @Component({

@@ -1,7 +1,7 @@
 import {AfterViewInit, Component} from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms'; // Importar herramientas de formularios reactivos
 import { CommonModule } from '@angular/common';
-import {LayoutService} from "../layout/layout.service";
+import {LayoutService} from "../../layout/layout.service";
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
@@ -9,7 +9,7 @@ import { MatIconModule } from '@angular/material/icon'; // Opcional, para ícono
 import { MatCardModule } from '@angular/material/card';
 import {Router} from '@angular/router';
 import {HttpClient} from '@angular/common/http';
-import {NotificationService} from '../notification.service';
+import {NotificationService} from '../../notification.service';
 
 
 @Component({

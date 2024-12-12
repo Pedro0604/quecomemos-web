@@ -3,9 +3,9 @@ import {MatCardModule} from '@angular/material/card';
 import {MatIcon} from '@angular/material/icon';
 import {MatDivider} from '@angular/material/divider';
 import {MatAnchor, MatButton} from '@angular/material/button';
-import {Menu} from './menu.model';
+import {Menu} from '../menu.model';
 import {RouterLink} from '@angular/router';
-import {DialogEliminarMenuComponent} from '../dialog-eliminar-menu/dialog-eliminar-menu.component';
+import {DialogEliminarMenuComponent} from '../dialog-eliminar/dialog-eliminar-menu.component';
 import {MatDialog} from '@angular/material/dialog';
 
 @Component({

@@ -1,13 +1,13 @@
 import {Routes} from '@angular/router';
-import {LoginComponent} from './login/login.component';
-import {RegisterComponent} from './register/register.component';
+import {LoginComponent} from './auth/login/login.component';
+import {RegisterComponent} from './auth/register/register.component';
 import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
-import {MenuListComponent} from './menu-list/menu-list.component';
+import {MenuListComponent} from './menu/list/menu-list.component';
 import {HomeComponent} from './home/home.component';
-import {AuthGuard} from './guards/auth.guards';
-import {MenuFormComponent} from './menu-form/menu-form.component';
-import {ComidaFormComponent} from './comida-form/comida-form.component';
-import {ComidaListComponent} from './comida-list/comida-list.component';
+import {AuthGuard} from './auth/guards/auth.guards';
+import {MenuFormComponent} from './menu/form/menu-form.component';
+import {ComidaFormComponent} from './comida/form/comida-form.component';
+import {ComidaListComponent} from './comida/list/comida-list.component';
 
 export const appRoutes: Routes = [
   {
@@ -19,6 +19,23 @@ export const appRoutes: Routes = [
     path: 'home',
     component: HomeComponent,
     title: 'Home'
+  },
+  {
+    path: 'menu-diario',
+    component: MenuListComponent,
+    title: 'Todos los menús diarios'
+  },
+  {
+    path: 'menu-diario/create',
+    component: MenuFormComponent,
+    title: 'Crear un menú diario',
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'menu-diario/edit/:id',
+    component: MenuFormComponent,
+    title: 'Editar un menú diario',
+    canActivate: [AuthGuard]
   },
   {
     path: 'menu',

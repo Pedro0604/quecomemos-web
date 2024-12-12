@@ -1,10 +1,10 @@
 import {AfterViewInit, Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
-import {Comida} from '../comida/comida.model';
-import {LayoutService} from '../layout/layout.service';
-import {ComidaService} from '../comida/comida.service';
+import {Comida} from '../comida.model';
+import {LayoutService} from '../../layout/layout.service';
+import {ComidaService} from '../service/comida.service';
 import {MatIcon} from '@angular/material/icon';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
-import {ComidaComponent} from '../comida/comida.component';
+import {ComidaComponent} from '../component/comida.component';
 
 @Component({
   selector: 'app-comida-list',

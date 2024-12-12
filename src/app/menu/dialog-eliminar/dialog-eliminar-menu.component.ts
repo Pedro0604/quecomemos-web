@@ -5,10 +5,10 @@ import {
   MatDialogContent,
   MatDialogRef, MatDialogTitle
 } from '@angular/material/dialog';
-import {Menu} from '../menu/menu.model';
+import {Menu} from '../menu.model';
 import {MatButton} from '@angular/material/button';
-import {MenuService} from '../menu/menu.service';
-import {NotificationService} from '../notification.service';
+import {MenuService} from '../service/menu.service';
+import {NotificationService} from '../../notification.service';
 
 export type DialogData = {
   menu: Menu;
