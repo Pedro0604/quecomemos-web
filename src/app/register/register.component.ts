@@ -34,10 +34,10 @@ export class RegisterComponent implements AfterViewInit {
       dni: ['', [Validators.required, Validators.pattern('^[0-9]{8}$')]],
       nombre: ['', Validators.required],
       apellido: ['', Validators.required],
-      foto: [null],  // Foto opcional
+      urlImagen: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['', Validators.required],
+      clave: ['', [Validators.required, Validators.minLength(6)]],
+      confirmClave: ['', Validators.required],
     }, {
       // Validación personalizada para comprobar que las contraseñas coincidan
       validators: this.passwordMatchValidator
@@ -46,9 +46,9 @@ export class RegisterComponent implements AfterViewInit {
 
   // Método de validación personalizada para comparar las contraseñas
   passwordMatchValidator(group: FormGroup): { [key: string]: boolean } | null {
-    const password = group.get('password')?.value;
-    const confirmPassword = group.get('confirmPassword')?.value;
-    return password && confirmPassword && password !== confirmPassword
+    const clave = group.get('clave')?.value;
+    const confirmClave = group.get('confirmClave')?.value;
+    return clave && confirmClave && clave !== confirmClave
       ? { passwordsDoNotMatch: true }
       : null;
   }
@@ -62,7 +62,7 @@ export class RegisterComponent implements AfterViewInit {
         .subscribe({
           next: (response) => {
             this.notificationService.show('Usuario registrado exitosamente');
-            this.router.navigate(['/menu']);
+            this.router.navigate(['/login']);
           },
           error: (error) => {
             if (error.status === 400) {
