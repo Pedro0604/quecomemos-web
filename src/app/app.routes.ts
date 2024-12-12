@@ -1,5 +1,6 @@
 import {Routes} from '@angular/router';
 import {LoginComponent} from './login/login.component';
+import {RegisterComponent} from './register/register.component';
 import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 import {MenuListComponent} from './menu-list/menu-list.component';
 import {HomeComponent} from './home/home.component';
@@ -60,6 +61,11 @@ export const appRoutes: Routes = [
     component: ComidaFormComponent,
     title: 'Editar una comida',
     canActivate: [AuthGuard]
+  },
+  {
+    path: 'register',
+    component: RegisterComponent,
+    title: 'Registro de usuario'
   },
   {
     path: '**',

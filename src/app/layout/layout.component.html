@@ -7,6 +7,7 @@
     <mat-nav-list>
       @for (item of rootRoutes; track $index) {
         <a
+          *ngIf="item.title !== 'Registro de usuario'"
           mat-list-item
           [routerLink]="item.path"
           #link="routerLinkActive"
@@ -63,6 +64,18 @@
               <mat-icon aria-label="Login icon">login</mat-icon>
             </a>
           </span>
+        </div>
+        <div>
+            <span class="hidden md:block">
+              <a
+                mat-button
+                routerLink="register"
+                routerLinkActive
+                *ngIf="!isLoggedIn()"
+              >
+                Registro
+              </a>
+            </span>
         </div>
       </div>
     </mat-toolbar>
