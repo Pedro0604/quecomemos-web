@@ -34,24 +34,22 @@
           }
         </div>
         <div>
-          @if (isLoggedIn()) {
+          @if (authService.isLoggedIn()) {
             <span class="hidden md:block">
-              <a
+              <button
                 mat-button
-                routerLink="logout"
-                routerLinkActive
+                (click)="authService.logout()"
               >
                 Cerrar sesión
-              </a>
+              </button>
             </span>
             <span class="block md:hidden">
-              <a
+              <button
                 mat-icon-button
-                routerLink="logout"
-                routerLinkActive
+                (click)="authService.logout()"
               >
                 <mat-icon aria-label="Logout icon">logout</mat-icon>
-              </a>
+              </button>
             </span>
           } @else {
             <div class="flex items-center">

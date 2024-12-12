@@ -17,11 +17,6 @@ export const appRoutes: Routes = [
     title: 'Inicio de sesión'
   },
   {
-    path: 'logout',
-    component: LayoutComponent,
-    redirectTo: 'login'
-  },
-  {
     path: 'home',
     component: HomeComponent,
     title: 'Home'

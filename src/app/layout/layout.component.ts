@@ -14,6 +14,7 @@ import {LayoutService} from './layout.service';
 import {NotificationService} from '../notification.service';
 import {jwtDecode} from 'jwt-decode';
 import {AuthGuard} from '../guards/auth.guards';
+import {AuthService} from '../login/services/auth.service';
 
 interface JwtPayload {
   exp: number; // Tiempo de expiración del token (en segundos desde la época UNIX)
@@ -46,24 +47,16 @@ export class LayoutComponent implements OnInit {
       shareReplay()
     );
 
-  excludedRoutes = ['login', '**', 'menu/edit/:id', 'comida/edit/:id', 'logout', 'register'];
+  excludedRoutes = ['login', '**', 'menu/edit/:id', 'comida/edit/:id', 'register'];
   rootRoutes: Routes = [];
 
   title: string = '';
   extra: TemplateRef<any> | null = null;
 
-  constructor(private layoutService: LayoutService, private router: Router, private notificationService: NotificationService, private injector: Injector) {
+  constructor(private layoutService: LayoutService, private injector: Injector, protected authService: AuthService) {
   }
 
-  ngOnInit(): void {
-    this.layoutService.currentTitle$.subscribe((title) => {
-      this.title = title;
-    });
-
-    this.layoutService.currentExtra$.subscribe((extra) => {
-      this.extra = extra;
-    });
-
+  filtrarRutas() {
     this.rootRoutes = appRoutes.filter(route => {
       if (!route.path) {
         return false;
@@ -94,31 +87,19 @@ export class LayoutComponent implements OnInit {
     });
   }
 
-  logout() {
-    // Eliminar el token de localStorage
-    localStorage.removeItem('authToken');
+  ngOnInit(): void {
+    this.layoutService.currentTitle$.subscribe((title) => {
+      this.title = title;
+    });
 
-    // Redirigir al usuario a la página de inicio de sesión
-    this.router.navigate(['/login']);
-    this.notificationService.show('Sesión cerrada correctamente');
-  }
+    this.layoutService.currentExtra$.subscribe((extra) => {
+      this.extra = extra;
+    });
 
-  isLoggedIn(): boolean {
-    const token = localStorage.getItem('authToken');
+    this.authService.isLoggedIn$.subscribe(() => {
+      this.filtrarRutas();
+    });
 
-    if (!token) {
-      return false;
-    }
-
-    try {
-      const decoded = jwtDecode<JwtPayload>(token);
-
-      return decoded.exp * 1000 >= Date.now();
-
-
-    } catch (error) {
-      console.error('Error decoding token:', error);
-      return false;
-    }
+    this.filtrarRutas();
   }
 }

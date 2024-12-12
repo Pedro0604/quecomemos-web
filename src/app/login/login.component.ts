@@ -9,6 +9,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {NotificationService} from '../notification.service';
 import {MatCard, MatCardContent, MatCardHeader} from '@angular/material/card';
+import {AuthService} from './services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -32,7 +33,7 @@ export class LoginComponent {
   hide = signal(true);
   loginError = false;
 
-  constructor(private fb: FormBuilder, private http: HttpClient, private router: Router, private notificationService: NotificationService) {
+  constructor(private fb: FormBuilder, private http: HttpClient, private router: Router, private notificationService: NotificationService, private authService: AuthService) {
     this.loginForm = this.fb.group({
       dni: ['', [Validators.required, Validators.minLength(7), Validators.maxLength(8)]],
       clave: ['', [Validators.required, Validators.minLength(6)]],
@@ -57,7 +58,7 @@ export class LoginComponent {
               const token = response.headers.get('authorization');
               if (token) {
                 encontrado = true;
-                localStorage.setItem('authToken', token);
+                this.authService.login(token);
                 this.router.navigate(['/home']);
               }
             },
@@ -78,7 +79,7 @@ export class LoginComponent {
                 const token = response.headers.get('Authorization');
                 if (token) {
                   encontrado = true;
-                  localStorage.setItem('authToken', token);
+                  this.authService.login(token);
                   this.router.navigate(['/home']);
                 }
               },
@@ -100,13 +101,13 @@ export class LoginComponent {
               const token = response.headers.get('Authorization');
               if (token) {
                 encontrado = true;
-                localStorage.setItem('authToken', token);
+                this.authService.login(token);
                 this.router.navigate(['/home']);
               }
             },
             error: (error) => {
-              console.error('Error al administrador cliente', error);
-              this.notificationService.show('Error al administrador el cliente');
+              console.error('Error al autenticar administrador', error);
+              this.notificationService.show('Error al autenticar el administrador');
             },
             complete: () => {
               this.notificationService.show('Administrador autenticado correctamente');
