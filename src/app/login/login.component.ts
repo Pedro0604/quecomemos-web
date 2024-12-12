@@ -35,7 +35,7 @@ export class LoginComponent {
   constructor(private fb: FormBuilder, private http: HttpClient, private router: Router, private notificationService: NotificationService) {
     this.loginForm = this.fb.group({
       dni: ['', [Validators.required, Validators.minLength(7), Validators.maxLength(8)]],
-      clave: ['', [Validators.required, Validators.minLength(4)]],
+      clave: ['', [Validators.required, Validators.minLength(6)]],
     });
   }
 
