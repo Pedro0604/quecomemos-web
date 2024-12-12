@@ -31,32 +31,21 @@
           }
         </mat-form-field>
       </div>
-      <mat-checkbox formControlName="vegetariano">¿Es vegetariana?</mat-checkbox>
-      @if (errorMessages['vegetariano']) {
-        <mat-error>{{ errorMessages['vegetariano'] }}</mat-error>
+      <mat-checkbox formControlName="vegetariana">¿Es vegetariana?</mat-checkbox>
+      @if (errorMessages['vegetariana']) {
+        <mat-error>{{ errorMessages['vegetariana'] }}</mat-error>
       }
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <mat-form-field>
           <mat-label>Tipo de comida</mat-label>
-          <input type="text"
-                 [placeholder]="('Seleccione un tipo de comida')"
-                 matInput
-                 (blur)="updateErrorMessage(tiposDeComida.toString())"
-          >
+          <mat-select formControlName="tipoComida" placeholder="Seleccione un tipo de comida"
+                      (selectionChange)="updateErrorMessage('tipoComida')">
             @for (tipo of tiposDeComida; track tipo) {
-              <mat-option [value]="tipo">
-                                  <span class="flex items-center gap-4">
-                                    <span class="flex items-center">
-                                      <span>{{ tipo.toString() }}</span>
-                                    </span>
-                                  </span>
-              </mat-option>
+              <mat-option [value]="tipo">{{ tipo }}</mat-option>
             }
-          @if (errorMessages[tiposDeComida.toString()]) {
-            <mat-error>{{ errorMessages[tiposDeComida.toString()] }}</mat-error>
-          }
-          @if (hints[tiposDeComida.toString()]) {
-            <mat-hint>{{ hints[tiposDeComida.toString()] }}</mat-hint>
+          </mat-select>
+          @if (errorMessages['tipoComida']) {
+            <mat-error>{{ errorMessages['tipoComida'] }}</mat-error>
           }
         </mat-form-field>
       </div>

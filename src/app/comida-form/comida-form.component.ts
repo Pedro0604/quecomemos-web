@@ -13,7 +13,6 @@ import {ComidaService} from '../comida/comida.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {LayoutService} from '../layout/layout.service';
 import {NotificationService} from '../notification.service';
-import {data} from 'autoprefixer';
 import {MatError, MatFormField, MatPrefix} from '@angular/material/form-field';
 import {MatCard, MatCardContent} from '@angular/material/card';
 import {MatIcon} from '@angular/material/icon';
@@ -21,6 +20,7 @@ import {MatInput, MatLabel, MatHint} from '@angular/material/input';
 import {MatButton} from '@angular/material/button';
 import {MatOption} from '@angular/material/core';
 import {MatCheckbox} from '@angular/material/checkbox';
+import {MatSelect} from '@angular/material/select';
 
 type PossibleErrorFunctions = { (control: AbstractControl): string; }
 
@@ -49,7 +49,8 @@ type ComidaFormData = {
     MatOption,
     MatCheckbox,
     MatLabel,
-    MatHint
+    MatHint,
+    MatSelect
   ],
   templateUrl: './comida-form.component.html',
   standalone: true,
@@ -72,7 +73,6 @@ export class ComidaFormComponent implements OnInit, AfterViewInit {
 
     possibleErrors: PossibleError[] = [
       {name: 'required', errorFunction: () => 'El campo es obligatorio'},
-      {name: 'email', errorFunction: () => 'El email no es válido'},
       {
         name: 'minlength',
         errorFunction: (control: AbstractControl) => `La longitud mínima es: ${control.errors?.['minlength'].requiredLength} caracteres`
@@ -94,7 +94,6 @@ export class ComidaFormComponent implements OnInit, AfterViewInit {
         name: 'max',
         errorFunction: (control: AbstractControl) => `El valor máximo es: ${control.errors?.['max'].max}`
       },
-      {name: 'comidaInvalida', errorFunction: () => `La comida ingresada no es válida`},
     ]
 
     constructor(
@@ -109,7 +108,7 @@ export class ComidaFormComponent implements OnInit, AfterViewInit {
         precio: new FormControl('', [Validators.required, Validators.min(0), Validators.max(10000)]),
         vegetariana: new FormControl(false),
         tipoComida: new FormControl('', [Validators.required]),
-        urlImagen: new FormControl('', [Validators.required])
+        urlImagen: new FormControl('', [])
       });
     }
 
