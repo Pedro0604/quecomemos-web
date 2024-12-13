@@ -31,10 +31,10 @@ export class RegisterComponent implements AfterViewInit {
   constructor(private layoutService: LayoutService, private fb: FormBuilder, private http: HttpClient, private router: Router, private notificationService: NotificationService) {
 
     this.registerForm = this.fb.group({
-      dni: ['', [Validators.required, Validators.minLength(7), Validators.maxLength(8)]],
-      nombre: ['', Validators.required],
-      apellido: ['', Validators.required],
-      urlImagen: ['', Validators.required],
+      dni: ['', [Validators.required, Validators.minLength(7), Validators.maxLength(8), Validators.pattern(/^\d+$/)]],
+      nombre: ['', [Validators.required, Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)]],
+      apellido: ['', [Validators.required, Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)]],
+      urlImagen: ['', [Validators.required, Validators.pattern(/^(https?:\/\/[^\s$.?#].[^\s]*)$/)]],
       email: ['', [Validators.required, Validators.email]],
       clave: ['', [Validators.required, Validators.minLength(6)]],
       confirmClave: ['', Validators.required],
@@ -46,11 +46,14 @@ export class RegisterComponent implements AfterViewInit {
 
   // Método de validación personalizada para comparar las contraseñas
   passwordMatchValidator(group: FormGroup): { [key: string]: boolean } | null {
-    const clave = group.get('clave')?.value;
-    const confirmClave = group.get('confirmClave')?.value;
-    return clave && confirmClave && clave !== confirmClave
-      ? { passwordsDoNotMatch: true }
-      : null;
+    const password = group.get('clave')?.value;
+    const confirmPassword = group.get('confirmClave')?.value;
+
+    if (password && confirmPassword && password !== confirmPassword) {
+      group.get('confirmClave')?.setErrors({ passwordsDoNotMatch: true });
+      return {passwordsDoNotMatch: true};
+    }
+    return null;
   }
 
   // Método para manejar el envío del formulario
@@ -58,7 +61,7 @@ export class RegisterComponent implements AfterViewInit {
     if (this.registerForm.valid) {
       const datosRegistro = this.registerForm.value;
       this.http
-        .post('http://localhost:8080/clientes', datosRegistro, { observe: 'response' })
+        .post('http://localhost:8080/clientes',  datosRegistro, { observe: 'response' })
         .subscribe({
           next: () => {
             this.notificationService.show('Usuario registrado exitosamente');
@@ -76,6 +79,7 @@ export class RegisterComponent implements AfterViewInit {
           },
         });
     } else {
+      this.registerForm.markAllAsTouched();
       this.notificationService.show('El formulario contiene errores. Por favor, revisa los campos.');
     }
   }
