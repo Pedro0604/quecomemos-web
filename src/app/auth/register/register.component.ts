@@ -1,11 +1,11 @@
 import {AfterViewInit, Component} from '@angular/core';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms'; // Importar herramientas de formularios reactivos
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import {LayoutService} from "../../layout/layout.service";
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon'; // Opcional, para íconos
+import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import {Router} from '@angular/router';
 import {HttpClient} from '@angular/common/http';
@@ -44,7 +44,6 @@ export class RegisterComponent implements AfterViewInit {
     });
   }
 
-  // Método de validación personalizada para comparar las contraseñas
   passwordMatchValidator(group: FormGroup): { [key: string]: boolean } | null {
     const password = group.get('clave')?.value;
     const confirmPassword = group.get('confirmClave')?.value;
@@ -56,7 +55,6 @@ export class RegisterComponent implements AfterViewInit {
     return null;
   }
 
-  // Método para manejar el envío del formulario
   register() {
     if (this.registerForm.valid) {
       const datosRegistro = this.registerForm.value;
@@ -70,7 +68,7 @@ export class RegisterComponent implements AfterViewInit {
           error: (error) => {
             if (error.status === 400) {
               const mensaje = error.error?.message || 'El usuario ya existe.';
-              this.notificationService.show(mensaje); // Muestra el mensaje de error
+              this.notificationService.show(mensaje);
             } else {
               this.notificationService.show('Error al registrar el usuario. Por favor, intente más tarde.');
             }
