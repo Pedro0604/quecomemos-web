@@ -1,11 +1,15 @@
 <mat-card class="w-full h-full" appearance="outlined">
-  <mat-card-header class="flex justify-between">
-    <mat-card-title>{{ traduccionDiasSemana(menuDiario.dia) }}</mat-card-title>
-  </mat-card-header>
+  @if (showDia) {
+    <mat-card-header class="flex justify-between">
+      <mat-card-title>{{ traduccionDiasSemana(menuDiario.dia) }}</mat-card-title>
+    </mat-card-header>
+  }
   <mat-card-content class="my-4">
     <div class="grid grid-cols-2">
-      <app-menu [menu]="menuDiario.menuVegetariano" [showButtons]="false" appearance="raised" straightRightBorder></app-menu>
-      <app-menu [menu]="menuDiario.menuNoVegetariano" [showButtons]="false" appearance="raised" straightLeftBorder></app-menu>
+      <app-menu [menu]="menuDiario.menuVegetariano" [showButtons]="false" appearance="raised"
+                straightRightBorder></app-menu>
+      <app-menu [menu]="menuDiario.menuNoVegetariano" [showButtons]="false" appearance="raised"
+                straightLeftBorder></app-menu>
     </div>
   </mat-card-content>
   @if (showButtons) {

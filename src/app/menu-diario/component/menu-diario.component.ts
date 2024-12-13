@@ -34,6 +34,7 @@ export class MenuDiarioComponent {
   dialog = inject(MatDialog);
   @Input({required: true}) menuDiario!: MenuDiario;
   @Input() showButtons: boolean = true;
+  @Input() showDia: boolean = true;
   @Output() onDelete = new EventEmitter<number>();
 
   constructor() {

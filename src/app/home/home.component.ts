@@ -1,27 +1,31 @@
-import {Component, TemplateRef, ViewChild} from '@angular/core';
-import {MatAnchor} from "@angular/material/button";
+import {Component, TemplateRef, viewChild, ViewChild} from '@angular/core';
+import {MatAnchor, MatButton} from "@angular/material/button";
 import {MatIcon} from "@angular/material/icon";
 import {MatProgressSpinner} from "@angular/material/progress-spinner";
 import {MenuDiarioComponent} from "../menu-diario/component/menu-diario.component";
 import {RouterLink} from "@angular/router";
-import {MenuDiario} from '../menu-diario/menu-diario.model';
+import {MenuDiario, traduccionDiasSemana} from '../menu-diario/menu-diario.model';
 import {LayoutService} from '../layout/layout.service';
 import {MenuDiarioService} from '../menu-diario/service/menu-diario.service';
+import {MatAccordion, MatExpansionModule} from '@angular/material/expansion';
 
 @Component({
   selector: 'app-home',
-    imports: [
-        MatAnchor,
-        MatIcon,
-        MatProgressSpinner,
-        MenuDiarioComponent,
-        RouterLink
-    ],
+  imports: [
+    MatAnchor,
+    MatIcon,
+    MatProgressSpinner,
+    MenuDiarioComponent,
+    RouterLink,
+    MatButton,
+    MatExpansionModule
+  ],
   templateUrl: './home.component.html',
   standalone: true,
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
+  accordion = viewChild.required(MatAccordion);
   menusDiarios: MenuDiario[] = [];
 
   error = false;
@@ -31,7 +35,7 @@ export class HomeComponent {
   }
 
   ngOnInit(): void {
-    this.menuDiarioService.getMenusDiariosSemanal().subscribe({
+    this.menuDiarioService.getMenusDiarios().subscribe({
       next: (data) => {
         this.menusDiarios = data ?? [];
       },
@@ -51,4 +55,6 @@ export class HomeComponent {
     this.layoutService.setTitle('Menú semanal');
     this.layoutService.setExtra(this.extraTemplate);
   }
+
+  protected readonly traduccionDiasSemana = traduccionDiasSemana;
 }

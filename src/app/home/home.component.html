@@ -23,8 +23,19 @@
   }
 } @else {
   <div class="flex flex-col xl:mx-20 gap-4 xl:gap-8">
-    @for (menuDiario of menusDiarios; track menuDiario) {
-      <app-menu-diario [menuDiario]="menuDiario" [showButtons]="false"></app-menu-diario>
-    }
+    <div class="example-action-buttons">
+      <button mat-button (click)="accordion().openAll()">Mostrar todos</button>
+      <button mat-button (click)="accordion().closeAll()">Ocultar todos</button>
+    </div>
+    <mat-accordion multi>
+      @for (menuDiario of menusDiarios; track menuDiario) {
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>Menú del {{ traduccionDiasSemana(menuDiario.dia) }}</mat-panel-title>
+          </mat-expansion-panel-header>
+          <app-menu-diario [menuDiario]="menuDiario" [showButtons]="false" [showDia]="false"></app-menu-diario>
+        </mat-expansion-panel>
+      }
+    </mat-accordion>
   </div>
 }
