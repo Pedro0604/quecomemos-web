@@ -3,7 +3,7 @@
                [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
                [mode]="(isHandset$ | async) ? 'over' : 'side'"
                [opened]="(isHandset$ | async) === false">
-    <mat-toolbar>¿Qué comemos?</mat-toolbar>
+    <mat-toolbar><a routerLink="/carta">¿Qué Comemos?</a></mat-toolbar>
     <mat-nav-list>
       @for (item of rootRoutes; track $index) {
         <a
