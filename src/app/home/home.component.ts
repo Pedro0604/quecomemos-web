@@ -35,7 +35,7 @@ export class HomeComponent {
   }
 
   ngOnInit(): void {
-    this.menuDiarioService.getMenusDiarios().subscribe({
+    this.menuDiarioService.getMenusDiariosSemanal().subscribe({
       next: (data) => {
         this.menusDiarios = data ?? [];
       },

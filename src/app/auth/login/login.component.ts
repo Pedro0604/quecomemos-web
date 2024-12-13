@@ -59,7 +59,7 @@ export class LoginComponent {
               if (token) {
                 encontrado = true;
                 this.authService.login(token);
-                this.router.navigate(['/home']);
+                this.router.navigate(['/carta']);
               }
             },
             error: (error) => {
