@@ -18,9 +18,9 @@ export const appRoutes: Routes = [
     title: 'Inicio de sesión'
   },
   {
-    path: 'home',
+    path: 'carta',
     component: HomeComponent,
-    title: 'Home'
+    title: 'Carta semanal'
   },
   {
     path: 'menu-diario',
