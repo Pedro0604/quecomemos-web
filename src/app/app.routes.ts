@@ -61,7 +61,7 @@ export const appRoutes: Routes = [
   {
     path: 'comidas',
     component: ComidaListComponent,
-    title: 'Todas las comidas',
+    title: 'Comidas',
     canActivate: [AuthGuard]
   },
   {

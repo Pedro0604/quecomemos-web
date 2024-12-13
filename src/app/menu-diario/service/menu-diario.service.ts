@@ -33,4 +33,8 @@ export class MenuDiarioService {
   deleteMenuDiario(id: number): Observable<void> {
     return this.http.delete<void>(this.apiUrl + "/" + id);
   }
+
+  getMenusDiariosSemanal(): Observable<MenuDiario[]> {
+    return this.http.get<MenuDiario[]>(this.apiUrl + "/semanal");
+  }
 }

@@ -1,1 +1,25 @@
-<p>home works!</p>
+<ng-template #extra>
+      <span class="flex items-center justify-end mr-6">
+        <mat-icon class="text-green-600">eco</mat-icon> = Vegetariano
+      </span>
+</ng-template>
+
+@if (error || loading || menusDiarios.length === 0) {
+  <div class="flex justify-center items-center mt-20 text-2xl">
+    @if (error) {
+      <mat-icon class="error">error</mat-icon>
+      <span class="ml-2">Error al cargar el menú semanal</span>
+    } @else if (loading) {
+      <mat-spinner></mat-spinner>
+    } @else if (menusDiarios.length === 0) {
+      <mat-icon class="error">warning</mat-icon>
+      <span class="ml-2">No hay menú semanal</span>
+    }
+  </div>
+} @else {
+  <div class="flex flex-col xl:mx-20 gap-4 xl:gap-8">
+    @for (menuDiario of menusDiarios; track menuDiario) {
+      <app-menu-diario [menuDiario]="menuDiario" [showButtons]="false"></app-menu-diario>
+    }
+  </div>
+}
