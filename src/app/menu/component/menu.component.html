@@ -1,4 +1,4 @@
-<mat-card class="w-full h-full" appearance="outlined">
+<mat-card class="w-full h-full {{straightLeftBorder ? '!rounded-l-none' : ''}} {{straightRightBorder ? '!rounded-r-none' : ''}}" [appearance]="appearance">
   <mat-card-header class="flex justify-between">
     <mat-card-title>{{ menu.nombre }}</mat-card-title>
     <mat-card-subtitle>${{ menu.precio }}</mat-card-subtitle>

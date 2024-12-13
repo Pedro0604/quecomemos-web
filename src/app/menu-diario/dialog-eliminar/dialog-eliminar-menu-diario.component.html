@@ -1,1 +1,11 @@
-<p>dialog-eliminar-menu-diario works!</p>
+<div class="error">
+  <h2 mat-dialog-title>Eliminación del menú diario entre '{{ this.data.menuDiario.menuVegetariano.nombre }}' y ''{{ this.data.menuDiario.menuNoVegetariano.nombre }}' para el día {{ traduccionDiasSemana(this.data.menuDiario.dia) }}</h2>
+  <mat-dialog-content>
+    <p>Estás seguro de eliminar el menú diario</p>
+    <p>Esta acción es irreversible!</p>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button (click)="onNoClick()" cdkFocusInitial>Cancelar</button>
+    <button mat-button (click)="deleteMenuDiario()">Eliminar</button>
+  </mat-dialog-actions>
+</div>

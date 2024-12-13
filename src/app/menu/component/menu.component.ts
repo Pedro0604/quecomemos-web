@@ -1,5 +1,5 @@
-import {Component, EventEmitter, inject, Input, Output} from '@angular/core';
-import {MatCardModule} from '@angular/material/card';
+import {booleanAttribute, Component, EventEmitter, inject, Input, Output} from '@angular/core';
+import {MatCardAppearance, MatCardModule} from '@angular/material/card';
 import {MatIcon} from '@angular/material/icon';
 import {MatDivider} from '@angular/material/divider';
 import {MatAnchor, MatButton} from '@angular/material/button';
@@ -20,6 +20,9 @@ export class MenuComponent {
   dialog = inject(MatDialog);
   @Input({required: true}) menu!: Menu;
   @Input() showButtons: boolean = true;
+  @Input() appearance: MatCardAppearance = "outlined";
+  @Input({transform: booleanAttribute}) straightLeftBorder: boolean = false;
+  @Input({transform: booleanAttribute}) straightRightBorder: boolean = false;
   @Output() onDelete = new EventEmitter<number>();
 
   constructor() {

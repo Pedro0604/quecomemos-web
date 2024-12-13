@@ -25,7 +25,8 @@ export const appRoutes: Routes = [
   {
     path: 'menu-diario',
     component: MenuDiarioListComponent,
-    title: 'Todos los menús diarios'
+    title: 'Menús diarios',
+    canActivate: [AuthGuard]
   },
   {
     path: 'menu-diario/create',
@@ -42,7 +43,7 @@ export const appRoutes: Routes = [
   {
     path: 'menu',
     component: MenuListComponent,
-    title: 'Todos los menús',
+    title: 'Menús',
     canActivate: [AuthGuard]
   },
   {

@@ -17,6 +17,11 @@
       <span class="ml-2">No hay menús disponibles</span>
     }
   </div>
+  @if (menus.length === 0) {
+    <span class="flex justify-center mt-4">
+      <a mat-button routerLink="menu-diario/create">Creá uno ahora</a>
+    </span>
+  }
 } @else {
   <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
     @for (menu of menus; track menu) {

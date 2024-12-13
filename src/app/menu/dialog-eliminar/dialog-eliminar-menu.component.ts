@@ -56,7 +56,7 @@ export class DialogEliminarMenuComponent {
         this.dialogRef.close(true);
       },
       complete: () => {
-        this.isDeleting = false; // Resetea la bandera al terminar.
+        this.isDeleting = false;
       },
     });
   }

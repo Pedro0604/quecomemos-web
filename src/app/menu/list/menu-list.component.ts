@@ -6,13 +6,17 @@ import {Menu} from '../menu.model';
 import {TipoComida} from '../../comida/comida.model';
 import {MenuService} from '../service/menu.service';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
+import {MatAnchor} from '@angular/material/button';
+import {RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-menu-list',
   imports: [
     MatIcon,
     MenuComponent,
-    MatProgressSpinner
+    MatProgressSpinner,
+    MatAnchor,
+    RouterLink
   ],
   templateUrl: './menu-list.component.html',
   standalone: true,
@@ -33,7 +37,7 @@ export class MenuListComponent implements AfterViewInit, OnInit {
   ngOnInit(): void {
     this.menuService.getMenus().subscribe({
       next: (data) => {
-        this.menus = data;
+        this.menus = data ?? [];
         this.menus.forEach(menu => {
           menu.comidas.sort((a, b) => {
             return this.ordenComidas.indexOf(a.tipoComida) - this.ordenComidas.indexOf(b.tipoComida);
@@ -53,7 +57,7 @@ export class MenuListComponent implements AfterViewInit, OnInit {
   @ViewChild('extra') extraTemplate!: TemplateRef<any> | null;
 
   ngAfterViewInit(): void {
-    this.layoutService.setTitle('Todos los menús');
+    this.layoutService.setTitle('Menús');
     this.layoutService.setExtra(this.extraTemplate);
   }
 
