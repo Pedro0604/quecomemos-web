@@ -26,8 +26,7 @@ import {inArrayValidator, possibleErrors} from '../../form-errors';
 import {MatAnchor, MatButton} from '@angular/material/button';
 import {MatAutocomplete, MatAutocompleteTrigger, MatOption} from '@angular/material/autocomplete';
 import {MatCard, MatCardContent} from '@angular/material/card';
-import {MatCheckbox} from '@angular/material/checkbox';
-import {MatError, MatFormField, MatHint, MatLabel, MatPrefix} from '@angular/material/form-field';
+import {MatError, MatFormField, MatHint, MatLabel} from '@angular/material/form-field';
 import {MatIcon} from '@angular/material/icon';
 import {MatInput} from '@angular/material/input';
 import {MatSelect} from '@angular/material/select';
@@ -49,7 +48,6 @@ type CampoMenu = {
     MatButton,
     MatCard,
     MatCardContent,
-    MatCheckbox,
     MatError,
     MatFormField,
     MatHint,
@@ -57,7 +55,6 @@ type CampoMenu = {
     MatInput,
     MatLabel,
     MatOption,
-    MatPrefix,
     ReactiveFormsModule,
     RouterLink,
     MatSelect

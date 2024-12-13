@@ -18,7 +18,6 @@ import {MatOption} from '@angular/material/core';
 import {MatCheckbox} from '@angular/material/checkbox';
 import {MatSelect} from '@angular/material/select';
 import {possibleErrors} from '../../form-errors';
-import {MatIcon} from '@angular/material/icon';
 
 type ComidaFormData = {
   nombre: string,
@@ -44,7 +43,6 @@ type ComidaFormData = {
     MatLabel,
     MatHint,
     MatSelect,
-    MatIcon
   ],
   templateUrl: './comida-form.component.html',
   standalone: true,
