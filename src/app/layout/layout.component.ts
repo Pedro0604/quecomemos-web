@@ -69,7 +69,10 @@ export class LayoutComponent implements OnInit {
           }
 
           if (typeof guardInstance.canActivate === 'function') {
-            return guardInstance.canActivate();
+            guardInstance.redirectToLogin.set(false);
+            const canActivateReturnValue = guardInstance.canActivate();
+            guardInstance.redirectToLogin.set(true);
+            return canActivateReturnValue;
           }
 
           console.warn('Guard no tiene un método canActivate válido:', guardClass);
