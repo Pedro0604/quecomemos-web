@@ -1,9 +1,9 @@
 import {AfterViewInit, Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
-import {Menu, MenuDTO} from '../menu.model';
+import {Menu, MenuDTO, MenuFormData} from '../menu.model';
 import {MenuService} from '../service/menu.service';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {LayoutService} from '../../layout/layout.service';
-import {NotificationService} from '../../notification.service';
+import {NotificationService} from '../../notification/notification.service';
 import {
     AbstractControl,
     FormControl,
@@ -22,6 +22,7 @@ import {Comida, TipoComida} from '../../comida/comida.model';
 import {MatCard, MatCardContent,} from '@angular/material/card';
 import {ComidaService} from '../../comida/service/comida.service';
 import {firstValueFrom} from 'rxjs';
+import {possibleErrors} from '../../form-errors';
 
 type CampoComida = {
     nombre: string,
@@ -30,20 +31,6 @@ type CampoComida = {
     comidasFiltradas: Comida[],
     comidasIniciales: Comida[],
     tipoComida: TipoComida
-}
-
-type PossibleErrorFunction = { (control: AbstractControl): string; }
-
-type PossibleError = { name: string, errorFunction: PossibleErrorFunction }
-
-type MenuFormData = {
-    nombre: string,
-    precio: number,
-    vegetariano: boolean,
-    entrada: Comida | null,
-    principal: Comida | null,
-    postre: Comida | null,
-    bebida: Comida | null,
 }
 
 @Component({
@@ -118,33 +105,6 @@ export class MenuFormComponent implements OnInit, AfterViewInit {
             tipoComida: 'BEBIDA'
         },
     ];
-
-    possibleErrors: PossibleError[] = [
-        {name: 'required', errorFunction: () => 'El campo es obligatorio'},
-        {name: 'email', errorFunction: () => 'El email no es válido'},
-        {
-            name: 'minlength',
-            errorFunction: (control: AbstractControl) => `La longitud mínima es: ${control.errors?.['minlength'].requiredLength} caracteres`
-        },
-        {
-            name: 'maxlength',
-            errorFunction: (control: AbstractControl) => `La longitud máxima es: ${control.errors?.['maxlength'].requiredLength} caracteres`
-        },
-        {
-            name: 'min', errorFunction: (control: AbstractControl) => {
-                if (control.errors?.['min'].min === 0) {
-                    return 'El valor no puede ser negativo';
-                } else {
-                    return `El valor mínimo es: ${control.errors?.['min'].min}`;
-                }
-            }
-        },
-        {
-            name: 'max',
-            errorFunction: (control: AbstractControl) => `El valor máximo es: ${control.errors?.['max'].max}`
-        },
-        {name: 'comidaInvalida', errorFunction: () => `La comida ingresada no es válida`},
-    ]
 
     alMenosUnaComidaSeleccionadaValidator(): ValidatorFn {
         return (group: AbstractControl): ValidationErrors | null => {
@@ -242,23 +202,35 @@ export class MenuFormComponent implements OnInit, AfterViewInit {
     async ngOnInit(): Promise<void> {
         const id = this.route.snapshot.params['id'];
         if (id) {
-            this.menuService.getMenuById(id).subscribe((data) => {
+            this.menuService.getMenuById(id).subscribe({
+              next: (data) => {
                 this.menu = data
                 this.form.get('nombre')?.setValue(this.menu.nombre)
                 this.form.get('precio')?.setValue(this.menu.precio)
                 this.form.get('vegetariano')?.setValue(this.menu.vegetariano)
                 this.menu.comidas.forEach(comida => {
-                    const campoComida = this.camposDeComida.find(campoComida => campoComida.tipoComida === comida.tipoComida)
-                    if (campoComida) {
-                        const comidaField = this.form.get(campoComida.nombre);
-                        comidaField?.setValue(comida);
-                        comidaField?.markAsTouched();
-                    }
+                  const campoComida = this.camposDeComida.find(campoComida => campoComida.tipoComida === comida.tipoComida)
+                  if (campoComida) {
+                    const comidaField = this.form.get(campoComida.nombre);
+                    comidaField?.setValue(comida);
+                    comidaField?.markAsTouched();
+                  }
                 })
+              },
+              error: error => {
+                this.error = true;
+                console.error('Error al obtener el menú', error);
+                this.notificationService.show('Ha ocurrido un error. Por favor, intente nuevamente más tarde');
+              }
             });
             this.layoutService.setTitle('Modificar Menú');
         } else {
             this.layoutService.setTitle('Crear Menú');
+        }
+
+        const vegetarianoInicial = this.route.snapshot.queryParams['vegetariano'];
+        if (vegetarianoInicial) {
+            this.form.get('vegetariano')?.setValue(true);
         }
 
         await this.cargarComidas();
@@ -313,7 +285,7 @@ export class MenuFormComponent implements OnInit, AfterViewInit {
     updateErrorMessage(controlName: string) {
         const control = this.form.get(controlName);
         if (control && control.touched && control.invalid) {
-            this.possibleErrors.forEach(error => {
+            possibleErrors.forEach(error => {
                 if (control.hasError(error.name)) {
                     this.errorMessages[controlName] = error.errorFunction(control);
                 }
@@ -343,7 +315,7 @@ export class MenuFormComponent implements OnInit, AfterViewInit {
             comidaIds: comidaIds,
         }
 
-        if (this.menu?.id) {
+        if (this.menu) {
             this.menuService.updateMenu(this.menu.id, dto).subscribe({
                 complete: () => {
                     this.notificationService.show('Menú modificado exitosamente');

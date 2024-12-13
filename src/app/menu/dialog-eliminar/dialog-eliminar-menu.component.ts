@@ -8,7 +8,7 @@ import {
 import {Menu} from '../menu.model';
 import {MatButton} from '@angular/material/button';
 import {MenuService} from '../service/menu.service';
-import {NotificationService} from '../../notification.service';
+import {NotificationService} from '../../notification/notification.service';
 
 export type DialogData = {
   menu: Menu;
@@ -56,7 +56,7 @@ export class DialogEliminarMenuComponent {
         this.dialogRef.close(true);
       },
       complete: () => {
-        this.isDeleting = false; // Resetea la bandera al terminar.
+        this.isDeleting = false;
       },
     });
   }

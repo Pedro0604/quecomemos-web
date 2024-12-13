@@ -1,3 +1,10 @@
+<!-- Template que se renderiza debajo del titulo -->
+<ng-template #extra>
+      <span class="flex justify-start mx-6">
+        <button mat-button (click)="history.back()">Volver</button>
+      </span>
+</ng-template>
+
 <mat-card class="w-full max-w-2xl h-full mx-auto" appearance="outlined">
   <mat-card-content class="my-4">
     <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
@@ -31,7 +38,7 @@
         <mat-form-field>
           <mat-label>Tipo de comida</mat-label>
           <mat-select formControlName="tipoComida" placeholder="Seleccione un tipo de comida"
-                      (selectionChange)="updateErrorMessage('tipoComida')">
+                      (blur)="updateErrorMessage('tipoComida')">
             @for (tipo of tiposDeComida; track tipo) {
               <mat-option [value]="tipo">{{ tipo.replace("_", " ") }}</mat-option>
             }
@@ -60,10 +67,8 @@
       }
       <div class="ms-4">
         @if (error) {
+          <mat-error>Ha ocurrido un error</mat-error>
           <mat-error>Por favor, intente nuevamente más tarde</mat-error>
-        } @else if (form.errors ? deberiaMostrarErrorTipoComida() && form.errors['ningunoSeleccionada'] : false) {
-          <mat-error>Debe seleccionar un tipo de comida (entrada, plato principal, postre, bebida u otro)
-          </mat-error>
         }
       </div>
       <button mat-raised-button class="w-full" type="submit"

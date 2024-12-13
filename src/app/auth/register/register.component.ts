@@ -9,7 +9,7 @@ import { MatIconModule } from '@angular/material/icon'; // Opcional, para ícono
 import { MatCardModule } from '@angular/material/card';
 import {Router} from '@angular/router';
 import {HttpClient} from '@angular/common/http';
-import {NotificationService} from '../../notification.service';
+import {NotificationService} from '../../notification/notification.service';
 
 
 @Component({
@@ -60,7 +60,7 @@ export class RegisterComponent implements AfterViewInit {
       this.http
         .post('http://localhost:8080/clientes', datosRegistro, { observe: 'response' })
         .subscribe({
-          next: (response) => {
+          next: () => {
             this.notificationService.show('Usuario registrado exitosamente');
             this.router.navigate(['/login']);
           },

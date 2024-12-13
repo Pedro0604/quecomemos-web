@@ -5,27 +5,27 @@
       </span>
 </ng-template>
 
-@if (error || loading || menus.length === 0) {
+@if (error || loading || menusDiarios.length === 0) {
   <div class="flex justify-center items-center mt-20 text-2xl">
     @if (error) {
       <mat-icon class="error">error</mat-icon>
-      <span class="ml-2">Error al cargar los menús</span>
+      <span class="ml-2">Error al cargar los menús diarios</span>
     } @else if (loading) {
       <mat-spinner></mat-spinner>
-    } @else if (menus.length === 0) {
+    } @else if (menusDiarios.length === 0) {
       <mat-icon class="error">warning</mat-icon>
-      <span class="ml-2">No hay menús disponibles</span>
+      <span class="ml-2">No hay menús diarios</span>
     }
   </div>
-  @if (menus.length === 0) {
+  @if (menusDiarios.length === 0) {
     <span class="flex justify-center mt-4">
-      <a mat-button routerLink="/menu/create">Creá uno ahora</a>
+      <a mat-button routerLink="/menu-diario/create">Creá uno ahora</a>
     </span>
   }
 } @else {
-  <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-    @for (menu of menus; track menu) {
-      <app-menu [menu]="menu" (onDelete)="handleDeleteMenu(menu.id)"></app-menu>
+  <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
+    @for (menuDiario of menusDiarios; track menuDiario) {
+      <app-menu-diario [menuDiario]="menuDiario" (onDelete)="handleDeleteMenu(menuDiario.id)"></app-menu-diario>
     }
   </div>
 }
