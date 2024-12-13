@@ -12,6 +12,10 @@ import {MenuDiarioListComponent} from './menu-diario/list/menu-diario-list.compo
 import {MenuDiarioFormComponent} from './menu-diario/form/menu-diario-form.component';
 
 export const appRoutes: Routes = [
+  { path: '',
+    redirectTo: '/carta',
+    pathMatch: 'full'
+  },
   {
     path: 'login',
     component: LoginComponent,
