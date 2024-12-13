@@ -17,6 +17,8 @@ export function traduccionDiasSemana(dia: diasSemana): string {
   }
 }
 
+export const diasSemanaArray: diasSemana[] = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY'];
+
 export type MenuDiario = {
   id: number;
   dia: diasSemana;
@@ -28,4 +30,10 @@ export type MenuDiarioDTO = {
   dia: diasSemana;
   menuVegetarianoId: number;
   menuNoVegetarianoId: number;
+}
+
+export type MenuDiarioFormData = {
+  dia: diasSemana;
+  menuVegetariano: Menu;
+  menuNoVegetariano: Menu;
 }

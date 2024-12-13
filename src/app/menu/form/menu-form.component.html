@@ -84,12 +84,11 @@
             </div>
             <div class="ms-4">
                 @if (error) {
-                    <mat-error>Ha ocurrido un error al obtener las comidas</mat-error>
+                    <mat-error>Ha ocurrido un error</mat-error>
                     <mat-error>Por favor, intente nuevamente más tarde</mat-error>
                 } @else if (mostrarErrorSinComidas) {
                     <mat-error>No hay ninguna comida (entrada, plato principal, postre o bebida)</mat-error>
-                    <!--  TODO - MODIFICAR LINK A CREACION DE COMIDAS  -->
-                    <a routerLink="/login" mat-button>Creá alguna para poder continuar</a>
+                    <a routerLink="/comida/create" mat-button class="-ms-3">Creá alguna para poder continuar</a>
                 } @else if (form.errors ? deberiaMostrarErrorAlMenosUnaComida() && form.errors['ningunaSeleccionada'] : false) {
                     <mat-error>Debe seleccionar al menos una comida (entrada, plato principal, postre o bebida)
                     </mat-error>

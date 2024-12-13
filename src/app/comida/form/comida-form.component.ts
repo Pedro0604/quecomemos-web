@@ -1,11 +1,8 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {
-  AbstractControl,
   FormControl,
   FormGroup,
   ReactiveFormsModule,
-  ValidationErrors,
-  ValidatorFn,
   Validators
 } from '@angular/forms';
 import {Comida, ComidaDTO, TipoComida} from '../comida.model';
@@ -20,10 +17,8 @@ import {MatButton} from '@angular/material/button';
 import {MatOption} from '@angular/material/core';
 import {MatCheckbox} from '@angular/material/checkbox';
 import {MatSelect} from '@angular/material/select';
-
-type PossibleErrorFunctions = { (control: AbstractControl): string; }
-
-type PossibleError = { name: string, errorFunction: PossibleErrorFunctions };
+import {possibleErrors} from '../../form-errors';
+import {MatIcon} from '@angular/material/icon';
 
 type ComidaFormData = {
   nombre: string,
@@ -48,51 +43,23 @@ type ComidaFormData = {
     MatCheckbox,
     MatLabel,
     MatHint,
-    MatSelect
+    MatSelect,
+    MatIcon
   ],
   templateUrl: './comida-form.component.html',
   standalone: true,
   styleUrl: './comida-form.component.css'
 })
-export class ComidaFormComponent implements OnInit {
+export class ComidaFormComponent implements OnInit, AfterViewInit {
     comida: Comida | null = null;
 
     error: boolean = false;
-
-    loading: boolean = true;
 
     tiposDeComida: TipoComida[] = ['OTRO', 'POSTRE', 'ENTRADA', 'BEBIDA', 'PLATO_PRINCIPAL'];
 
     form: FormGroup
 
     errorMessages: { [key: string]: string } = {};
-    hints: { [key: string]: string } = {};
-    mostrarErrorTipoComida: boolean = false;
-
-    possibleErrors: PossibleError[] = [
-      {name: 'required', errorFunction: () => 'El campo es obligatorio'},
-      {
-        name: 'minlength',
-        errorFunction: (control: AbstractControl) => `La longitud mínima es: ${control.errors?.['minlength'].requiredLength} caracteres`
-      },
-      {
-        name: 'maxlength',
-        errorFunction: (control: AbstractControl) => `La longitud máxima es: ${control.errors?.['maxlength'].requiredLength} caracteres`
-      },
-      {
-        name: 'min', errorFunction: (control: AbstractControl) => {
-          if (control.errors?.['min'].min === 0) {
-            return 'El valor no puede ser negativo';
-          } else {
-            return `El valor mínimo es: ${control.errors?.['min'].min}`;
-          }
-        }
-      },
-      {
-        name: 'max',
-        errorFunction: (control: AbstractControl) => `El valor máximo es: ${control.errors?.['max'].max}`
-      },
-    ]
 
     constructor(
       private comidaService: ComidaService,
@@ -110,42 +77,35 @@ export class ComidaFormComponent implements OnInit {
       });
     }
 
-    tipoComidaSeleccionadoValidator(): ValidatorFn {
-      return (control: AbstractControl): ValidationErrors | null => {
-        const tipoComida = control.value;
-        return tipoComida ? null : { tipoComidaNoSeleccionado: true };
-      };
-    }
-
     ngOnInit() {
       const id = this.route.snapshot.params['id'];
       if (id) {
-        this.comidaService.getComidaById(id).subscribe((data) => {
-          this.comida = data
-          this.form.get('nombre')?.setValue(this.comida.nombre);
-          this.form.get('precio')?.setValue(this.comida.precio);
-          this.form.get('vegetariana')?.setValue(this.comida.vegetariana);
-          this.form.get('tipoComida')?.setValue(this.comida.tipoComida);
-          this.form.get('urlImagen')?.setValue(this.comida.urlImagen);
+        this.comidaService.getComidaById(id).subscribe({
+          next: (data) => {
+            this.comida = data;
+            this.form.get('nombre')?.setValue(this.comida.nombre);
+            this.form.get('precio')?.setValue(this.comida.precio);
+            this.form.get('vegetariana')?.setValue(this.comida.vegetariana);
+            this.form.get('tipoComida')?.setValue(this.comida.tipoComida);
+            this.form.get('urlImagen')?.setValue(this.comida.urlImagen);
+          },
+          error: error => {
+            this.error = true;
+            console.error('Error al obtener la comida', error);
+            this.notificationService.show('Ha ocurrido un error. Por favor, intente nuevamente más tarde');
+          }
         });
 
         this.layoutService.setTitle('Modificar comida');
       } else {
         this.layoutService.setTitle('Crear comida');
       }
-
-      this.mostrarErrorTipoComida = this.form.get('tipoComida')?.hasError('tipoComidaNoSeleccionado') || false;
-
-    }
-
-    deberiaMostrarErrorTipoComida(): boolean {
-      return this.mostrarErrorTipoComida;
     }
 
     updateErrorMessage(controlName: string) {
       const control = this.form.get(controlName);
       if (control && control.touched && control.invalid) {
-        this.possibleErrors.forEach(error => {
+        possibleErrors.forEach(error => {
           if (control.hasError(error.name)) {
             this.errorMessages[controlName] = error.errorFunction(control);
           }
@@ -197,6 +157,12 @@ export class ComidaFormComponent implements OnInit {
       } else {
         this.notificationService.show('Error al enviar el formuladrio. Vuelva a intentarlo.');
       }
+    }
+
+    @ViewChild('extra') extraTemplate!: TemplateRef<any> | null;
+
+    ngAfterViewInit(): void {
+      this.layoutService.setExtra(this.extraTemplate);
     }
 
     protected readonly history = history;

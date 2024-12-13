@@ -60,7 +60,7 @@ export class RegisterComponent implements AfterViewInit {
       this.http
         .post('http://localhost:8080/clientes', datosRegistro, { observe: 'response' })
         .subscribe({
-          next: (response) => {
+          next: () => {
             this.notificationService.show('Usuario registrado exitosamente');
             this.router.navigate(['/login']);
           },

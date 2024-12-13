@@ -1,1 +1,82 @@
-<p>menu-diario-form works!</p>
+<!-- Template que se renderiza debajo del titulo -->
+<ng-template #extra>
+      <span class="flex justify-start mx-6">
+        <button mat-button (click)="history.back()">Volver</button>
+      </span>
+</ng-template>
+
+<mat-card class="w-full max-w-2xl h-full mx-auto" appearance="outlined">
+  <mat-card-content class="my-4">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
+      <mat-form-field>
+        <mat-label>Día del menú diario</mat-label>
+
+        <mat-select formControlName="dia" (blur)="updateErrorMessage('dia')" required>
+          @for (diaSemana of diasSemanaArray; track diaSemana) {
+            <mat-option [value]="diaSemana">{{ traduccionDiasSemana(diaSemana) }}</mat-option>
+          }
+        </mat-select>
+        @if (errorMessages['dia']) {
+          <mat-error>{{ errorMessages['dia'] }}</mat-error>
+        }
+      </mat-form-field>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        @for (campo of camposDeMenus; track campo.nombre) {
+          <mat-form-field>
+            <mat-label>{{ loading ? 'Cargando...' : (error ? 'Error' : campo.label) }}</mat-label>
+            <input type="text"
+                   [placeholder]="('Seleccioná un ' + campo.label.toLowerCase())"
+                   matInput
+                   [formControlName]="campo.nombre"
+                   [matAutocomplete]="auto"
+                   (blur)="updateErrorMessage(campo.nombre)"
+                   (input)="selectMenuIfNameMatches(campo.nombre)"
+                   [disabled]="error || loading"
+            >
+            <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]="displayFn"
+                              autoSelectActiveOption>
+              @for (menu of campo.menusFiltrados; track menu.id) {
+                <mat-option [value]="menu">
+                                    <span class="flex items-center gap-4">
+                                        <span class="flex items-center">
+                                          <span>{{ menu.nombre }}</span>
+                                          @if (menu.vegetariano) {
+                                            <mat-icon class="text-green-600">eco</mat-icon>
+                                          }
+                                        </span>
+                                    </span>
+                </mat-option>
+              }
+            </mat-autocomplete>
+            @if (errorMessages[campo.nombre]) {
+              <mat-error>{{ errorMessages[campo.nombre] }}</mat-error>
+            }
+            @if (hints[campo.nombre]) {
+              <mat-hint>{{ hints[campo.nombre] }}</mat-hint>
+            }
+          </mat-form-field>
+        }
+      </div>
+      <div class="ms-4">
+        @if (error) {
+          <mat-error>Ha ocurrido un error</mat-error>
+          <mat-error>Por favor, intente nuevamente más tarde</mat-error>
+        } @else if (menus.length === 0) {
+          <mat-error>No hay ningún menú</mat-error>
+          <a routerLink="/menu/create" mat-button class="-ms-3">Creá alguno para poder continuar</a>
+        }
+        @else {
+          @for (campo of camposDeMenus; track campo.nombre) {
+            @if (campo.menusIniciales.length === 0) {
+              <mat-error>No hay ningún menú {{campo.vegetariano ? '' : 'no ' }}vegetariano</mat-error>
+              <a routerLink="/menu/create" [queryParams]="campo.vegetariano ? { vegetariano: campo.vegetariano } : {}" mat-button class="-ms-3">Creá alguno para poder continuar</a>
+            }
+          }
+        }
+      </div>
+      <button mat-raised-button class="w-full" type="submit"
+              [disabled]="form.invalid || !form.dirty">{{ form.pending ? 'Enviando' : 'Enviar' }}
+      </button>
+    </form>
+  </mat-card-content>
+</mat-card>
