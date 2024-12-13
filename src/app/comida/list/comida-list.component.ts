@@ -5,14 +5,18 @@ import {ComidaService} from '../service/comida.service';
 import {MatIcon} from '@angular/material/icon';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {ComidaComponent} from '../component/comida.component';
+import {MatAnchor} from "@angular/material/button";
+import {RouterLink} from "@angular/router";
 
 @Component({
   selector: 'app-comida-list',
-  imports: [
-    MatIcon,
-    MatProgressSpinner,
-    ComidaComponent
-  ],
+    imports: [
+        MatIcon,
+        MatProgressSpinner,
+        ComidaComponent,
+        MatAnchor,
+        RouterLink
+    ],
   templateUrl: './comida-list.component.html',
   standalone: true,
   styleUrl: './comida-list.component.css'

@@ -17,7 +17,7 @@
       <span class="ml-2">No hay menús disponibles</span>
     }
   </div>
-  @if (menus.length === 0) {
+  @if (!error && !loading && menus.length === 0) {
     <span class="flex justify-center mt-4">
       <a mat-button routerLink="/menu/create">Creá uno ahora</a>
     </span>

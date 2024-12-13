@@ -17,7 +17,7 @@
       <span class="ml-2">No hay menús diarios</span>
     }
   </div>
-  @if (menusDiarios.length === 0) {
+  @if (!error && !loading && menusDiarios.length === 0) {
     <span class="flex justify-center mt-4">
       <a mat-button routerLink="/menu-diario/create">Creá uno ahora</a>
     </span>

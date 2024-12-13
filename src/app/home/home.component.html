@@ -16,6 +16,11 @@
       <span class="ml-2">No hay menú semanal</span>
     }
   </div>
+  @if (!error && !loading && menusDiarios.length === 0) {
+    <span class="flex justify-center mt-4">
+      <a mat-button routerLink="/menu-diario/create">Creá un menú diario ahora</a>
+    </span>
+  }
 } @else {
   <div class="flex flex-col xl:mx-20 gap-4 xl:gap-8">
     @for (menuDiario of menusDiarios; track menuDiario) {
