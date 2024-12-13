@@ -3,7 +3,7 @@ import {Menu, MenuDTO} from '../menu.model';
 import {MenuService} from '../service/menu.service';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {LayoutService} from '../../layout/layout.service';
-import {NotificationService} from '../../notification.service';
+import {NotificationService} from '../../notification/notification.service';
 import {
     AbstractControl,
     FormControl,

@@ -9,7 +9,7 @@ import { MatIconModule } from '@angular/material/icon'; // Opcional, para ícono
 import { MatCardModule } from '@angular/material/card';
 import {Router} from '@angular/router';
 import {HttpClient} from '@angular/common/http';
-import {NotificationService} from '../../notification.service';
+import {NotificationService} from '../../notification/notification.service';
 
 
 @Component({

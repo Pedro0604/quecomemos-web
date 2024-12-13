@@ -8,6 +8,8 @@ import {AuthGuard} from './auth/guards/auth.guards';
 import {MenuFormComponent} from './menu/form/menu-form.component';
 import {ComidaFormComponent} from './comida/form/comida-form.component';
 import {ComidaListComponent} from './comida/list/comida-list.component';
+import {MenuDiarioListComponent} from './menu-diario/list/menu-diario-list.component';
+import {MenuDiarioFormComponent} from './menu-diario/form/menu-diario-form.component';
 
 export const appRoutes: Routes = [
   {
@@ -22,18 +24,18 @@ export const appRoutes: Routes = [
   },
   {
     path: 'menu-diario',
-    component: MenuListComponent,
+    component: MenuDiarioListComponent,
     title: 'Todos los menús diarios'
   },
   {
     path: 'menu-diario/create',
-    component: MenuFormComponent,
+    component: MenuDiarioFormComponent,
     title: 'Crear un menú diario',
     canActivate: [AuthGuard]
   },
   {
     path: 'menu-diario/edit/:id',
-    component: MenuFormComponent,
+    component: MenuDiarioFormComponent,
     title: 'Editar un menú diario',
     canActivate: [AuthGuard]
   },

@@ -12,7 +12,7 @@ import {Comida, ComidaDTO, TipoComida} from '../comida.model';
 import {ComidaService} from '../service/comida.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {LayoutService} from '../../layout/layout.service';
-import {NotificationService} from '../../notification.service';
+import {NotificationService} from '../../notification/notification.service';
 import {MatError, MatFormField, MatPrefix} from '@angular/material/form-field';
 import {MatCard, MatCardContent} from '@angular/material/card';
 import {MatInput, MatLabel, MatHint} from '@angular/material/input';

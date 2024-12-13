@@ -7,7 +7,7 @@ import {
   MatDialogTitle
 } from '@angular/material/dialog';
 import {ComidaService} from '../service/comida.service';
-import {NotificationService} from '../../notification.service';
+import {NotificationService} from '../../notification/notification.service';
 import {Comida} from '../comida.model';
 import {MatButton} from '@angular/material/button';
 
