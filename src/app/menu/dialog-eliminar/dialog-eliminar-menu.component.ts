@@ -53,7 +53,7 @@ export class DialogEliminarMenuComponent {
         this.notificationService.show(
           'Ocurrió un error al intentar eliminar el menú. Por favor, intenta nuevamente más tarde.'
         );
-        this.dialogRef.close(true);
+        this.dialogRef.close(false);
       },
       complete: () => {
         this.isDeleting = false;

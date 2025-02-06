@@ -55,7 +55,7 @@ export class DialogEliminarComidaComponent {
         this.notificationService.show(
           'Ocurrió un error al intentar eliminar la comida. Por favor, intenta nuevamente más tarde.'
         );
-        this.dialogRef.close(true);
+        this.dialogRef.close(false);
       },
       complete: () => {
         this.isDeleting = false; // Resetea la bandera al terminar.
