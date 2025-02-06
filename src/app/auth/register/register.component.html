@@ -1,0 +1,127 @@
+<div class="flex items-center justify-center">
+  <mat-card class="p-8 w-full max-w-4xl">
+    <h2 class="text-2xl font-semibold text-center mb-8" style="color: #000000;">
+      REGISTRO DE USUARIOS
+    </h2>
+    <form [formGroup]="registerForm" (ngSubmit)="register()" class="grid grid-cols-2 gap-6">
+
+      <!-- DNI -->
+      <mat-form-field appearance="fill" class="w-full">
+        <mat-label>DNI</mat-label>
+        <input
+          matInput
+          type="text"
+          formControlName="dni"
+          placeholder="Ingrese su DNI"
+        />
+        @if (registerForm.get('dni')?.errors?.['required']) {
+          <mat-error>
+            El DNI es obligatorio.
+          </mat-error>
+        } @else if (registerForm.get('dni')?.errors?.['pattern']) {
+          <mat-error>
+            El DNI debe contener solo números.
+          </mat-error>
+        } @else if (registerForm.get('dni')?.errors?.['minlength']) {
+          <mat-error>
+            El DNI debe tener al menos 7 dígitos.
+          </mat-error>
+        } @else if (registerForm.get('dni')?.errors?.['maxlength']) {
+          <mat-error>
+            El DNI no puede exceder los 8 dígitos.
+          </mat-error>
+        }
+      </mat-form-field>
+
+      <!-- Nombre -->
+      <mat-form-field appearance="fill" class="w-full">
+        <mat-label>Nombre</mat-label>
+        <input matInput type="text" formControlName="nombre" placeholder="Ingrese su nombre"/>
+        <mat-error *ngIf="registerForm.get('nombre')?.errors?.['required']">
+          El nombre es obligatorio.
+        </mat-error>
+        <mat-error *ngIf="registerForm.get('nombre')?.errors?.['pattern']">
+          El nombre debe contener solo letras.
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Apellido -->
+      <mat-form-field appearance="fill" class="w-full">
+        <mat-label>Apellido</mat-label>
+        <input matInput type="text" formControlName="apellido" placeholder="Ingrese su apellido"/>
+        <mat-error *ngIf="registerForm.get('apellido')?.errors?.['required']">
+          El apellido es obligatorio.
+        </mat-error>
+        <mat-error *ngIf="registerForm.get('apellido')?.errors?.['pattern']">
+          El apellido debe contener solo letras.
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Email -->
+      <mat-form-field appearance="fill" class="w-full">
+        <mat-label>Email</mat-label>
+        <input
+          matInput
+          type="email"
+          formControlName="email"
+          placeholder="Ingrese su correo electrónico"
+        />
+        <mat-error *ngIf="registerForm.get('email')?.errors?.['required']">
+          El correo electrónico es obligatorio.
+        </mat-error>
+        <mat-error *ngIf="registerForm.get('email')?.errors?.['email']">
+          El correo electrónico no es válido.
+        </mat-error>
+      </mat-form-field>
+
+      <!-- URL de Imagen -->
+      <mat-form-field appearance="fill" class="w-full">
+        <mat-label>URL de Imagen</mat-label>
+        <input matInput type="text" formControlName="urlImagen" placeholder="Ingrese la URL de la imagen"/>
+        <mat-error *ngIf="registerForm.get('urlImagen')?.errors?.['required']">
+          La URL de la imagen es obligatoria.
+        </mat-error>
+        <mat-error *ngIf="registerForm.get('urlImagen')?.errors?.['pattern']">
+          La URL de la imagen no es válida.
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Contraseña -->
+      <mat-form-field>
+        <mat-label>Contraseña</mat-label>
+        <input matInput type="password" formControlName="clave" placeholder="Ingrese su contraseña"/>
+        <mat-error *ngIf="registerForm.get('clave')?.hasError('required')">
+          La contraseña es obligatoria.
+        </mat-error>
+        <mat-error *ngIf="registerForm.get('clave')?.hasError('minlength')">
+          La contraseña debe tener al menos 6 caracteres.
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Confirmar Contraseña -->
+      <mat-form-field>
+        <mat-label>Confirmar Contraseña</mat-label>
+        <input matInput type="password" formControlName="confirmClave" placeholder="Confirme su contraseña"/>
+        <mat-error *ngIf="registerForm.get('confirmClave')?.hasError('required')">
+          Debes confirmar la contraseña.
+        </mat-error>
+        <mat-error *ngIf="registerForm.get('confirmClave')?.hasError('passwordsDoNotMatch')">
+          Las contraseñas no coinciden.
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Botón de Registro -->
+      <div class="col-span-2">
+        <button
+          mat-raised-button
+          color="primary"
+          class="w-full"
+          type="submit"
+          [disabled]="registerForm.invalid"
+        >
+          Registrarse
+        </button>
+      </div>
+    </form>
+  </mat-card>
+</div>

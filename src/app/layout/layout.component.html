@@ -1,0 +1,107 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #drawer class="sidenav" fixedInViewport
+               [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+               [mode]="(isHandset$ | async) ? 'over' : 'side'"
+               [opened]="(isHandset$ | async) === false">
+    <mat-toolbar><a routerLink="/carta">¿Qué Comemos?</a></mat-toolbar>
+    <mat-nav-list>
+      @for (item of rootRoutes; track $index) {
+        <a
+          mat-list-item
+          [routerLink]="item.path"
+          #link="routerLinkActive"
+          routerLinkActive
+          [activated]="link.isActive"
+          [routerLinkActiveOptions]="{exact: true}"
+        >
+          {{ item.title }}
+        </a>
+      }
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <div class="flex justify-between w-full">
+        <div>
+          @if (isHandset$ | async) {
+            <button
+              type="button"
+              aria-label="Toggle sidenav"
+              mat-icon-button
+              (click)="drawer.toggle()">
+              <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+            </button>
+          }
+        </div>
+        <div>
+          @if (authService.isLoggedIn()) {
+            <span class="hidden md:block">
+              <button
+                mat-button
+                (click)="authService.logout()"
+              >
+                Cerrar sesión
+              </button>
+            </span>
+            <span class="block md:hidden">
+              <button
+                mat-icon-button
+                (click)="authService.logout()"
+              >
+                <mat-icon aria-label="Logout icon">logout</mat-icon>
+              </button>
+            </span>
+          } @else {
+            <div class="flex items-center">
+              <span class="hidden md:block">
+                <a
+                  mat-button
+                  routerLink="login"
+                  routerLinkActive
+                >
+                  Iniciar sesión
+                </a>
+              </span>
+              <span class="block md:hidden">
+                <a
+                  mat-icon-button
+                  routerLink="login"
+                  routerLinkActive
+                >
+                  <mat-icon aria-label="Login icon">login</mat-icon>
+                </a>
+              </span>
+              <span class="block">
+                <a
+                  mat-button
+                  routerLink="register"
+                  routerLinkActive
+                >
+                  Registrarse
+                </a>
+              </span>
+            </div>
+          }
+        </div>
+      </div>
+    </mat-toolbar>
+    <div class="sidenav-scroll-wrapper">
+      <div class="sidenav-content">
+        @if (title) {
+          <div class="sticky top-0 z-10 pt-8 pb-2 mb-6">
+            <div class="backdrop-glass-filter"></div>
+            <div class="relative z-10">
+              <h1 class="text-4xl text-center mb-2">{{ title }}</h1>
+              @if (extra) {
+                <ng-container *ngTemplateOutlet="extra"></ng-container>
+              }
+            </div>
+          </div>
+        }
+        <div class="padded-content min-h-48">
+          <ng-content></ng-content>
+        </div>
+      </div>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

@@ -1,0 +1,32 @@
+<mat-card class="w-full h-full" appearance="outlined">
+  <mat-card-header class="flex justify-between">
+    <mat-card-title>{{ comida.nombre }}</mat-card-title>
+    <mat-card-subtitle>${{ comida.precio }}</mat-card-subtitle>
+    @if (comida.vegetariana) {
+      <mat-icon class="text-green-600">eco</mat-icon>
+    }
+  </mat-card-header>
+  <mat-card-content class="my-4">
+    <div class="flex flex-col gap-4">
+      <div class="flex justify-between gap-2">
+        <div>
+          <p class="text-sm">{{ comida.tipoComida.replace("_", " ") }}</p>
+          <p class="text-lg">{{ comida.nombre }}</p>
+        </div>
+        <div class="flex justify-center items-center w-20 h-20 border image-container">
+          @if (comida.urlImagen) {
+            <img class="object-cover aspect-square" [src]="comida.urlImagen" [alt]="comida.nombre">
+          } @else {
+            <mat-icon class="text-5xl !w-fit !h-fit">no_photography</mat-icon>
+          }
+        </div>
+      </div>
+    </div>
+  </mat-card-content>
+  @if (showButtons) {
+    <mat-card-actions class="mt-auto">
+      <a mat-button [routerLink]="['/comida/edit/', comida.id]">MODIFICAR</a>
+      <button mat-button class="error" (click)="openDialogEliminar()">ELIMINAR</button>
+    </mat-card-actions>
+  }
+</mat-card>
