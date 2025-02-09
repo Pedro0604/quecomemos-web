@@ -10,6 +10,8 @@ import {MatIconModule} from '@angular/material/icon';
 import {NotificationService} from '../../notification/notification.service';
 import {MatCard, MatCardContent, MatCardHeader} from '@angular/material/card';
 import {AuthService} from './services/auth.service';
+import {concatMap, first, of} from 'rxjs';
+import {catchError} from 'rxjs/operators';
 
 @Component({
   selector: 'app-login',
@@ -32,6 +34,7 @@ export class LoginComponent {
   loginForm: FormGroup;
   hide = signal(true);
   loginError = false;
+  roles: ('clientes' | 'responsables' | 'administradores')[] = ['clientes', 'responsables', 'administradores'];
 
   constructor(private fb: FormBuilder, private http: HttpClient, private router: Router, private notificationService: NotificationService, private authService: AuthService) {
     this.loginForm = this.fb.group({
@@ -46,78 +49,39 @@ export class LoginComponent {
 
   onSubmit() {
     if (this.loginForm.valid) {
-      let encontrado = false;
-      const credenciales = {
-        dni: this.loginForm.get('dni')?.value,
-        clave: this.loginForm.get('clave')?.value,
-      };
-      this.http
-        .post('http://localhost:8080/clientes/autenticacion', credenciales, {observe: 'response'})
-        .subscribe({
-            next: (response) => {
-              const token = response.headers.get('authorization');
-              if (token) {
-                encontrado = true;
-                this.authService.login(token);
-                this.router.navigate(['/carta']);
-              }
-            },
-            error: (error) => {
-              console.error('Error al autenticar cliente', error);
-              this.notificationService.show('Error al autenticar el cliente');
-            },
-            complete: () => {
-              this.notificationService.show('Cliente autenticado correctamente');
-            }
+      const credenciales = this.loginForm.value;
+
+      of(...this.roles).pipe(
+        concatMap((role) =>
+          this.authService.authenticate(role, credenciales).pipe(
+            catchError(() => of(null)) // Si falla, retorna null y sigue con el siguiente rol
+          )
+        ),
+        first((response) => response && response.headers && response.headers.get("authorization"), null)// Detiene el flujo en el primer login exitoso
+      ).subscribe({
+        next: (response) => {
+          if (response) {
+            const token = response.headers.get('authorization');
+            this.authService.login(token);
+            this.notificationService.show(`${this.getRoleName(response.url)} autenticado correctamente`);
+            this.router.navigate(['/carta']);
+          } else {
+            this.notificationService.show('Credenciales incorrectas');
           }
-        );
-      if (!encontrado) {
-        this.http
-          .post('http://localhost:8080/responsables/autenticacion', credenciales, {observe: 'response'})
-          .subscribe({
-              next: (response) => {
-                const token = response.headers.get('Authorization');
-                if (token) {
-                  encontrado = true;
-                  this.authService.login(token);
-                  this.router.navigate(['/home']);
-                }
-              },
-              error: (error) => {
-                console.error('Error al autenticar responsable', error);
-                this.notificationService.show('Error al autenticar el responsable');
-              },
-              complete: () => {
-                this.notificationService.show('Responsable autenticado correctamente');
-              }
-            }
-          );
-      }
-      if (!encontrado) {
-        this.http
-          .post('http://localhost:8080/administradores/autenticacion', credenciales, {observe: 'response'})
-          .subscribe({
-            next: (response) => {
-              const token = response.headers.get('Authorization');
-              if (token) {
-                encontrado = true;
-                this.authService.login(token);
-                this.router.navigate(['/home']);
-              }
-            },
-            error: (error) => {
-              console.error('Error al autenticar administrador', error);
-              this.notificationService.show('Error al autenticar el administrador');
-            },
-            complete: () => {
-              this.notificationService.show('Administrador autenticado correctamente');
-            }
-          });
-      }
-      if (!encontrado) {
-        this.loginError = true;
-      }
+        },
+        error: () => {
+          this.notificationService.show('Error en la autenticación. Vuelva a intentarlo');
+        }
+      });
+    } else {
+      this.notificationService.show('Error en el formulario. Vuelva a intentarlo');
     }
   }
 
+  private getRoleName(url: string): string {
+    if (url.includes('clientes')) return 'Cliente';
+    if (url.includes('responsables')) return 'Responsable de turno';
+    if (url.includes('administradores')) return 'Administrador';
+    return 'Usuario';
+  }
 }

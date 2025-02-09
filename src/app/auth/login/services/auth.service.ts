@@ -1,18 +1,20 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {jwtDecode, JwtPayload} from 'jwt-decode';
 import {NotificationService} from '../../../notification/notification.service';
 import {Router} from '@angular/router';
+import {HttpClient} from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private userLoggedIn = new BehaviorSubject<boolean>(false);
+  private apiUrl = "http://localhost:8080";
 
   isLoggedIn$ = this.userLoggedIn.asObservable();
 
-  constructor(private router: Router, private notificationService: NotificationService) {
+  constructor(private router: Router, private notificationService: NotificationService, private http: HttpClient) {
   }
 
   login(token: string) {
@@ -59,5 +61,9 @@ export class AuthService {
       console.error('Error decoding token:', error);
       return false;
     }
+  }
+
+  authenticate(role: 'clientes' | 'responsables' | 'administradores', credenciales: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/${role}/autenticacion`, credenciales, { observe: 'response' });
   }
 }
