@@ -90,7 +90,7 @@
                     <mat-error>No hay ninguna comida (entrada, plato principal, postre o bebida)</mat-error>
                     <a routerLink="/comida/create" mat-button class="-ms-3">Creá alguna para poder continuar</a>
                 } @else if (form.errors ? deberiaMostrarErrorAlMenosUnaComida() && form.errors['ningunaSeleccionada'] : false) {
-                    <mat-error>Debe seleccionar al menos una comida (entrada, plato principal, postre o bebida)
+                    <mat-error>Debes seleccionar al menos una comida (entrada, plato principal, postre o bebida)
                     </mat-error>
                 }
             </div>

@@ -1,15 +1,21 @@
 import {AfterViewInit, Component} from '@angular/core';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {CommonModule} from '@angular/common';
 import {LayoutService} from "../../layout/layout.service";
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatCardModule } from '@angular/material/card';
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatButtonModule} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
+import {MatCardModule} from '@angular/material/card';
 import {Router} from '@angular/router';
 import {HttpClient} from '@angular/common/http';
 import {NotificationService} from '../../notification/notification.service';
+import {
+  FormErrorService,
+  onlyLettersValidator,
+  onlyNumbersValidator,
+  urlValidator
+} from '../../formError/form-error.service';
 
 
 @Component({
@@ -27,19 +33,26 @@ import {NotificationService} from '../../notification/notification.service';
 export class RegisterComponent implements AfterViewInit {
 
   registerForm: FormGroup;
+  errorMessages: { [key: string]: string } = {};
 
-  constructor(private layoutService: LayoutService, private fb: FormBuilder, private http: HttpClient, private router: Router, private notificationService: NotificationService) {
+  constructor(
+    private layoutService: LayoutService,
+    private fb: FormBuilder,
+    private http: HttpClient,
+    private router: Router,
+    private notificationService: NotificationService,
+    private formErrorService: FormErrorService
+  ) {
 
     this.registerForm = this.fb.group({
-      dni: ['', [Validators.required, Validators.minLength(7), Validators.maxLength(8), Validators.pattern(/^\d+$/)]],
-      nombre: ['', [Validators.required, Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)]],
-      apellido: ['', [Validators.required, Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)]],
-      urlImagen: ['', [Validators.required, Validators.pattern(/^(https?:\/\/[^\s$.?#].[^\s]*)$/)]],
+      dni: ['', [Validators.required, Validators.minLength(7), Validators.maxLength(8), onlyNumbersValidator]],
+      nombre: ['', [Validators.required, onlyLettersValidator]],
+      apellido: ['', [Validators.required, onlyLettersValidator]],
+      urlImagen: ['', [Validators.required, urlValidator]],
       email: ['', [Validators.required, Validators.email]],
       clave: ['', [Validators.required, Validators.minLength(6)]],
       confirmClave: ['', Validators.required],
     }, {
-      // Validación personalizada para comprobar que las contraseñas coincidan
       validators: this.passwordMatchValidator
     });
   }
@@ -49,7 +62,7 @@ export class RegisterComponent implements AfterViewInit {
     const confirmPassword = group.get('confirmClave')?.value;
 
     if (password && confirmPassword && password !== confirmPassword) {
-      group.get('confirmClave')?.setErrors({ passwordsDoNotMatch: true });
+      group.get('confirmClave')?.setErrors({passwordsDoNotMatch: true});
       return {passwordsDoNotMatch: true};
     }
     return null;
@@ -59,7 +72,7 @@ export class RegisterComponent implements AfterViewInit {
     if (this.registerForm.valid) {
       const datosRegistro = this.registerForm.value;
       this.http
-        .post('http://localhost:8080/clientes',  datosRegistro, { observe: 'response' })
+        .post('http://localhost:8080/clientes', datosRegistro, {observe: 'response'})
         .subscribe({
           next: () => {
             this.notificationService.show('Usuario registrado exitosamente');
@@ -84,5 +97,10 @@ export class RegisterComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.layoutService.setTitle('Registro de usuario');
+  }
+
+  updateErrorMessage(controlName: string) {
+    const control = this.registerForm.get(controlName);
+    this.errorMessages[controlName] = this.formErrorService.updateErrorMessage(control);
   }
 }
