@@ -1,74 +1,44 @@
-<mat-card class="w-full max-w-2xl h-full mx-auto my-28 px-4 sm:px-8 md:px-16" appearance="outlined">
-  <mat-card-header class="flex justify-between">
-  </mat-card-header>
+<mat-card class="w-full max-w-xl h-full mx-auto" appearance="outlined">
   <mat-card-content class="my-4">
-    <h2 class="text-center text-2xl font-semibold text-gray-800 mb-6">Iniciar Sesión</h2>
-
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="flex flex-col items-center gap-4">
-      <!-- DNI -->
-      <div class="flex-grow w-full max-w-sm">
-        <mat-form-field appearance="fill" class="w-full">
-          <mat-label>Ingrese su DNI</mat-label>
-          <input matInput formControlName="dni" placeholder="12345678" />
-          @if (loginForm.get('dni')?.errors?.['required']) {
-            <mat-error>
-              El DNI es obligatorio.
-            </mat-error>
-          } @else if (loginForm.get('dni')?.errors?.['pattern']) {
-            <mat-error>
-              El DNI debe contener solo números.
-            </mat-error>
-          } @else if (loginForm.get('dni')?.errors?.['minlength']) {
-            <mat-error>
-              El DNI debe tener al menos 7 dígitos.
-            </mat-error>
-          } @else if (loginForm.get('dni')?.errors?.['maxlength']) {
-            <mat-error>
-              El DNI no puede exceder los 8 dígitos.
-            </mat-error>
-          }
-        </mat-form-field>
-      </div>
+      <mat-form-field appearance="fill" class="w-full">
+        <mat-label>DNI</mat-label>
+        <input matInput type="text" formControlName="dni" placeholder="12345678"
+               (blur)="updateErrorMessage('dni')" required>
+        @if (errorMessages['dni']) {
+          <mat-error>{{ errorMessages['dni'] }}</mat-error>
+        }
+      </mat-form-field>
+      <mat-form-field appearance="fill" class="w-full">
+        <mat-label>Ingrese su contraseña</mat-label>
+        <input matInput [type]="hide() ? 'password' : 'text'" formControlName="clave" placeholder="Contraseña"
+               (blur)="updateErrorMessage('clave')"/>
+        <button
+          type="button"
+          mat-icon-button
+          matSuffix
+          (click)="toggleHide()"
+          [attr.aria-label]="'Toggle password visibility'"
+        >
+          <mat-icon>{{ hide() ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+        @if (errorMessages['clave']) {
+          <mat-error>{{ errorMessages['clave'] }}</mat-error>
+        }
+      </mat-form-field>
 
-      <!-- Clave -->
-      <div class="flex-grow w-full max-w-sm">
-        <mat-form-field appearance="fill" class="w-full">
-          <mat-label>Ingrese su contraseña</mat-label>
-          <input matInput [type]="hide() ? 'password' : 'text'" formControlName="clave" />
-          <button
-            type="button"
-            mat-icon-button
-            matSuffix
-            (click)="toggleHide()"
-            [attr.aria-label]="'Toggle password visibility'"
-          >
-            <mat-icon>{{ hide() ? 'visibility_off' : 'visibility' }}</mat-icon>
-          </button>
-          <mat-error *ngIf="loginForm.get('clave')?.hasError('required')">Debe ingresar una contraseña</mat-error>
-          <mat-error *ngIf="loginForm.get('clave')?.hasError('minlength')">
-            La contraseña debe tener al menos 4 caracteres
-          </mat-error>
-        </mat-form-field>
-      </div>
+      @if (loginError()) {
+        <mat-error>Credenciales incorrectas. Inténtelo nuevamente.</mat-error>
+      }
 
-      <!-- Botón de envío -->
       <button
         type="submit"
         mat-raised-button
-        color="primary"
-        class="w-full max-w-sm"
+        class="w-full"
         [disabled]="loginForm.invalid"
       >
         Ingresar
       </button>
     </form>
-
-    <!-- Mensaje de error -->
-    <div
-      *ngIf="loginError"
-      class="mt-4 text-center text-sm text-red-600 bg-red-100 p-2 rounded-md"
-    >
-      Usuario o clave incorrectos. Inténtelo nuevamente.
-    </div>
   </mat-card-content>
 </mat-card>

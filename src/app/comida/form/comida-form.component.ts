@@ -17,7 +17,7 @@ import {MatButton} from '@angular/material/button';
 import {MatOption} from '@angular/material/core';
 import {MatCheckbox} from '@angular/material/checkbox';
 import {MatSelect} from '@angular/material/select';
-import {possibleErrors} from '../../form-errors';
+import {FormErrorService} from '../../formError/form-error.service';
 
 type ComidaFormData = {
   nombre: string,
@@ -64,7 +64,8 @@ export class ComidaFormComponent implements OnInit, AfterViewInit {
       private route: ActivatedRoute,
       private router: Router,
       private layoutService: LayoutService,
-      private notificationService: NotificationService
+      private notificationService: NotificationService,
+      private formErrorService: FormErrorService
     ) {
       this.form = new FormGroup({
         nombre: new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]),
@@ -102,13 +103,7 @@ export class ComidaFormComponent implements OnInit, AfterViewInit {
 
     updateErrorMessage(controlName: string) {
       const control = this.form.get(controlName);
-      if (control && control.touched && control.invalid) {
-        possibleErrors.forEach(error => {
-          if (control.hasError(error.name)) {
-            this.errorMessages[controlName] = error.errorFunction(control);
-          }
-        })
-      }
+      this.errorMessages[controlName] = this.formErrorService.updateErrorMessage(control);
     }
 
     saveComida(comidaData: ComidaFormData): void {

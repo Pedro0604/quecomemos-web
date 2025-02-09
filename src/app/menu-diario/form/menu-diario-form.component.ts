@@ -22,7 +22,6 @@ import {LayoutService} from '../../layout/layout.service';
 import {NotificationService} from '../../notification/notification.service';
 import {MenuDiarioService} from '../service/menu-diario.service';
 import {firstValueFrom} from 'rxjs';
-import {inArrayValidator, possibleErrors} from '../../form-errors';
 import {MatAnchor, MatButton} from '@angular/material/button';
 import {MatAutocomplete, MatAutocompleteTrigger, MatOption} from '@angular/material/autocomplete';
 import {MatCard, MatCardContent} from '@angular/material/card';
@@ -30,6 +29,7 @@ import {MatError, MatFormField, MatHint, MatLabel} from '@angular/material/form-
 import {MatIcon} from '@angular/material/icon';
 import {MatInput} from '@angular/material/input';
 import {MatSelect} from '@angular/material/select';
+import {FormErrorService, inArrayValidator} from '../../formError/form-error.service';
 
 type CampoMenu = {
   nombre: string,
@@ -98,7 +98,8 @@ export class MenuDiarioFormComponent implements OnInit, AfterViewInit {
     private router: Router,
     private layoutService: LayoutService,
     private notificationService: NotificationService,
-    private menuService: MenuService) {
+    private menuService: MenuService,
+    private formErrorService: FormErrorService) {
     this.form = new FormGroup({
       dia: new FormControl('', [Validators.required, inArrayValidator(diasSemanaArray)]),
       menuVegetariano: new FormControl('', [Validators.required]),
@@ -206,13 +207,7 @@ export class MenuDiarioFormComponent implements OnInit, AfterViewInit {
 
   updateErrorMessage(controlName: string) {
     const control = this.form.get(controlName);
-    if (control && control.touched && control.invalid) {
-      possibleErrors.forEach(error => {
-        if (control.hasError(error.name)) {
-          this.errorMessages[controlName] = error.errorFunction(control);
-        }
-      })
-    }
+    this.errorMessages[controlName] = this.formErrorService.updateErrorMessage(control);
   }
 
   saveMenu(menuData: MenuDiarioFormData): void {
