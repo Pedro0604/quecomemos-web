@@ -1,18 +1,20 @@
 import {AfterViewInit, Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
-import {MatError, MatFormField, MatPrefix} from '@angular/material/form-field';
+import {MatError, MatFormField} from '@angular/material/form-field';
 import {MatCard, MatCardContent} from '@angular/material/card';
 import {MatInput, MatLabel, MatHint} from '@angular/material/input';
 import {MatButton} from '@angular/material/button';
-import {MatOption} from '@angular/material/core';
-import {MatCheckbox} from '@angular/material/checkbox';
-import {MatSelect} from '@angular/material/select';
-import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {User, UserDTO} from '../user.model';
 import {FormErrorService, onlyLettersValidator, urlValidator} from '../../formError/form-error.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {LayoutService} from '../../layout/layout.service';
 import {NotificationService} from '../../notification/notification.service';
 import {UserService} from '../service/user.service';
+import {MatDialog} from '@angular/material/dialog';
+import {ConfirmDialogComponent} from '../confirm-dialog/confirm-dialog.component';
+import {AuthService} from '../../auth/login/services/auth.service';
+import {concatMap, first, of} from 'rxjs';
+import {catchError} from 'rxjs/operators';
 
 type UserFormData = {
   nombre: string,
@@ -20,8 +22,7 @@ type UserFormData = {
   dni: number,
   email: string,
   urlImagen: string,
-  clave: string,
-  confirmClave: string
+  clave: string
 }
 
 @Component({
@@ -50,6 +51,8 @@ export class UserFormComponent implements OnInit, AfterViewInit {
 
   errorMessages: { [key: string]: string } = {};
 
+  roles: ('clientes' | 'responsables' | 'administradores')[] = ['clientes', 'responsables', 'administradores'];
+
   constructor(
     private formErrorService: FormErrorService,
     private userService: UserService,
@@ -57,7 +60,9 @@ export class UserFormComponent implements OnInit, AfterViewInit {
     private activatedRoute: ActivatedRoute,
     private layoutService: LayoutService,
     private notificationService: NotificationService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private dialog: MatDialog,
+    private authService: AuthService
   ) {
     this.form = this.fb.group({
       nombre: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30), onlyLettersValidator]],
@@ -65,10 +70,7 @@ export class UserFormComponent implements OnInit, AfterViewInit {
       dni: ['', [Validators.required, Validators.min(1000000), Validators.max(99999999)]],
       email: ['', [Validators.required, Validators.email]],
       urlImagen: ['', [Validators.required, urlValidator]],
-      clave: ['', [Validators.required, Validators.minLength(6)]],
-      confirmClave: ['', [Validators.required]],
-    }, {
-      validators: this.claveMatchValidator
+      clave: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
 
@@ -83,6 +85,7 @@ export class UserFormComponent implements OnInit, AfterViewInit {
           this.form.get('dni')?.setValue(this.user.dni);
           this.form.get('email')?.setValue(this.user.email);
           this.form.get('urlImagen')?.setValue(this.user.urlImagen);
+          this.form.get('clave')?.setValue(this.user.clave);
         },
         error: error => {
           this.error = true;
@@ -110,9 +113,6 @@ export class UserFormComponent implements OnInit, AfterViewInit {
       clave: userData.clave
     }
 
-    console.log('User data: ', dto);
-    console.log('ID: ', this.user?.id);
-
     if (this.user?.id) {
       this.userService.updateUser(this.user.id, dto).subscribe({
         complete: () => {
@@ -125,26 +125,56 @@ export class UserFormComponent implements OnInit, AfterViewInit {
         }
       });
     }
+
   }
 
   onSubmit(): void {
     if (this.form.valid) {
       const userData: UserFormData = this.form.value;
-      this.saveUser(userData);
+
+      const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+        width: '400px',
+        disableClose: true // Evita que se cierre sin elegir una opción
+      });
+
+      dialogRef.afterClosed().subscribe(password => {
+        if (password) {
+
+          const credenciales = {
+            dni: userData.dni,
+            clave: password
+          };
+
+          of(...this.roles).pipe(
+            concatMap((role) =>
+              this.authService.authenticate(role, credenciales).pipe(
+                catchError(() => of(null)) // Si falla, retorna null y sigue con el siguiente rol
+              )
+            ),
+            first((response) => response && response.headers && response.headers.get("authorization"), null)// Detiene el flujo en el primer login exitoso
+          ).subscribe({
+            next: (response) => {
+              if (response) {
+                this.saveUser(userData);
+              } else {
+                this.notificationService.show('La contraseña ingresada es incorrecta. Vuelva a intentarlo');
+              }
+          },
+            error: () => {
+            this.notificationService.show('Error en la autenticación. Vuelva a intentarlo');
+          }
+          });
+
+        } else {
+          console.log('Modificación cancelada');
+        }
+
+      });
+
     } else {
       this.notificationService.show('Error al enviar el formulario. Vuelva a intentarlo.');
     }
-  }
 
-  claveMatchValidator(group: FormGroup): { [key: string]: boolean } | null {
-    const clave = group.get('clave')?.value;
-    const confirmClave = group.get('confirmClave')?.value;
-
-    if (clave && confirmClave && clave !== confirmClave) {
-      group.get('confirmClave')?.setErrors({clavesDoNotMatch: true});
-      return {clavesDoNotMatch: true};
-    }
-    return null;
   }
 
   @ViewChild('extra') extraTemplate!: TemplateRef<any> | null;

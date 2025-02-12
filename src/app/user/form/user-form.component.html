@@ -79,22 +79,6 @@
           class="bg-transparent"
         >
       </mat-form-field>
-      <mat-form-field>
-        <mat-label>Contraseña</mat-label>
-        <input matInput type="clave" formControlName="clave" placeholder="Ingrese su contraseña" required
-               (blur)="updateErrorMessage('clave')"/>
-        @if (errorMessages['clave']) {
-          <mat-error>{{ errorMessages['clave'] }}</mat-error>
-        }
-      </mat-form-field>
-      <mat-form-field>
-        <mat-label>Confirmar Contraseña</mat-label>
-        <input matInput type="clave" formControlName="confirmClave" placeholder="Confirme su contraseña" required
-               (blur)="updateErrorMessage('confirmClave')"/>
-        @if (errorMessages['confirmClave']) {
-          <mat-error>{{ errorMessages['confirmClave'] }}</mat-error>
-        }
-      </mat-form-field>
       <div class="col-span-2">
         <button
           mat-raised-button
