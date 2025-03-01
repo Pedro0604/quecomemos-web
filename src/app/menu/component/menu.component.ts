@@ -7,13 +7,13 @@ import {Menu} from '../menu.model';
 import {RouterLink} from '@angular/router';
 import {DialogEliminarMenuComponent} from '../dialog-eliminar/dialog-eliminar-menu.component';
 import {MatDialog} from '@angular/material/dialog';
+import {DefaultImageDirective} from '../../directives/default-image-directive/default-image.directive';
 
 @Component({
   selector: 'app-menu',
-  imports: [MatCardModule, MatIcon, MatDivider, MatButton, MatAnchor, RouterLink],
+  imports: [MatCardModule, MatIcon, MatDivider, MatButton, MatAnchor, RouterLink, DefaultImageDirective],
   templateUrl: './menu.component.html',
   standalone: true,
-  styleUrl: './menu.component.scss'
 })
 
 export class MenuComponent {

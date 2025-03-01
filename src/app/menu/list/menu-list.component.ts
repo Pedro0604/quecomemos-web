@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {MatIcon} from '@angular/material/icon';
 import {LayoutService} from '../../layout/layout.service';
 import {MenuComponent} from '../component/menu.component';
@@ -8,6 +8,7 @@ import {MenuService} from '../service/menu.service';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {MatAnchor} from '@angular/material/button';
 import {RouterLink} from '@angular/router';
+import {TitleExtraComponent} from '../../components/title-extra/title-extra.component';
 
 @Component({
   selector: 'app-menu-list',
@@ -16,11 +17,11 @@ import {RouterLink} from '@angular/router';
     MenuComponent,
     MatProgressSpinner,
     MatAnchor,
-    RouterLink
+    RouterLink,
+    TitleExtraComponent
   ],
   templateUrl: './menu-list.component.html',
   standalone: true,
-  styleUrl: './menu-list.component.css',
 })
 
 export class MenuListComponent implements AfterViewInit, OnInit {
@@ -54,11 +55,8 @@ export class MenuListComponent implements AfterViewInit, OnInit {
     });
   }
 
-  @ViewChild('extra') extraTemplate!: TemplateRef<any> | null;
-
   ngAfterViewInit(): void {
     this.layoutService.setTitle('Menús');
-    this.layoutService.setExtra(this.extraTemplate);
   }
 
   handleDeleteMenu(id: number) {

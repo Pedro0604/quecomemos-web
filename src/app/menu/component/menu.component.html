@@ -1,4 +1,6 @@
-<mat-card class="w-full h-full {{straightLeftBorder ? '!rounded-l-none' : ''}} {{straightRightBorder ? '!rounded-r-none' : ''}}" [appearance]="appearance">
+<mat-card
+  class="w-full h-full {{straightLeftBorder ? '!rounded-l-none' : ''}} {{straightRightBorder ? '!rounded-r-none' : ''}}"
+  [appearance]="appearance">
   <mat-card-header class="flex justify-between">
     <mat-card-title>{{ menu.nombre }}</mat-card-title>
     <mat-card-subtitle>${{ menu.precio }}</mat-card-subtitle>
@@ -15,11 +17,9 @@
             <p class="text-lg">{{ comida.nombre }}</p>
           </div>
           <div class="flex justify-center items-center w-20 h-20 border image-container">
-            @if (comida.urlImagen) {
-              <img class="object-cover aspect-square" [src]="comida.urlImagen" [alt]="comida.nombre">
-            } @else {
-              <mat-icon class="text-5xl !w-fit !h-fit">no_photography</mat-icon>
-            }
+            <img class="object-cover aspect-square w-full h-full"
+                 [src]="comida.urlImagen"
+                 [alt]="comida.nombre">
           </div>
         </div>
         @if (!$last) {
