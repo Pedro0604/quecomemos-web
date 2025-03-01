@@ -35,7 +35,7 @@ app-input {
   }
 }
 
-.error {
+.violet-error {
   @include mat.theme((
     color: (
       primary: mat.$violet-palette,
@@ -60,6 +60,7 @@ mat-card-actions {
 .error {
   color: var(--mat-sys-error);
 }
+
 // Default image styles
 .g-skeleton {
   background-color: rgb(224, 224, 224);

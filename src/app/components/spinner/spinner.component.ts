@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {booleanAttribute, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
 
 @Component({
@@ -10,7 +10,7 @@ import {MatProgressSpinner} from '@angular/material/progress-spinner';
   standalone: true
 })
 export class SpinnerComponent implements OnInit, OnChanges {
-  @Input({required: true}) loading: boolean = false;
+  @Input({required: true, transform: booleanAttribute}) loading!: boolean;
 
   showSpinner: boolean = false;
 

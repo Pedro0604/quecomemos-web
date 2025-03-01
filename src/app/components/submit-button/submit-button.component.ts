@@ -14,7 +14,7 @@ import {MatTooltip} from '@angular/material/tooltip';
   standalone: true
 })
 export class SubmitButtonComponent {
-  @Input({required: true}) form: FormGroup = new FormGroup({});
+  @Input({required: true}) form!: FormGroup;
   @Input() pendingText = 'Enviando';
 
   constructor(protected formService: FormService) {

@@ -1,13 +1,14 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {environment} from '../../../environments/environment';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {MenuDiario, MenuDiarioDTO} from '../menu-diario.model';
+import {Deletable} from '../../utils/Deletable';
 
 @Injectable({
   providedIn: 'root'
 })
-export class MenuDiarioService {
+export class MenuDiarioService implements Deletable {
 
   private apiUrl = environment.apiBaseUrl + "/menus-diarios";
 
@@ -30,7 +31,7 @@ export class MenuDiarioService {
     return this.http.put<MenuDiarioDTO>(this.apiUrl + "/" + id, menu);
   }
 
-  deleteMenuDiario(id: number): Observable<void> {
+  delete(id: number): Observable<void> {
     return this.http.delete<void>(this.apiUrl + "/" + id);
   }
 

@@ -26,7 +26,6 @@ import {SpinnerComponent} from '../../components/spinner/spinner.component';
 import {AutocompleteComponent} from '../../components/autocomplete/autocomplete.component';
 import {FormService} from '../../form-service/form.service';
 import {FormStateHandler} from '../../utils/FormStateHandler';
-import {DefaultImageDirective} from '../../directives/default-image-directive/default-image.directive';
 import {SubmitButtonComponent} from '../../components/submit-button/submit-button.component';
 import {TitleExtraComponent} from '../../components/title-extra/title-extra.component';
 import {
@@ -54,7 +53,6 @@ type CampoComida = {
     InputComponent,
     SpinnerComponent,
     AutocompleteComponent,
-    DefaultImageDirective,
     SubmitButtonComponent,
     TitleExtraComponent,
     FocusFirstInvalidFieldDirective

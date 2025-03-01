@@ -1,0 +1,32 @@
+<div>
+  <app-spinner [loading]="isDeleting"/>
+  <h2 mat-dialog-title>Eliminación de {{ data.baseEntityName }} '{{ data.deletingEntityName }}'</h2>
+  <mat-dialog-content>
+    <p class="error text-lg">¡Esta acción es irreversible!</p>
+    <p>¿Estás seguro de eliminar {{ data.baseEntityName }} '{{ data.deletingEntityName }}'?</p>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button
+      type="button"
+      mat-button
+      cdkFocusInitial
+      (click)="onNoClick()"
+      [disabled]="isDeleting"
+      [matTooltip]="isDeleting ? 'Eliminando...' : ''"
+      disabledInteractive
+    >
+      {{ isDeleting ? 'Eliminando...' : 'Cancelar' }}
+    </button>
+    <button
+      type="button"
+      mat-button
+      class="violet-error"
+      (click)="deleteEntity()"
+      [disabled]="isDeleting"
+      [matTooltip]="isDeleting ? 'Eliminando...' : ''"
+      disabledInteractive
+    >
+      {{ isDeleting ? 'Eliminando...' : 'Eliminar' }}
+    </button>
+  </mat-dialog-actions>
+</div>

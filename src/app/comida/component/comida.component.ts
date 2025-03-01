@@ -1,4 +1,4 @@
-import {Component, EventEmitter, inject, Input, Output} from '@angular/core';
+import {booleanAttribute, Component, EventEmitter, inject, Input, Output} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {Comida} from '../comida.model';
 import {
@@ -12,8 +12,8 @@ import {
 import {MatIcon} from '@angular/material/icon';
 import {MatAnchor, MatButton} from '@angular/material/button';
 import {RouterLink} from '@angular/router';
-import {DialogEliminarComidaComponent} from "../dialog-eliminar/dialog-eliminar-comida.component";
-import {DefaultImageDirective} from '../../directives/default-image-directive/default-image.directive';
+import {DialogEliminarComponent} from '../../components/dialog-eliminar/dialog-eliminar.component';
+import {ComidaService} from '../service/comida.service';
 
 @Component({
   selector: 'app-comida',
@@ -30,28 +30,28 @@ import {DefaultImageDirective} from '../../directives/default-image-directive/de
     MatAnchor,
     MatButton,
     RouterLink,
-    DefaultImageDirective,
   ],
 })
 
 export class ComidaComponent {
   dialog = inject(MatDialog);
   @Input({required: true}) comida!: Comida;
-  @Input() showButtons: boolean = true;
+  @Input({transform: booleanAttribute}) showButtons: boolean = true;
   @Output() onDelete = new EventEmitter<number>();
 
-  imagenError = false;
-
-  constructor() {
+  constructor(private comidaService: ComidaService) {
   }
 
   openDialogEliminar(): void {
-    const dialogRef = this.dialog.open(DialogEliminarComidaComponent, {
-      data: {comida: this.comida},
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
+    this.dialog.open(DialogEliminarComponent<Comida, ComidaService>, {
+      data: {
+        entity: this.comida,
+        service: this.comidaService,
+        baseEntityName: 'la comida',
+        deletingEntityName: this.comida.nombre,
+      }
+    }).afterClosed().subscribe((deleted) => {
+      if (deleted) {
         this.onDelete.emit(this.comida.id);
       }
     });

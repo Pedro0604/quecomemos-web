@@ -3,11 +3,12 @@ import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {environment} from '../../../environments/environment';
 import {Menu, MenuDTO} from '../menu.model';
+import {Deletable} from '../../utils/Deletable';
 
 @Injectable({
   providedIn: 'root'
 })
-export class MenuService {
+export class MenuService implements Deletable {
 
   private apiUrl = environment.apiBaseUrl + "/menus";
 
@@ -30,7 +31,7 @@ export class MenuService {
     return this.http.put<MenuDTO>(this.apiUrl + "/" + id, menu);
   }
 
-  deleteMenu(id: number): Observable<void> {
+  delete(id: number): Observable<void> {
     return this.http.delete<void>(this.apiUrl + "/" + id);
   }
 }
