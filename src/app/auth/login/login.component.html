@@ -1,44 +1,28 @@
 <mat-card class="w-full max-w-xl h-full mx-auto" appearance="outlined">
   <mat-card-content class="my-4">
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="flex flex-col items-center gap-4">
-      <mat-form-field appearance="fill" class="w-full">
-        <mat-label>DNI</mat-label>
-        <input matInput type="text" formControlName="dni" placeholder="12345678"
-               (blur)="updateErrorMessage('dni')" required>
-        @if (errorMessages['dni']) {
-          <mat-error>{{ errorMessages['dni'] }}</mat-error>
-        }
-      </mat-form-field>
-      <mat-form-field appearance="fill" class="w-full">
-        <mat-label>Ingrese su contraseña</mat-label>
-        <input matInput [type]="hide() ? 'password' : 'text'" formControlName="clave" placeholder="Contraseña"
-               (blur)="updateErrorMessage('clave')"/>
-        <button
-          type="button"
-          mat-icon-button
-          matSuffix
-          (click)="toggleHide()"
-          [attr.aria-label]="'Toggle password visibility'"
-        >
-          <mat-icon>{{ hide() ? 'visibility_off' : 'visibility' }}</mat-icon>
-        </button>
-        @if (errorMessages['clave']) {
-          <mat-error>{{ errorMessages['clave'] }}</mat-error>
-        }
-      </mat-form-field>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
+      <app-input
+        label="DNI"
+        type="text"
+        placeholder='12345678'
+        [abstractControl]="this.loginForm.get('dni')"
+        minLength="7"
+        maxLength="8"
+      />
+      <app-input
+        label="Contraseña"
+        type="password"
+        placeholder="************"
+        [abstractControl]="this.loginForm.get('clave')"
+        minLength="6"
+        maxLength="30"
+      />
 
       @if (loginError()) {
-        <mat-error>Credenciales incorrectas. Inténtelo nuevamente.</mat-error>
+        <mat-error>Credenciales incorrectas</mat-error>
       }
 
-      <button
-        type="submit"
-        mat-raised-button
-        class="w-full"
-        [disabled]="loginForm.invalid"
-      >
-        Ingresar
-      </button>
+      <app-submit-button [form]="loginForm" pendingText="Ingresando">Ingresar</app-submit-button>
     </form>
   </mat-card-content>
 </mat-card>

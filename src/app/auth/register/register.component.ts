@@ -8,14 +8,17 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatCardModule} from '@angular/material/card';
 import {Router} from '@angular/router';
-import {HttpClient} from '@angular/common/http';
 import {NotificationService} from '../../notification/notification.service';
+import {InputComponent} from '../../components/input/input.component';
+import {AuthService, UserData} from '../service/auth.service';
 import {
-  FormErrorService,
+  FormService,
   onlyLettersValidator,
   onlyNumbersValidator,
   urlValidator
-} from '../../formError/form-error.service';
+} from '../../form-service/form.service';
+import {SubmitButtonComponent} from '../../components/submit-button/submit-button.component';
+import {FocusFirstInvalidFieldDirective} from '../../directives/focus-first-invalid-field.directive/focus-first-invalid-field.directive';
 
 
 @Component({
@@ -28,41 +31,47 @@ import {
     MatInputModule,
     MatButtonModule,
     MatIconModule,
-    MatCardModule],
+    MatCardModule,
+    InputComponent,
+    SubmitButtonComponent,
+    FocusFirstInvalidFieldDirective
+  ],
 })
 export class RegisterComponent implements AfterViewInit {
-
   registerForm: FormGroup;
-  errorMessages: { [key: string]: string } = {};
 
   constructor(
     private layoutService: LayoutService,
     private fb: FormBuilder,
-    private http: HttpClient,
     private router: Router,
     private notificationService: NotificationService,
-    private formErrorService: FormErrorService
+    protected formService: FormService,
+    private authService: AuthService
   ) {
-
     this.registerForm = this.fb.group({
-      dni: ['', [Validators.required, Validators.minLength(7), Validators.maxLength(8), onlyNumbersValidator]],
-      nombre: ['', [Validators.required, onlyLettersValidator]],
-      apellido: ['', [Validators.required, onlyLettersValidator]],
-      urlImagen: ['', [Validators.required, urlValidator]],
-      email: ['', [Validators.required, Validators.email]],
-      clave: ['', [Validators.required, Validators.minLength(6)]],
-      confirmClave: ['', Validators.required],
+      dni: ['', [onlyNumbersValidator]],
+      nombre: ['', [onlyLettersValidator]],
+      apellido: ['', [onlyLettersValidator]],
+      urlImagen: ['', [urlValidator]],
+      email: ['', [Validators.email]],
+      clave: [''],
+      confirmClave: [''],
     }, {
-      validators: this.passwordMatchValidator
+      validators: this.confirmationMatchesPasswordValidator
     });
   }
 
-  passwordMatchValidator(group: FormGroup): { [key: string]: boolean } | null {
+  ngAfterViewInit(): void {
+    this.layoutService.setTitle('Registro de usuario');
+  }
+
+  confirmationMatchesPasswordValidator(group: FormGroup): { [key: string]: boolean } | null {
     const password = group.get('clave')?.value;
     const confirmPassword = group.get('confirmClave')?.value;
 
     if (password && confirmPassword && password !== confirmPassword) {
-      group.get('confirmClave')?.setErrors({passwordsDoNotMatch: true});
+      group.get('confirmClave')?.setErrors({...group.get('confirmClave')?.errors, passwordsDoNotMatch: true});
+      group.get('clave')?.setErrors({...group.get('clave')?.errors, passwordsDoNotMatch: true});
       return {passwordsDoNotMatch: true};
     }
     return null;
@@ -70,37 +79,40 @@ export class RegisterComponent implements AfterViewInit {
 
   register() {
     if (this.registerForm.valid) {
-      const datosRegistro = this.registerForm.value;
-      this.http
-        .post('http://localhost:8080/clientes', datosRegistro, {observe: 'response'})
-        .subscribe({
-          next: () => {
-            this.notificationService.show('Usuario registrado exitosamente');
-            this.router.navigate(['/login']);
-          },
-          error: (error) => {
-            if (error.status === 400) {
-              const mensaje = error.error?.message || 'El usuario ya existe.';
-              this.notificationService.show(mensaje);
-            } else {
-              this.notificationService.show('Error al registrar el usuario. Por favor, intente más tarde.');
+      const userData: UserData = {
+        dni: this.registerForm.get('dni')?.value,
+        nombre: this.registerForm.get('nombre')?.value,
+        apellido: this.registerForm.get('apellido')?.value,
+        urlImagen: this.registerForm.get('urlImagen')?.value,
+        email: this.registerForm.get('email')?.value,
+        clave: this.registerForm.get('clave')?.value,
+      };
+
+      this.authService.register('clientes', userData).subscribe({
+        next: () => {
+          this.notificationService.show('Usuario registrado exitosamente');
+          this.authService.authenticate('clientes', this.registerForm.value).subscribe({
+            next: (response) => {
+              if (response && response.headers && response.headers.get('authorization')) {
+                const token = response.headers.get('authorization');
+                this.authService.login(token);
+                this.router.navigate(['/']);
+              } else {
+                this.router.navigate(['/login']);
+              }
+            },
+            error: () => {
+              this.router.navigate(['/login']);
             }
-          },
-          complete: () => {
-          },
-        });
+          })
+        },
+        error: (error) => {
+          const mensaje = error.status === 400 ? error.error?.message || 'El usuario ya existe.' : 'Error al registrar el usuario. Por favor, intente más tarde.';
+          this.notificationService.show(mensaje);
+        }
+      });
     } else {
-      this.registerForm.markAllAsTouched();
-      this.notificationService.show('El formulario contiene errores. Por favor, revisa los campos.');
+      this.formService.validateAllFields(this.registerForm);
     }
-  }
-
-  ngAfterViewInit(): void {
-    this.layoutService.setTitle('Registro de usuario');
-  }
-
-  updateErrorMessage(controlName: string) {
-    const control = this.registerForm.get(controlName);
-    this.errorMessages[controlName] = this.formErrorService.updateErrorMessage(control);
   }
 }

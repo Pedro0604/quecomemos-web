@@ -1,82 +1,66 @@
 <div class="flex items-center justify-center">
   <mat-card class="p-8 w-full max-w-4xl">
     <form [formGroup]="registerForm" (ngSubmit)="register()" class="grid grid-cols-2 gap-6">
-      <mat-form-field appearance="fill" class="w-full">
-        <mat-label>DNI</mat-label>
-        <input
-          matInput
-          type="text"
-          formControlName="dni"
-          placeholder="Ingrese su DNI"
-          (blur)="updateErrorMessage('dni')"
-          required
-        />
-        @if (errorMessages['dni']) {
-          <mat-error>{{ errorMessages['dni'] }}</mat-error>
-        }
-      </mat-form-field>
-      <mat-form-field appearance="fill" class="w-full">
-        <mat-label>Nombre</mat-label>
-        <input matInput type="text" formControlName="nombre" placeholder="Ingrese su nombre" required
-               (blur)="updateErrorMessage('nombre')"/>
-        @if (errorMessages['nombre']) {
-          <mat-error>{{ errorMessages['nombre'] }}</mat-error>
-        }
-      </mat-form-field>
-      <mat-form-field appearance="fill" class="w-full">
-        <mat-label>Apellido</mat-label>
-        <input matInput type="text" formControlName="apellido" placeholder="Ingrese su apellido" required
-               (blur)="updateErrorMessage('apellido')"/>
-        @if (errorMessages['apellido']) {
-          <mat-error>{{ errorMessages['apellido'] }}</mat-error>
-        }
-      </mat-form-field>
-      <mat-form-field appearance="fill" class="w-full">
-        <mat-label>Email</mat-label>
-        <input
-          matInput
-          type="email"
-          formControlName="email"
-          placeholder="Ingrese su correo electrónico"
-          required
-          (blur)="updateErrorMessage('email')"/>
-        @if (errorMessages['email']) {
-          <mat-error>{{ errorMessages['email'] }}</mat-error>
-        }
-      </mat-form-field>
-      <mat-form-field appearance="fill" class="w-full">
-        <mat-label>URL de Imagen</mat-label>
-        <input matInput type="text" formControlName="urlImagen" placeholder="https://www.ejemplo.com" required
-               (blur)="updateErrorMessage('urlImagen')"/>
-        @if (errorMessages['urlImagen']) {
-          <mat-error>{{ errorMessages['urlImagen'] }}</mat-error>
-        }
-      </mat-form-field>
-      <mat-form-field>
-        <mat-label>Contraseña</mat-label>
-        <input matInput type="password" formControlName="clave" placeholder="Ingrese su contraseña" required
-               (blur)="updateErrorMessage('clave')"/>
-        @if (errorMessages['clave']) {
-          <mat-error>{{ errorMessages['clave'] }}</mat-error>
-        }
-      </mat-form-field>
-      <mat-form-field>
-        <mat-label>Confirmar Contraseña</mat-label>
-        <input matInput type="password" formControlName="confirmClave" placeholder="Confirme su contraseña" required
-               (blur)="updateErrorMessage('confirmClave')"/>
-        @if (errorMessages['confirmClave']) {
-          <mat-error>{{ errorMessages['confirmClave'] }}</mat-error>
-        }
-      </mat-form-field>
+      <app-input
+        label="DNI"
+        type="text"
+        placeholder="12345678"
+        [abstractControl]="this.registerForm.get('dni')"
+        minLength="7"
+        maxLength="8"
+      />
+      <app-input
+        label="Nombre"
+        type="text"
+        placeholder="Ingrese su nombre"
+        [abstractControl]="this.registerForm.get('nombre')"
+        minLength="3"
+        maxLength="255"
+      />
+      <app-input
+        label="Apellido"
+        type="text"
+        placeholder="Ingrese su apellido"
+        [abstractControl]="this.registerForm.get('apellido')"
+        minLength="3"
+        maxLength="255"
+      />
+      <app-input
+        label="Email"
+        type="email"
+        placeholder="ejemplo@gmail.com"
+        [abstractControl]="this.registerForm.get('email')"
+        minLength="3"
+        maxLength="255"
+      />
+      <app-input
+        label="URL de Imagen"
+        type="text"
+        placeholder="https://www.ejemplo.com"
+        [abstractControl]="this.registerForm.get('urlImagen')"
+        minLength="7"
+        maxLength="255"
+      />
+      <app-input
+        label="Contraseña"
+        type="password"
+        placeholder="************"
+        [abstractControl]="this.registerForm.get('clave')"
+        (input)="this.registerForm.get('confirmClave')?.updateValueAndValidity()"
+        minLength="6"
+        maxLength="30"
+      />
+      <app-input
+        label="Confirmación de Contraseña"
+        type="password"
+        placeholder="************"
+        [abstractControl]="this.registerForm.get('confirmClave')"
+        (input)="this.registerForm.get('clave')?.updateValueAndValidity()"
+        minLength="6"
+        maxLength="30"
+      />
       <div class="col-span-2">
-        <button
-          mat-raised-button
-          class="w-full"
-          type="submit"
-          [disabled]="registerForm.invalid"
-        >
-          Registrarse
-        </button>
+        <app-submit-button [form]="registerForm" pendingText="Registrando usuario">Registrar usuario</app-submit-button>
       </div>
     </form>
   </mat-card>
