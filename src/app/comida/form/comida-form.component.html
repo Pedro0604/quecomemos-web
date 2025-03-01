@@ -1,79 +1,49 @@
-<!-- Template que se renderiza debajo del titulo -->
-<ng-template #extra>
-      <span class="flex justify-start mx-6">
-        <button mat-button (click)="history.back()">Volver</button>
-      </span>
-</ng-template>
+<app-title-extra showVolver/>
 
 <mat-card class="w-full max-w-2xl h-full mx-auto" appearance="outlined">
   <mat-card-content class="my-4">
     <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <mat-form-field>
-          <mat-label>Nombre de la comida</mat-label>
-          <input
-            matInput
-            type="text"
-            formControlName="nombre"
-            placeholder="Nombre"
-            (blur)="updateErrorMessage('nombre')"
-            required
-          >
-          <mat-hint align="end">{{ form.get('nombre')?.value?.length || 0 }}/255</mat-hint>
-          @if (errorMessages['nombre']) {
-            <mat-error>{{ errorMessages['nombre'] }}</mat-error>
-          }
-        </mat-form-field>
-        <mat-form-field floatLabel="always">
-          <mat-label>Precio de la comida</mat-label>
-          <input matInput type="number" class="precio-input" formControlName="precio" placeholder="0"
-                 (blur)="updateErrorMessage('precio')" required/>
-          <span matTextPrefix>$&nbsp;</span>
-          @if (errorMessages['precio']) {
-            <mat-error>{{ errorMessages['precio'] }}</mat-error>
-          }
-        </mat-form-field>
-      </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <mat-form-field>
-          <mat-label>Tipo de comida</mat-label>
-          <mat-select formControlName="tipoComida" placeholder="Seleccione un tipo de comida"
-                      (blur)="updateErrorMessage('tipoComida')">
-            @for (tipo of tiposDeComida; track tipo) {
-              <mat-option [value]="tipo">{{ tipo.replace("_", " ") }}</mat-option>
-            }
-          </mat-select>
-          @if (errorMessages['tipoComida']) {
-            <mat-error>{{ errorMessages['tipoComida'] }}</mat-error>
-          }
-        </mat-form-field>
-        <mat-form-field>
-          <mat-label>Url Imagen</mat-label>
-          <input
-            matInput
-            type="text"
-            formControlName="urlImagen"
-            placeholder="Ingrese url de la imagen"
-            (blur)="updateErrorMessage('urlImagen')"
-          >
-          @if (errorMessages['urlImagen']) {
-            <mat-error>{{ errorMessages['urlImagen'] }}</mat-error>
-          }
-        </mat-form-field>
+        <app-input
+          label="Nombre de la comida"
+          type="text"
+          placeholder="Nombre"
+          [abstractControl]="form.get('nombre')"
+          minLength="3"
+          maxLength="255"
+        />
+        <app-input
+          label="Precio de la comida"
+          type="number"
+          placeholder="0"
+          [abstractControl]="form.get('precio')"
+          textPrefix="$&nbsp;"
+          floatLabel="always"
+        />
+        <app-select
+          label="Tipo de comida"
+          [abstractControl]="form.get('tipoComida')"
+          placeholder="Seleccione un tipo de comida"
+          [opciones]="tiposDeComidaOptions"
+        />
+        <app-input
+          label="URL de la imagen"
+          type="text"
+          placeholder="https://www.ejemplo.com"
+          [abstractControl]="form.get('urlImagen')"
+          [required]="false"
+          minLength="7"
+          maxLength="255"
+        />
       </div>
       <mat-checkbox formControlName="vegetariana">¿Es vegetariana?</mat-checkbox>
-      @if (errorMessages['vegetariana']) {
-        <mat-error>{{ errorMessages['vegetariana'] }}</mat-error>
-      }
       <div class="ms-4">
         @if (error) {
           <mat-error>Ha ocurrido un error</mat-error>
           <mat-error>Por favor, intente nuevamente más tarde</mat-error>
         }
       </div>
-      <button mat-raised-button class="w-full" type="submit"
-              [disabled]="form.invalid || !form.dirty">{{ form.pending ? 'Enviando' : 'Enviar' }}
-      </button>
+      <app-submit-button [form]="form" pendingText="Creando comida">Crear comida</app-submit-button>
     </form>
   </mat-card-content>
 </mat-card>

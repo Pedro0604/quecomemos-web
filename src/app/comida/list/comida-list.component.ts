@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {Comida} from '../comida.model';
 import {LayoutService} from '../../layout/layout.service';
 import {ComidaService} from '../service/comida.service';
@@ -7,19 +7,20 @@ import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {ComidaComponent} from '../component/comida.component';
 import {MatAnchor} from "@angular/material/button";
 import {RouterLink} from "@angular/router";
+import {TitleExtraComponent} from '../../components/title-extra/title-extra.component';
 
 @Component({
   selector: 'app-comida-list',
-    imports: [
-        MatIcon,
-        MatProgressSpinner,
-        ComidaComponent,
-        MatAnchor,
-        RouterLink
-    ],
+  imports: [
+    MatIcon,
+    MatProgressSpinner,
+    ComidaComponent,
+    MatAnchor,
+    RouterLink,
+    TitleExtraComponent
+  ],
   templateUrl: './comida-list.component.html',
   standalone: true,
-  styleUrl: './comida-list.component.css'
 })
 export class ComidaListComponent implements AfterViewInit, OnInit {
   comidas: Comida[] = [];
@@ -45,11 +46,8 @@ export class ComidaListComponent implements AfterViewInit, OnInit {
     });
   }
 
-  @ViewChild('extra') extraTemplate!: TemplateRef<any> | null;
-
   ngAfterViewInit(): void {
     this.layoutService.setTitle('Todas las comidas');
-    this.layoutService.setExtra(this.extraTemplate);
   }
 
   handleDeleteComida(id: number) {

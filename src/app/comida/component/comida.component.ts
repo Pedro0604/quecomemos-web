@@ -13,6 +13,7 @@ import {MatIcon} from '@angular/material/icon';
 import {MatAnchor, MatButton} from '@angular/material/button';
 import {RouterLink} from '@angular/router';
 import {DialogEliminarComidaComponent} from "../dialog-eliminar/dialog-eliminar-comida.component";
+import {DefaultImageDirective} from '../../directives/default-image-directive/default-image.directive';
 
 @Component({
   selector: 'app-comida',
@@ -28,9 +29,9 @@ import {DialogEliminarComidaComponent} from "../dialog-eliminar/dialog-eliminar-
     MatCardSubtitle,
     MatAnchor,
     MatButton,
-    RouterLink
+    RouterLink,
+    DefaultImageDirective,
   ],
-  styleUrl: './comida.component.scss'
 })
 
 export class ComidaComponent {
@@ -38,6 +39,8 @@ export class ComidaComponent {
   @Input({required: true}) comida!: Comida;
   @Input() showButtons: boolean = true;
   @Output() onDelete = new EventEmitter<number>();
+
+  imagenError = false;
 
   constructor() {
   }
