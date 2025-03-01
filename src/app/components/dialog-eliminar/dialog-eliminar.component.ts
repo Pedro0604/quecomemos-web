@@ -8,7 +8,7 @@ import {
 } from '@angular/material/dialog';
 import { NotificationService } from '../../notification/notification.service';
 import { MatButton } from '@angular/material/button';
-import {Deletable} from '../../utils/Deletable';
+import {Deletable} from '../../crud-service/Deletable';
 import {SpinnerComponent} from '../spinner/spinner.component';
 import {MatTooltip} from '@angular/material/tooltip';
 

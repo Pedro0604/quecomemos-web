@@ -32,7 +32,7 @@ export class ComidaListComponent implements AfterViewInit, OnInit {
   }
 
   ngOnInit(): void {
-    this.comidaService.getComidas().subscribe({
+    this.comidaService.getAll().subscribe({
       next: (data) => {
         this.comidas = data;
       },

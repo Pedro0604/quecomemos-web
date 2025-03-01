@@ -97,7 +97,7 @@ export class MenuDiarioFormComponent extends FormStateHandler implements OnInit 
   private async cargarMenus(): Promise<void> {
     try {
       this.loading = true;
-      this.menus = await firstValueFrom(this.menuService.getMenus());
+      this.menus = await firstValueFrom(this.menuService.getAll());
       this.menus ??= [];
     } catch (error) {
       console.error('Error al obtener los menús');
@@ -111,7 +111,7 @@ export class MenuDiarioFormComponent extends FormStateHandler implements OnInit 
   async ngOnInit(): Promise<void> {
     const id = this.route.snapshot.params['id'];
     if (id) {
-      this.menuDiarioService.getMenuDiarioById(id).subscribe({
+      this.menuDiarioService.getById(id).subscribe({
         next: (data) => {
           this.menuDiario = data;
           this.form.get('dia')?.setValue(this.menuDiario.dia)
@@ -157,9 +157,9 @@ export class MenuDiarioFormComponent extends FormStateHandler implements OnInit 
     }
 
     if (this.menuDiario) {
-      this.menuDiarioService.updateMenuDiario(this.menuDiario.id, dto).subscribe(getPostOptions(true));
+      this.menuDiarioService.update(this.menuDiario.id, dto).subscribe(getPostOptions(true));
     } else {
-      this.menuDiarioService.createMenuDiario(dto).subscribe(getPostOptions(false));
+      this.menuDiarioService.create(dto).subscribe(getPostOptions(false));
     }
   }
 

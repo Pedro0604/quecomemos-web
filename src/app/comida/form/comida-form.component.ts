@@ -66,7 +66,7 @@ export class ComidaFormComponent implements OnInit {
   ngOnInit() {
     const id = this.route.snapshot.params['id'];
     if (id) {
-      this.comidaService.getComidaById(id).subscribe({
+      this.comidaService.getById(id).subscribe({
         next: (data) => {
           this.comida = data;
           this.form.get('nombre')?.setValue(this.comida.nombre);
@@ -111,9 +111,9 @@ export class ComidaFormComponent implements OnInit {
     }
 
     if (this.comida?.id) {
-      this.comidaService.updateComida(this.comida.id, comidaDTO).subscribe(getPostOptions(true));
+      this.comidaService.update(this.comida.id, comidaDTO).subscribe(getPostOptions(true));
     } else {
-      this.comidaService.createComida(comidaDTO).subscribe(getPostOptions(false));
+      this.comidaService.create(comidaDTO).subscribe(getPostOptions(false));
     }
   }
 

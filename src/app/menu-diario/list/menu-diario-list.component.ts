@@ -32,7 +32,7 @@ export class MenuDiarioListComponent implements AfterViewInit, OnInit {
   }
 
   ngOnInit(): void {
-    this.menuDiarioService.getMenusDiarios().subscribe({
+    this.menuDiarioService.getAll().subscribe({
       next: (data) => {
         this.menusDiarios = data ?? [];
       },

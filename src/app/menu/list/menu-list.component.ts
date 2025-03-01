@@ -36,7 +36,7 @@ export class MenuListComponent implements AfterViewInit, OnInit {
   }
 
   ngOnInit(): void {
-    this.menuService.getMenus().subscribe({
+    this.menuService.getAll().subscribe({
       next: (data) => {
         this.menus = data ?? [];
         this.menus.forEach(menu => {

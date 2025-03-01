@@ -3,7 +3,9 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DialogEliminarComponent } from './dialog-eliminar.component';
 
 describe('DialogEliminarComponent', () => {
+  // @ts-ignore
   let component: DialogEliminarComponent;
+  // @ts-ignore
   let fixture: ComponentFixture<DialogEliminarComponent>;
 
   beforeEach(async () => {

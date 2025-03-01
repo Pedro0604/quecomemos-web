@@ -149,7 +149,7 @@ export class MenuFormComponent extends FormStateHandler implements OnInit {
   async cargarComidas(): Promise<void> {
     try {
       this.loading = true;
-      this.comidas = await firstValueFrom(this.comidaService.getComidas());
+      this.comidas = await firstValueFrom(this.comidaService.getAll());
     } catch (error) {
       console.error('Error al obtener las comidas');
       console.error(error);
@@ -162,7 +162,7 @@ export class MenuFormComponent extends FormStateHandler implements OnInit {
   async ngOnInit(): Promise<void> {
     const id = this.route.snapshot.params['id'];
     if (id) {
-      this.menuService.getMenuById(id).subscribe({
+      this.menuService.getById(id).subscribe({
         next: (data) => {
           this.menu = data
           this.form.get('nombre')?.setValue(this.menu.nombre)
@@ -273,9 +273,9 @@ export class MenuFormComponent extends FormStateHandler implements OnInit {
     }
 
     if (this.menu) {
-      this.menuService.updateMenu(this.menu.id, dto).subscribe(getPostOptions(true));
+      this.menuService.update(this.menu.id, dto).subscribe(getPostOptions(true));
     } else {
-      this.menuService.createMenu(dto).subscribe(getPostOptions(false));
+      this.menuService.create(dto).subscribe(getPostOptions(false));
     }
   }
 
