@@ -1,0 +1,43 @@
+<mat-form-field appearance="fill" class="w-full" [floatLabel]="floatLabel">
+  <mat-label>{{ label }}</mat-label>
+  <input
+    type="text"
+    matInput
+    [placeholder]="placeholder"
+    [formControl]="control"
+    [matAutocomplete]="auto"
+    [required]="required"
+  >
+  <mat-autocomplete
+    autoActiveFirstOption
+    autoSelectActiveOption
+    #auto="matAutocomplete"
+    [displayWith]="displayWithFn"
+    (optionSelected)="onOptionSelected.emit($event)"
+  >
+    @for (opcion of opcionesFiltradas; track opcion.id) {
+      <mat-option [value]="opcion">
+        @if (optionTemplate) {
+          <ng-container *ngTemplateOutlet="optionTemplate; context: { $implicit: opcion }"></ng-container>
+        } @else {
+          {{ opcion.nombre }}
+        }
+      </mat-option>
+    }
+  </mat-autocomplete>
+
+  @if (textPrefix) {
+    <span matTextPrefix>{{ textPrefix }}</span>
+  }
+  @if (this.clearable && this.control.value) {
+    <button matSuffix mat-icon-button aria-label="Clear" (click)="this.control.setValue(null)">
+      <mat-icon>close</mat-icon>
+    </button>
+  }
+  @if (errorMessage) {
+    <mat-error>{{ errorMessage }}</mat-error>
+  }
+  @if (hint) {
+    <mat-hint>{{ hint }}</mat-hint>
+  }
+</mat-form-field>
