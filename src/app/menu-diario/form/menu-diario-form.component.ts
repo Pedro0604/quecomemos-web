@@ -1,41 +1,32 @@
-import {AfterViewInit, Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
-import {
-  diasSemanaArray,
-  MenuDiario,
-  MenuDiarioDTO,
-  MenuDiarioFormData,
-  traduccionDiasSemana
-} from '../menu-diario.model';
+import {Component, OnInit} from '@angular/core';
+import {diasSemanaArray, MenuDiario, MenuDiarioDTO, traduccionDiasSemana} from '../menu-diario.model';
 import {Menu} from '../../menu/menu.model';
-import {
-  AbstractControl,
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  ValidationErrors,
-  ValidatorFn,
-  Validators
-} from '@angular/forms';
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MenuService} from '../../menu/service/menu.service';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {LayoutService} from '../../layout/layout.service';
 import {NotificationService} from '../../notification/notification.service';
 import {MenuDiarioService} from '../service/menu-diario.service';
 import {firstValueFrom} from 'rxjs';
-import {MatAnchor, MatButton} from '@angular/material/button';
-import {MatAutocomplete, MatAutocompleteTrigger, MatOption} from '@angular/material/autocomplete';
+import {MatAnchor} from '@angular/material/button';
 import {MatCard, MatCardContent} from '@angular/material/card';
-import {MatError, MatFormField, MatHint, MatLabel} from '@angular/material/form-field';
+import {MatError} from '@angular/material/form-field';
 import {MatIcon} from '@angular/material/icon';
-import {MatInput} from '@angular/material/input';
-import {MatSelect} from '@angular/material/select';
-import {FormErrorService, inArrayValidator} from '../../formError/form-error.service';
+import {SelectComponent} from '../../components/select/select.component';
+import {SpinnerComponent} from '../../components/spinner/spinner.component';
+import {AutocompleteComponent} from '../../components/autocomplete/autocomplete.component';
+import {FormService, inArrayValidator} from "../../form-service/form.service";
+import {FormStateHandler} from '../../utils/FormStateHandler';
+import {SubmitButtonComponent} from '../../components/submit-button/submit-button.component';
+import {TitleExtraComponent} from '../../components/title-extra/title-extra.component';
+import {
+  FocusFirstInvalidFieldDirective
+} from '../../directives/focus-first-invalid-field.directive/focus-first-invalid-field.directive';
 
 type CampoMenu = {
   nombre: string,
   label: string,
-  menusFiltrados: Menu[],
-  menusIniciales: Menu[],
+  menus: Menu[],
   vegetariano: boolean
 }
 
@@ -43,51 +34,44 @@ type CampoMenu = {
   selector: 'app-menu-diario-form',
   imports: [
     MatAnchor,
-    MatAutocomplete,
-    MatAutocompleteTrigger,
-    MatButton,
     MatCard,
     MatCardContent,
     MatError,
-    MatFormField,
-    MatHint,
     MatIcon,
-    MatInput,
-    MatLabel,
-    MatOption,
     ReactiveFormsModule,
     RouterLink,
-    MatSelect
+    SelectComponent,
+    SpinnerComponent,
+    AutocompleteComponent,
+    SubmitButtonComponent,
+    TitleExtraComponent,
+    FocusFirstInvalidFieldDirective,
   ],
   templateUrl: './menu-diario-form.component.html',
   standalone: true,
-  styleUrl: './menu-diario-form.component.css'
 })
-export class MenuDiarioFormComponent implements OnInit, AfterViewInit {
+export class MenuDiarioFormComponent extends FormStateHandler implements OnInit {
   menuDiario: MenuDiario | null = null;
   menus: Menu[] = [];
 
-  loading: boolean = false;
-  error: boolean = false;
-
   form: FormGroup
 
-  errorMessages: { [key: string]: string } = {};
-  hints: { [key: string]: string } = {}
+  diasDeSemanaOptions = diasSemanaArray.map(diaSemana => ({
+    value: diaSemana,
+    name: traduccionDiasSemana(diaSemana)
+  }));
 
   camposDeMenus: CampoMenu[] = [
     {
       nombre: 'menuVegetariano',
       label: 'Menú vegetariano',
-      menusFiltrados: [],
-      menusIniciales: [],
+      menus: [],
       vegetariano: true
     },
     {
       nombre: 'menuNoVegetariano',
       label: 'Menú no vegetariano',
-      menusFiltrados: [],
-      menusIniciales: [],
+      menus: [],
       vegetariano: false
     },
   ];
@@ -99,43 +83,18 @@ export class MenuDiarioFormComponent implements OnInit, AfterViewInit {
     private layoutService: LayoutService,
     private notificationService: NotificationService,
     private menuService: MenuService,
-    private formErrorService: FormErrorService) {
-    this.form = new FormGroup({
-      dia: new FormControl('', [Validators.required, inArrayValidator(diasSemanaArray)]),
-      menuVegetariano: new FormControl('', [Validators.required]),
-      menuNoVegetariano: new FormControl('', [Validators.required]),
+    protected formService: FormService,
+    private fb: FormBuilder
+  ) {
+    super();
+    this.form = this.fb.group({
+      dia: ['', [inArrayValidator(diasSemanaArray)]],
+      menuVegetariano: [{value: '', disabled: true}],
+      menuNoVegetariano: [{value: '', disabled: true}],
     });
   }
 
-  menuSeleccionadoValidator(menusFiltrados: Menu[]): ValidatorFn {
-    return (control: AbstractControl): ValidationErrors | null => {
-      const menuSeleccionado = control.value;
-      if (menuSeleccionado) {
-        const menuValido = menusFiltrados.some(menu => menu.id === menuSeleccionado?.id);
-        return menuValido ? null : {menuInvalido: true};
-      }
-      return null;
-    };
-  }
-
-  private filtrarMenus(campo: CampoMenu): void {
-    const field = this.form.get(campo.nombre)
-    const valorCampo = field?.value;
-    const nombre = valorCampo ? typeof valorCampo == 'string' ? valorCampo : valorCampo.nombre : '';
-
-    campo.menusFiltrados = campo.menusIniciales.filter(menu => {
-      return menu.nombre.toLowerCase().includes(nombre.toLowerCase());
-    });
-
-    field?.setValidators([
-      this.menuSeleccionadoValidator(campo.menusFiltrados),
-      Validators.required
-    ]);
-    field?.updateValueAndValidity({emitEvent: false});
-    this.updateErrorMessage(campo.nombre);
-  }
-
-  async cargarMenusDiarios(): Promise<void> {
+  private async cargarMenus(): Promise<void> {
     try {
       this.loading = true;
       this.menus = await firstValueFrom(this.menuService.getMenus());
@@ -163,28 +122,17 @@ export class MenuDiarioFormComponent implements OnInit, AfterViewInit {
           this.error = true;
           console.error('Error al obtener el menú diario', error);
           this.notificationService.show('Ha ocurrido un error. Por favor, intente nuevamente más tarde');
-        }
+        },
       });
       this.layoutService.setTitle('Modificar Menú Diario');
     } else {
       this.layoutService.setTitle('Crear Menú Diario');
     }
 
-    await this.cargarMenusDiarios();
+    await this.cargarMenus();
 
     this.camposDeMenus.forEach(campo => {
-      campo.menusIniciales = this.menus.filter(menu => menu.vegetariano == campo.vegetariano);
-
-      const field = this.form.get(campo.nombre);
-      this.filtrarMenus(campo);
-      field?.valueChanges.subscribe(() => {
-        this.filtrarMenus(campo);
-      });
-
-      if (campo.menusIniciales.length === 0) {
-        this.hints[campo.nombre] = `No hay menús ${campo.vegetariano ? 'vegetarianos' : 'no vegetarianos'}`;
-        field?.disable();
-      }
+      campo.menus = this.menus.filter(menu => menu.vegetariano == campo.vegetariano);
     });
   }
 
@@ -192,74 +140,42 @@ export class MenuDiarioFormComponent implements OnInit, AfterViewInit {
     return menu && menu.nombre ? menu.nombre : '';
   }
 
-  selectMenuIfNameMatches(nombreCampo: string): void {
-    const field = this.form.get(nombreCampo);
-    const inputValue = field?.value || '';
-
-    const campoMenu = this.camposDeMenus.find(campo => campo.nombre === nombreCampo);
-
-    const menuSeleccionado = campoMenu?.menusIniciales.find(menu => menu.nombre.toLowerCase() === inputValue.toLowerCase());
-
-    if (menuSeleccionado) {
-      field?.setValue(menuSeleccionado);
-    }
-  }
-
-  updateErrorMessage(controlName: string) {
-    const control = this.form.get(controlName);
-    this.errorMessages[controlName] = this.formErrorService.updateErrorMessage(control);
-  }
-
-  saveMenu(menuData: MenuDiarioFormData): void {
-    const dto: MenuDiarioDTO = {
-      dia: menuData.dia,
-      menuVegetarianoId: menuData.menuVegetariano.id,
-      menuNoVegetarianoId: menuData.menuNoVegetariano.id,
+  private saveMenuDiario(dto: MenuDiarioDTO): void {
+    const getPostOptions = (isModification: boolean) => {
+      return {
+        complete: () => {
+          this.notificationService.show(isModification ? 'Menú diario modificado exitosamente' : 'Menú diario creado exitosamente');
+          this.router.navigate(['/menu-diario']);
+        },
+        error: (error: any) => {
+          const message = isModification ? 'Error al modificar el menú diario' : 'Error al crear el menú diario'
+          this.notificationService.show(message);
+          console.error(message);
+          console.error(error);
+        }
+      };
     }
 
     if (this.menuDiario) {
-      this.menuDiarioService.updateMenuDiario(this.menuDiario.id, dto).subscribe({
-        complete: () => {
-          this.notificationService.show('Menú diario modificado exitosamente');
-          this.router.navigate(['/menu-diario'])
-        },
-        error: error => {
-          this.notificationService.show('Error al modificar el menú diario. Por favor, intente nuevamente');
-          console.error("Error al modificar el menú diario");
-          console.error(error);
-        }
-      });
+      this.menuDiarioService.updateMenuDiario(this.menuDiario.id, dto).subscribe(getPostOptions(true));
     } else {
-      this.menuDiarioService.createMenuDiario(dto).subscribe({
-        complete: () => {
-          this.notificationService.show('Menú diario creado exitosamente');
-          this.router.navigate(['/menu-diario'])
-        },
-        error: error => {
-          this.notificationService.show('Error al crear el menú diario. Por favor, intente nuevamente');
-          console.error("Error al crear el menú diario");
-          console.error(error);
-        }
-      });
+      this.menuDiarioService.createMenuDiario(dto).subscribe(getPostOptions(false));
     }
   }
 
   onSubmit(): void {
-    if (this.form.valid) {
-      const menuDiarioData: MenuDiarioFormData = this.form.value;
-      this.saveMenu(menuDiarioData);
+    if (this.form.valid && this.form.dirty) {
+      const menuDiarioData = this.form.value;
+      const menuDiarioDTO: MenuDiarioDTO = {
+        dia: menuDiarioData.dia,
+        menuVegetarianoId: menuDiarioData.menuVegetariano.id,
+        menuNoVegetarianoId: menuDiarioData.menuNoVegetariano.id,
+      }
+      this.saveMenuDiario(menuDiarioDTO);
     } else {
-      this.notificationService.show('Error en el formulario. Vuelva a intentarlo');
+      this.formService.validateAllFields(this.form);
     }
   }
 
-  @ViewChild('extra') extraTemplate!: TemplateRef<any> | null;
-
-  ngAfterViewInit(): void {
-    this.layoutService.setExtra(this.extraTemplate);
-  }
-
   protected readonly history = history;
-  protected readonly diasSemanaArray = diasSemanaArray;
-  protected readonly traduccionDiasSemana = traduccionDiasSemana;
 }

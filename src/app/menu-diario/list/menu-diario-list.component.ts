@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {MenuDiario} from '../menu-diario.model';
 import {LayoutService} from '../../layout/layout.service';
 import {MenuDiarioService} from '../service/menu-diario.service';
@@ -7,19 +7,20 @@ import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {MenuDiarioComponent} from '../component/menu-diario.component';
 import {MatAnchor} from '@angular/material/button';
 import {RouterLink} from '@angular/router';
+import {TitleExtraComponent} from "../../components/title-extra/title-extra.component";
 
 @Component({
   selector: 'app-menu-diario-list',
-  imports: [
-    MatIcon,
-    MatProgressSpinner,
-    MenuDiarioComponent,
-    MatAnchor,
-    RouterLink
-  ],
+    imports: [
+        MatIcon,
+        MatProgressSpinner,
+        MenuDiarioComponent,
+        MatAnchor,
+        RouterLink,
+        TitleExtraComponent
+    ],
   templateUrl: './menu-diario-list.component.html',
   standalone: true,
-  styleUrl: './menu-diario-list.component.css'
 })
 export class MenuDiarioListComponent implements AfterViewInit, OnInit {
   menusDiarios: MenuDiario[] = [];
@@ -45,11 +46,8 @@ export class MenuDiarioListComponent implements AfterViewInit, OnInit {
     });
   }
 
-  @ViewChild('extra') extraTemplate!: TemplateRef<any> | null;
-
   ngAfterViewInit(): void {
     this.layoutService.setTitle('Menús diarios');
-    this.layoutService.setExtra(this.extraTemplate);
   }
 
   handleDeleteMenu(id: number) {

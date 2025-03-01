@@ -28,7 +28,6 @@ import {MenuComponent} from '../../menu/component/menu.component';
   ],
   templateUrl: './menu-diario.component.html',
   standalone: true,
-  styleUrl: './menu-diario.component.css'
 })
 export class MenuDiarioComponent {
   dialog = inject(MatDialog);
