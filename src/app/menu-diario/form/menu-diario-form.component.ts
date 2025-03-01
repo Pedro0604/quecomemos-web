@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {diasSemanaArray, MenuDiario, MenuDiarioDTO, traduccionDiasSemana} from '../menu-diario.model';
 import {Menu} from '../../menu/menu.model';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup, ReactiveFormsModule} from '@angular/forms';
 import {MenuService} from '../../menu/service/menu.service';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {LayoutService} from '../../layout/layout.service';
