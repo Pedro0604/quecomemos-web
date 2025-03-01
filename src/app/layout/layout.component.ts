@@ -12,7 +12,7 @@ import {RouterLink, RouterLinkActive, Routes} from '@angular/router';
 import {appRoutes} from '../app.routes';
 import {LayoutService} from './layout.service';
 import {AuthGuard} from '../auth/guards/auth.guards';
-import {AuthService} from '../auth/login/services/auth.service';
+import {AuthService} from '../auth/service/auth.service';
 
 
 @Component({

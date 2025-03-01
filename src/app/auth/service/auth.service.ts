@@ -1,9 +1,22 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {jwtDecode, JwtPayload} from 'jwt-decode';
-import {NotificationService} from '../../../notification/notification.service';
+import {NotificationService} from '../../notification/notification.service';
 import {Router} from '@angular/router';
 import {HttpClient} from '@angular/common/http';
+
+export type Role = 'clientes' | 'responsables' | 'administradores';
+
+export type Credenciales = { dni: string, clave: string };
+
+export type UserData = {
+  dni: string,
+  nombre: string,
+  apellido: string,
+  urlImagen: string,
+  email: string,
+  clave: string
+};
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +31,7 @@ export class AuthService {
   }
 
   login(token: string) {
-    if (this.userLoggedIn.getValue()){
+    if (this.userLoggedIn.getValue()) {
       return;
     }
 
@@ -63,7 +76,11 @@ export class AuthService {
     }
   }
 
-  authenticate(role: 'clientes' | 'responsables' | 'administradores', credenciales: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/${role}/autenticacion`, credenciales, { observe: 'response' });
+  authenticate(role: Role, credenciales: Credenciales): Observable<any> {
+    return this.http.post(`${this.apiUrl}/${role}/autenticacion`, credenciales, {observe: 'response'});
+  }
+
+  register(role: Role, userData: UserData): Observable<any> {
+    return this.http.post(`${this.apiUrl}/${role}`, userData, {observe: 'response'});
   }
 }
