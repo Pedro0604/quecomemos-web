@@ -1,4 +1,4 @@
-import {Component, TemplateRef, viewChild, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit, viewChild} from '@angular/core';
 import {MatAnchor, MatButton} from "@angular/material/button";
 import {MatIcon} from "@angular/material/icon";
 import {MatProgressSpinner} from "@angular/material/progress-spinner";
@@ -8,6 +8,7 @@ import {MenuDiario, traduccionDiasSemana} from '../menu-diario/menu-diario.model
 import {LayoutService} from '../layout/layout.service';
 import {MenuDiarioService} from '../menu-diario/service/menu-diario.service';
 import {MatAccordion, MatExpansionModule} from '@angular/material/expansion';
+import {TitleExtraComponent} from "../components/title-extra/title-extra.component";
 
 @Component({
   selector: 'app-home',
@@ -18,13 +19,14 @@ import {MatAccordion, MatExpansionModule} from '@angular/material/expansion';
     MenuDiarioComponent,
     RouterLink,
     MatButton,
-    MatExpansionModule
+    MatExpansionModule,
+    TitleExtraComponent
   ],
   templateUrl: './home.component.html',
   standalone: true,
   styleUrl: './home.component.css'
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit, AfterViewInit {
   accordion = viewChild.required(MatAccordion);
   menusDiarios: MenuDiario[] = [];
 
@@ -49,11 +51,8 @@ export class HomeComponent {
     });
   }
 
-  @ViewChild('extra') extraTemplate!: TemplateRef<any> | null;
-
   ngAfterViewInit(): void {
     this.layoutService.setTitle('Menú semanal');
-    this.layoutService.setExtra(this.extraTemplate);
   }
 
   protected readonly traduccionDiasSemana = traduccionDiasSemana;
