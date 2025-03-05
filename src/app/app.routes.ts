@@ -10,6 +10,7 @@ import {ComidaFormComponent} from './comida/form/comida-form.component';
 import {ComidaListComponent} from './comida/list/comida-list.component';
 import {MenuDiarioListComponent} from './menu-diario/list/menu-diario-list.component';
 import {MenuDiarioFormComponent} from './menu-diario/form/menu-diario-form.component';
+import {UserFormComponent} from './user/form/user-form.component';
 
 export const appRoutes: Routes = [
   { path: '',
@@ -84,6 +85,12 @@ export const appRoutes: Routes = [
     path: 'register',
     component: RegisterComponent,
     title: 'Registro de usuario'
+  },
+  {
+    path: 'clientes/:id',
+    component: UserFormComponent,
+    title: 'Mi perfil',
+    canActivate: [AuthGuard]
   },
   {
     path: '**',
