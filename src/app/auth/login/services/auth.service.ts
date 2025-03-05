@@ -12,6 +12,7 @@ import {catchError, map} from 'rxjs/operators';
 export class AuthService {
   private userLoggedIn = new BehaviorSubject<boolean>(false);
   private apiUrl = "http://localhost:8080";
+  private userImg = new BehaviorSubject<string | null>(null);
 
   isLoggedIn$ = this.userLoggedIn.asObservable();
 
@@ -32,6 +33,8 @@ export class AuthService {
       return;
     }
     localStorage.removeItem('authToken');
+
+    this.userImg.next(null); // Limpiar la imagen en caché
 
     this.notificationService.show('Sesión cerrada');
 
@@ -81,22 +84,37 @@ export class AuthService {
     }
   }
 
-  getUserImg(role: 'clientes' | 'responsables' | 'administradores'): Observable<string> {
+  getUserImg(role: 'clientes' | 'responsables' | 'administradores'): Observable<string | null> {
+    if (this.userImg.getValue()) {
+      return this.userImg.asObservable();
+    }
+
     const token = localStorage.getItem('authToken');
     const defaultImg = 'public/Sample_User_Icon.png'; // Imagen por defecto en caso de error
 
-    if (!token) return of(defaultImg); // Devuelve un observable con la imagen por defecto
+    if (!token) {
+      this.userImg.next(defaultImg);
+      return of(defaultImg);
+    }
 
     try {
       const decoded = jwtDecode<{ sub: string }>(token);
       const userId = decoded.sub;
 
       return this.http.get<{ urlImagen: string }>(`${this.apiUrl}/${role}/${userId}`).pipe(
-        map(user => user.urlImagen || defaultImg), // Devuelve la imagen o la imagen por defecto
-        catchError(() => of(defaultImg)) // Si hay error, devuelve la imagen por defecto
+        map(user => {
+          const imgUrl = user.urlImagen || defaultImg;
+          this.userImg.next(imgUrl); // Almacenar en caché
+          return imgUrl;
+        }),
+        catchError(() => {
+          this.userImg.next(defaultImg);
+          return of(defaultImg);
+        })
       );
     } catch (error) {
       console.error('Error decoding user token:', error);
+      this.userImg.next(defaultImg);
       return of(defaultImg);
     }
   }
