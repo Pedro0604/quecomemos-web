@@ -1,26 +1,11 @@
-<app-title-extra showVegetariano/>
+<app-list
+  title="menús"
+  [service]="menuService"
+  creationLink="/menu/create"
+  [itemTemplate]="menuTemplate"
+/>
 
-@if (error || loading || menus.length === 0) {
-  <div class="flex justify-center items-center mt-20 text-2xl">
-    @if (error) {
-      <mat-icon class="error">error</mat-icon>
-      <span class="ml-2">Error al cargar los menús</span>
-    } @else if (loading) {
-      <mat-spinner></mat-spinner>
-    } @else if (menus.length === 0) {
-      <mat-icon class="error">warning</mat-icon>
-      <span class="ml-2">No hay menús disponibles</span>
-    }
-  </div>
-  @if (!error && !loading && menus.length === 0) {
-    <span class="flex justify-center mt-4">
-      <a mat-button routerLink="/menu/create">Creá uno ahora</a>
-    </span>
-  }
-} @else {
-  <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-    @for (menu of menus; track menu) {
-      <app-menu [menu]="menu" (onDelete)="handleDeleteMenu(menu.id)"></app-menu>
-    }
-  </div>
-}
+<ng-template #menuTemplate let-menu let-onsDelete="onDselete">
+  <app-menu [menu]="menu" (onDelete)="onsDelete(menu.id)"></app-menu>
+</ng-template>
+

@@ -1,0 +1,27 @@
+<app-title-extra showVegetariano [femenino]="femenino"/>
+
+@if (error || loading || items.length === 0) {
+  <div class="flex justify-center items-center mt-20 text-2xl">
+    @if (error) {
+      <mat-icon class="error">error</mat-icon>
+      <span class="ml-2">Error al cargar {{ (femenino ? 'las' : 'los') + title }}</span>
+    } @else if (loading) {
+      <mat-spinner></mat-spinner>
+    } @else if (items.length === 0) {
+      <mat-icon class="error">warning</mat-icon>
+      <span class="ml-2">No hay {{ title }} disponibles</span>
+    }
+  </div>
+  @if (!error && !loading && items.length === 0) {
+    <span class="flex justify-center mt-4">
+      <a mat-button [routerLink]="creationLink">Creá un{{ femenino ? 'a' : 'o' }} ahora</a>
+    </span>
+  }
+} @else {
+  <div [class]="'grid gap-4 ' + gridCols">
+    @for (item of items; track item) {
+      <ng-container
+        *ngTemplateOutlet="itemTemplate; context: { $implicit: item, onDelete: handleDelete.bind(this) }"></ng-container>
+    }
+  </div>
+}

@@ -3,6 +3,7 @@ import {MatIcon} from '@angular/material/icon';
 import {MatButton} from '@angular/material/button';
 import {LayoutService} from '../../layout/layout.service';
 
+// TODO - MODIFICAR PARA QUE SE LLAME APP-TITLE Y QUE PERMITA SETEAR EL TITULO TAMBIEN
 @Component({
   selector: 'app-title-extra',
   imports: [
