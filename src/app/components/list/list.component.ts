@@ -9,6 +9,12 @@ import {NgTemplateOutlet} from '@angular/common';
 import {LayoutService} from '../../layout/layout.service';
 import {capitalize} from '../../utils/utils';
 
+// TODO - TODOS A HACER:
+  // PONER LINK DENTRO DE LOS COMPONENTES POR EJEMPLO DENTRO DE COMIDA, PARA Q EN MENÚ SE PUEDA CLICKEAR UNA COMIDA E IR A MODIFICARLA
+    // Y DENTRO DE MENÚ PARA LO MISMO CON MENU DIARIO
+  // USAR @EMPTY EN LIST
+  // HACER TODO DE TITLE EXTRA
+
 @Component({
   selector: 'app-list',
   imports: [
