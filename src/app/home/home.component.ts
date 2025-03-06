@@ -1,14 +1,13 @@
-import {AfterViewInit, Component, OnInit, viewChild} from '@angular/core';
+import {Component, OnInit, viewChild} from '@angular/core';
 import {MatAnchor, MatButton} from "@angular/material/button";
 import {MatIcon} from "@angular/material/icon";
 import {MatProgressSpinner} from "@angular/material/progress-spinner";
 import {MenuDiarioComponent} from "../menu-diario/component/menu-diario.component";
 import {RouterLink} from "@angular/router";
 import {MenuDiario, traduccionDiasSemana} from '../menu-diario/menu-diario.model';
-import {LayoutService} from '../layout/layout.service';
 import {MenuDiarioService} from '../menu-diario/service/menu-diario.service';
 import {MatAccordion, MatExpansionModule} from '@angular/material/expansion';
-import {TitleExtraComponent} from "../components/title-extra/title-extra.component";
+import {TitleComponent} from "../components/title/title.component";
 import {AuthService} from '../auth/service/auth.service';
 
 @Component({
@@ -21,20 +20,20 @@ import {AuthService} from '../auth/service/auth.service';
     RouterLink,
     MatButton,
     MatExpansionModule,
-    TitleExtraComponent
+    TitleComponent
   ],
   templateUrl: './home.component.html',
   standalone: true,
   styleUrl: './home.component.css'
 })
-export class HomeComponent implements OnInit, AfterViewInit {
+export class HomeComponent implements OnInit {
   accordion = viewChild.required(MatAccordion);
   menusDiarios: MenuDiario[] = [];
 
   error = false;
   loading = true;
 
-  constructor(private layoutService: LayoutService, private menuDiarioService: MenuDiarioService, protected authService: AuthService) {
+  constructor(private menuDiarioService: MenuDiarioService, protected authService: AuthService) {
   }
 
   ngOnInit(): void {
@@ -50,10 +49,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
         this.loading = false;
       }
     });
-  }
-
-  ngAfterViewInit(): void {
-    this.layoutService.setTitle('Menú semanal');
   }
 
   protected readonly traduccionDiasSemana = traduccionDiasSemana;

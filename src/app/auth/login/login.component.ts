@@ -1,4 +1,4 @@
-import {AfterViewInit, ChangeDetectionStrategy, Component, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, signal} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule} from '@angular/forms';
 import {Router} from '@angular/router';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -10,13 +10,13 @@ import {MatCard, MatCardContent} from '@angular/material/card';
 import {AuthService, Credenciales, Role} from '../service/auth.service';
 import {concatMap, first, of} from 'rxjs';
 import {catchError} from 'rxjs/operators';
-import {LayoutService} from '../../layout/layout.service';
 import {InputComponent} from '../../components/input/input.component';
 import {FormService, onlyNumbersValidator} from "../../form-service/form.service";
 import {SubmitButtonComponent} from '../../components/submit-button/submit-button.component';
 import {
   FocusFirstInvalidFieldDirective
 } from '../../directives/focus-first-invalid-field.directive/focus-first-invalid-field.directive';
+import {TitleComponent} from '../../components/title/title.component';
 
 @Component({
   selector: 'app-login',
@@ -33,12 +33,14 @@ import {
     InputComponent,
     SubmitButtonComponent,
     FocusFirstInvalidFieldDirective,
+    TitleComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LoginComponent implements AfterViewInit {
+export class LoginComponent {
   loginForm: FormGroup;
   loginError = signal(false);
+
   roles: Role[] = ['clientes', 'responsables', 'administradores'];
 
   constructor(
@@ -46,17 +48,12 @@ export class LoginComponent implements AfterViewInit {
     private router: Router,
     private notificationService: NotificationService,
     private authService: AuthService,
-    protected formService: FormService,
-    private layoutService: LayoutService
+    protected formService: FormService
   ) {
     this.loginForm = this.fb.group({
       dni: ['', [onlyNumbersValidator]],
       clave: [''],
     });
-  }
-
-  ngAfterViewInit(): void {
-    this.layoutService.setTitle('Iniciar sesión');
   }
 
   private getRoleName(url: string): string {

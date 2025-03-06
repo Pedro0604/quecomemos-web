@@ -1,10 +1,9 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, signal} from '@angular/core';
 import {diasSemanaArray, MenuDiario, MenuDiarioDTO, traduccionDiasSemana} from '../menu-diario.model';
 import {Menu} from '../../menu/menu.model';
 import {FormBuilder, FormGroup, ReactiveFormsModule} from '@angular/forms';
 import {MenuService} from '../../menu/service/menu.service';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
-import {LayoutService} from '../../layout/layout.service';
 import {NotificationService} from '../../notification/notification.service';
 import {MenuDiarioService} from '../service/menu-diario.service';
 import {firstValueFrom} from 'rxjs';
@@ -18,7 +17,7 @@ import {AutocompleteComponent} from '../../components/autocomplete/autocomplete.
 import {FormService, inArrayValidator} from "../../form-service/form.service";
 import {FormStateHandler} from '../../utils/FormStateHandler';
 import {SubmitButtonComponent} from '../../components/submit-button/submit-button.component';
-import {TitleExtraComponent} from '../../components/title-extra/title-extra.component';
+import {TitleComponent} from '../../components/title/title.component';
 import {
   FocusFirstInvalidFieldDirective
 } from '../../directives/focus-first-invalid-field.directive/focus-first-invalid-field.directive';
@@ -44,7 +43,7 @@ type CampoMenu = {
     SpinnerComponent,
     AutocompleteComponent,
     SubmitButtonComponent,
-    TitleExtraComponent,
+    TitleComponent,
     FocusFirstInvalidFieldDirective,
   ],
   templateUrl: './menu-diario-form.component.html',
@@ -55,6 +54,8 @@ export class MenuDiarioFormComponent extends FormStateHandler implements OnInit 
   menus: Menu[] = [];
 
   form: FormGroup
+
+  readonly title = signal('Crear Menú Diario')
 
   diasDeSemanaOptions = diasSemanaArray.map(diaSemana => ({
     value: diaSemana,
@@ -80,7 +81,6 @@ export class MenuDiarioFormComponent extends FormStateHandler implements OnInit 
     private menuDiarioService: MenuDiarioService,
     private route: ActivatedRoute,
     private router: Router,
-    private layoutService: LayoutService,
     private notificationService: NotificationService,
     private menuService: MenuService,
     protected formService: FormService,
@@ -124,9 +124,7 @@ export class MenuDiarioFormComponent extends FormStateHandler implements OnInit 
           this.notificationService.show('Ha ocurrido un error. Por favor, intente nuevamente más tarde');
         },
       });
-      this.layoutService.setTitle('Modificar Menú Diario');
-    } else {
-      this.layoutService.setTitle('Crear Menú Diario');
+      this.title.set('Modificar Menú Diario');
     }
 
     await this.cargarMenus();

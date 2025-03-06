@@ -1,7 +1,6 @@
-import {AfterViewInit, Component} from '@angular/core';
+import {Component} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {CommonModule} from '@angular/common';
-import {LayoutService} from "../../layout/layout.service";
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatButtonModule} from '@angular/material/button';
@@ -11,14 +10,12 @@ import {Router} from '@angular/router';
 import {NotificationService} from '../../notification/notification.service';
 import {InputComponent} from '../../components/input/input.component';
 import {AuthService, UserData} from '../service/auth.service';
-import {
-  FormService,
-  onlyLettersValidator,
-  onlyNumbersValidator,
-  urlValidator
-} from '../../form-service/form.service';
+import {FormService, onlyLettersValidator, onlyNumbersValidator, urlValidator} from '../../form-service/form.service';
 import {SubmitButtonComponent} from '../../components/submit-button/submit-button.component';
-import {FocusFirstInvalidFieldDirective} from '../../directives/focus-first-invalid-field.directive/focus-first-invalid-field.directive';
+import {
+  FocusFirstInvalidFieldDirective
+} from '../../directives/focus-first-invalid-field.directive/focus-first-invalid-field.directive';
+import {TitleComponent} from '../../components/title/title.component';
 
 
 @Component({
@@ -34,14 +31,13 @@ import {FocusFirstInvalidFieldDirective} from '../../directives/focus-first-inva
     MatCardModule,
     InputComponent,
     SubmitButtonComponent,
-    FocusFirstInvalidFieldDirective
+    FocusFirstInvalidFieldDirective, TitleComponent
   ],
 })
-export class RegisterComponent implements AfterViewInit {
+export class RegisterComponent {
   registerForm: FormGroup;
 
   constructor(
-    private layoutService: LayoutService,
     private fb: FormBuilder,
     private router: Router,
     private notificationService: NotificationService,
@@ -59,10 +55,6 @@ export class RegisterComponent implements AfterViewInit {
     }, {
       validators: this.confirmationMatchesPasswordValidator
     });
-  }
-
-  ngAfterViewInit(): void {
-    this.layoutService.setTitle('Registro de usuario');
   }
 
   confirmationMatchesPasswordValidator(group: FormGroup): { [key: string]: boolean } | null {

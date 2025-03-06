@@ -1,4 +1,4 @@
-<app-title-extra showVegetariano [femenino]="femenino"/>
+<app-title showVegetariano [femenino]="femenino" [title]="capitalize(this.title)"/>
 
 @if (error || loading || items.length === 0) {
   <div class="flex justify-center items-center mt-20 text-2xl">

@@ -1,9 +1,8 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, signal} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {Comida, ComidaDTO, TipoComida, tipoComidaToString} from '../comida.model';
 import {ComidaService} from '../service/comida.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import {LayoutService} from '../../layout/layout.service';
 import {NotificationService} from '../../notification/notification.service';
 import {MatError} from '@angular/material/form-field';
 import {MatCard, MatCardContent} from '@angular/material/card';
@@ -12,7 +11,7 @@ import {InputComponent} from '../../components/input/input.component';
 import {SelectComponent} from '../../components/select/select.component';
 import {FormService, inArrayValidator, urlValidator} from '../../form-service/form.service';
 import {SubmitButtonComponent} from '../../components/submit-button/submit-button.component';
-import {TitleExtraComponent} from '../../components/title-extra/title-extra.component';
+import {TitleComponent} from '../../components/title/title.component';
 import {
   FocusFirstInvalidFieldDirective
 } from '../../directives/focus-first-invalid-field.directive/focus-first-invalid-field.directive';
@@ -28,7 +27,7 @@ import {
     InputComponent,
     SelectComponent,
     SubmitButtonComponent,
-    TitleExtraComponent,
+    TitleComponent,
     FocusFirstInvalidFieldDirective,
   ],
   templateUrl: './comida-form.component.html',
@@ -38,18 +37,21 @@ import {
 export class ComidaFormComponent implements OnInit {
   comida: Comida | null = null;
   error: boolean = false;
+
   tiposDeComida: TipoComida[] = ['OTRO', 'POSTRE', 'ENTRADA', 'BEBIDA', 'PLATO_PRINCIPAL'];
   tiposDeComidaOptions = this.tiposDeComida.map(tipoComida => ({
     value: tipoComida,
     name: tipoComidaToString(tipoComida)
   }));
+
   form: FormGroup
+
+  readonly title = signal('Crear Comida')
 
   constructor(
     private comidaService: ComidaService,
     private route: ActivatedRoute,
     private router: Router,
-    private layoutService: LayoutService,
     private notificationService: NotificationService,
     protected formService: FormService,
     private fb: FormBuilder,
@@ -81,10 +83,7 @@ export class ComidaFormComponent implements OnInit {
           this.notificationService.show('Ha ocurrido un error. Por favor, intente nuevamente más tarde');
         }
       });
-
-      this.layoutService.setTitle('Modificar comida');
-    } else {
-      this.layoutService.setTitle('Crear comida');
+      this.title.set('Modificar Comida');
     }
 
     const tipoComidaInicial = this.route.snapshot.queryParams['tipo-comida'] as TipoComida;

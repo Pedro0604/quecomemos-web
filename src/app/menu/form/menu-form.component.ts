@@ -1,8 +1,7 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, signal} from '@angular/core';
 import {Menu, MenuDTO} from '../menu.model';
 import {MenuService} from '../service/menu.service';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
-import {LayoutService} from '../../layout/layout.service';
 import {NotificationService} from '../../notification/notification.service';
 import {
   AbstractControl,
@@ -27,7 +26,7 @@ import {AutocompleteComponent} from '../../components/autocomplete/autocomplete.
 import {FormService} from '../../form-service/form.service';
 import {FormStateHandler} from '../../utils/FormStateHandler';
 import {SubmitButtonComponent} from '../../components/submit-button/submit-button.component';
-import {TitleExtraComponent} from '../../components/title-extra/title-extra.component';
+import {TitleComponent} from '../../components/title/title.component';
 import {
   FocusFirstInvalidFieldDirective
 } from '../../directives/focus-first-invalid-field.directive/focus-first-invalid-field.directive';
@@ -54,7 +53,7 @@ type CampoComida = {
     SpinnerComponent,
     AutocompleteComponent,
     SubmitButtonComponent,
-    TitleExtraComponent,
+    TitleComponent,
     FocusFirstInvalidFieldDirective
   ],
   templateUrl: './menu-form.component.html',
@@ -66,6 +65,8 @@ export class MenuFormComponent extends FormStateHandler implements OnInit {
   comidas: Comida[] = []
 
   form: FormGroup
+
+  readonly title = signal('Crear Menú')
 
   camposSinComidas: CampoComida[] = [];
 
@@ -128,7 +129,6 @@ export class MenuFormComponent extends FormStateHandler implements OnInit {
     private menuService: MenuService,
     private route: ActivatedRoute,
     private router: Router,
-    private layoutService: LayoutService,
     private notificationService: NotificationService,
     private comidaService: ComidaService,
     protected formService: FormService,
@@ -183,9 +183,7 @@ export class MenuFormComponent extends FormStateHandler implements OnInit {
           this.notificationService.show('Ha ocurrido un error. Por favor, intente nuevamente más tarde');
         }
       });
-      this.layoutService.setTitle('Modificar Menú');
-    } else {
-      this.layoutService.setTitle('Crear Menú');
+      this.title.set('Modificar Menú');
     }
 
     const vegetarianoInicial = this.route.snapshot.queryParams['vegetariano'] as boolean;

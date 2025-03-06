@@ -2,21 +2,22 @@ import {AfterViewInit, booleanAttribute, Component, Input, TemplateRef, ViewChil
 import {MatIcon} from '@angular/material/icon';
 import {MatButton} from '@angular/material/button';
 import {LayoutService} from '../../layout/layout.service';
+import {capitalize} from '../../utils/utils';
 
-// TODO - MODIFICAR PARA QUE SE LLAME APP-TITLE Y QUE PERMITA SETEAR EL TITULO TAMBIEN
 @Component({
-  selector: 'app-title-extra',
+  selector: 'app-title',
   imports: [
     MatIcon,
     MatButton
   ],
-  templateUrl: './title-extra.component.html',
+  templateUrl: './title.component.html',
   standalone: true
 })
-export class TitleExtraComponent implements AfterViewInit {
+export class TitleComponent implements AfterViewInit {
   @Input({transform: booleanAttribute}) showVegetariano: boolean = false;
   @Input({transform: booleanAttribute}) femenino: boolean = false;
   @Input({transform: booleanAttribute}) showVolver: boolean = false;
+  @Input({required: true}) title!: string;
 
   constructor(private layoutService: LayoutService) {
   }
@@ -25,6 +26,8 @@ export class TitleExtraComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.layoutService.setExtra(this.extraTemplate);
+    this.title = this.title.split(' ').map(word => word.length > 3 ? capitalize(word) : word).join(' ');
+    this.layoutService.setTitle(this.title);
   }
 
   getClasses(): string {
