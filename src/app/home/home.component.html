@@ -4,15 +4,16 @@
   <div class="flex justify-center items-center mt-20 text-2xl">
     @if (error) {
       <mat-icon class="error">error</mat-icon>
-      <span class="ml-2">Error al cargar el menú semanal</span>
+      <span class="ml-2">Error al cargar los menús semanales</span>
     } @else if (loading) {
       <mat-spinner></mat-spinner>
     } @else if (menusDiarios.length === 0) {
       <mat-icon class="error">warning</mat-icon>
-      <span class="ml-2">No hay menú semanal</span>
+      <span class="ml-2">No hay menús semanales</span>
     }
   </div>
-  @if (!error && !loading && menusDiarios.length === 0) {
+<!--  TODO - MODIFICAR PARA QUE SE MUESTRE SI TIENE LOS PERMISOS-->
+  @if (!error && !loading && menusDiarios.length === 0 && this.authService.isLoggedIn()) {
     <span class="flex justify-center mt-4">
       <a mat-button routerLink="/menu-diario/create">Creá un menú diario ahora</a>
     </span>

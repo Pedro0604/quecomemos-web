@@ -50,6 +50,7 @@ export class LayoutComponent implements OnInit {
   constructor(private layoutService: LayoutService, private injector: Injector, protected authService: AuthService) {
   }
 
+  // TODO - MODIFICAR PARA QUE FILTRE SEGÚN EL PERMISO NECESARIO
   filtrarRutas() {
     this.rootRoutes = appRoutes.filter(route => {
       if (!route.path) {

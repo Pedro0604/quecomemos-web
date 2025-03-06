@@ -9,6 +9,7 @@ import {LayoutService} from '../layout/layout.service';
 import {MenuDiarioService} from '../menu-diario/service/menu-diario.service';
 import {MatAccordion, MatExpansionModule} from '@angular/material/expansion';
 import {TitleExtraComponent} from "../components/title-extra/title-extra.component";
+import {AuthService} from '../auth/service/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -33,7 +34,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   error = false;
   loading = true;
 
-  constructor(private layoutService: LayoutService, private menuDiarioService: MenuDiarioService) {
+  constructor(private layoutService: LayoutService, private menuDiarioService: MenuDiarioService, protected authService: AuthService) {
   }
 
   ngOnInit(): void {
