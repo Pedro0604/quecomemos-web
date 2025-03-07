@@ -38,7 +38,9 @@
       </div>
       <mat-checkbox formControlName="vegetariana">¿Es vegetariana?</mat-checkbox>
       <div class="ms-4">
-        @if (error) {
+        @if (loading) {
+          <app-spinner [loading]="loading"/>
+        } @else if (error) {
           <mat-error>Ha ocurrido un error</mat-error>
           <mat-error>Por favor, intente nuevamente más tarde</mat-error>
         }

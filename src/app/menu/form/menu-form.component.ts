@@ -146,50 +146,48 @@ export class MenuFormComponent extends FormStateHandler implements OnInit {
     }, {validators: this.alMenosUnaComidaSeleccionadaValidator()});
   }
 
-  async cargarComidas(): Promise<void> {
-    try {
-      this.loading = true;
-      this.comidas = await firstValueFrom(this.comidaService.getAll());
-    } catch (error) {
-      console.error('Error al obtener las comidas');
-      console.error(error);
-      this.error = true;
-    } finally {
-      this.loading = false;
-    }
-  }
-
   async ngOnInit(): Promise<void> {
     const id = this.route.snapshot.params['id'];
-    if (id) {
-      this.menuService.getById(id).subscribe({
-        next: (data) => {
-          this.menu = data
-          this.form.get('nombre')?.setValue(this.menu.nombre)
-          this.form.get('precio')?.setValue(this.menu.precio)
-          this.form.get('vegetariano')?.setValue(this.menu.vegetariano)
-          this.menu.comidas.forEach(comida => {
-            const campoComida = this.camposDeComida.find(campoComida => campoComida.tipoComida === comida.tipoComida)
-            if (campoComida) {
-              const comidaField = this.form.get(campoComida.nombre);
-              comidaField?.setValue(comida);
-              comidaField?.markAsTouched();
-            }
-          })
-        },
-        error: error => {
-          this.error = true;
-          console.error('Error al obtener el menú', error);
-          this.notificationService.show('Ha ocurrido un error. Por favor, intente nuevamente más tarde');
-        }
-      });
-      this.title.set('Modificar Menú');
+    this.loading = true;
+
+    try {
+      const menuPromise: Promise<Menu | null> = id
+        ? firstValueFrom(this.menuService.getById(id))
+        : Promise.resolve(null);
+      const comidasPromise: Promise<Comida[]> = firstValueFrom(this.comidaService.getAll());
+      const [menuData, comidas] = await Promise.all([menuPromise, comidasPromise]);
+      this.comidas = comidas;
+
+      if (menuData) {
+        this.menu = menuData;
+        this.form.patchValue({
+          nombre: this.menu.nombre,
+          precio: this.menu.precio,
+          vegetariano: this.menu.vegetariano
+        });
+
+        this.menu.comidas.forEach(comida => {
+          const campoComida = this.camposDeComida.find(campoComida => campoComida.tipoComida === comida.tipoComida);
+          if (campoComida) {
+            const comidaField = this.form.get(campoComida.nombre);
+            comidaField?.setValue(comida);
+            comidaField?.markAsTouched();
+          }
+        });
+
+        this.title.set('Modificar Menú');
+      }
+    } catch (error) {
+      this.error = true;
+      console.error('Error al obtener datos');
+      console.error(error);
+      this.notificationService.show('Ha ocurrido un error. Por favor, intente nuevamente más tarde');
+    } finally {
+      this.loading = false;
     }
 
     const vegetarianoInicial = this.route.snapshot.queryParams['vegetariano'] as boolean;
     this.form.get('vegetariano')?.setValue(vegetarianoInicial);
-
-    await this.cargarComidas();
 
     function filterComida(comida: Comida, tipoComida: TipoComida, menuVegetariano: boolean): boolean {
       return comida.tipoComida == tipoComida && (menuVegetariano ? comida.vegetariana : true);
@@ -210,13 +208,6 @@ export class MenuFormComponent extends FormStateHandler implements OnInit {
         campo.comidas = this.comidas.filter(comida => filterComida(comida, campo.tipoComida, menuVegetariano));
       });
       calculateCamposSinComidas();
-    });
-  }
-
-  algunaComidaTouched(): boolean {
-    return this.camposDeComida.some(campo => {
-      const field = this.form.get(campo.nombre);
-      return field?.touched;
     });
   }
 
@@ -254,6 +245,7 @@ export class MenuFormComponent extends FormStateHandler implements OnInit {
     return comida && comida.nombre ? comida.nombre : '';
   }
 
+  // TODO - GENERALIZAR
   private saveMenu(dto: MenuDTO): void {
     const getPostOptions = (isModification: boolean) => {
       return {

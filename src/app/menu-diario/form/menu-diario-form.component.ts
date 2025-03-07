@@ -94,40 +94,35 @@ export class MenuDiarioFormComponent extends FormStateHandler implements OnInit 
     });
   }
 
-  private async cargarMenus(): Promise<void> {
+  async ngOnInit(): Promise<void> {
+    const id = this.route.snapshot.params['id'];
+    this.loading = true;
+
     try {
-      this.loading = true;
-      this.menus = await firstValueFrom(this.menuService.getAll());
-      this.menus ??= [];
+      const menuDiarioPromise: Promise<MenuDiario | null> = id
+        ? firstValueFrom(this.menuDiarioService.getById(id))
+        : Promise.resolve(null);
+      const menusPromise: Promise<Menu[]> = firstValueFrom(this.menuService.getAll());
+      const [menuDiarioData, menus] = await Promise.all([menuDiarioPromise, menusPromise]);
+      this.menus = menus;
+
+      if (menuDiarioData) {
+        this.menuDiario = menuDiarioData;
+        this.form.patchValue({
+          dia: this.menuDiario.dia,
+          menuVegetariano: this.menuDiario.menuVegetariano,
+          menuNoVegetariano: this.menuDiario.menuNoVegetariano
+        });
+        this.title.set('Modificar Menú Diario');
+      }
     } catch (error) {
-      console.error('Error al obtener los menús');
-      console.error(error);
       this.error = true;
+      console.error('Error al obtener datos');
+      console.error(error);
+      this.notificationService.show('Ha ocurrido un error. Por favor, intente nuevamente más tarde');
     } finally {
       this.loading = false;
     }
-  }
-
-  async ngOnInit(): Promise<void> {
-    const id = this.route.snapshot.params['id'];
-    if (id) {
-      this.menuDiarioService.getById(id).subscribe({
-        next: (data) => {
-          this.menuDiario = data;
-          this.form.get('dia')?.setValue(this.menuDiario.dia)
-          this.form.get('menuVegetariano')?.setValue(this.menuDiario.menuVegetariano)
-          this.form.get('menuNoVegetariano')?.setValue(this.menuDiario.menuNoVegetariano)
-        },
-        error: error => {
-          this.error = true;
-          console.error('Error al obtener el menú diario', error);
-          this.notificationService.show('Ha ocurrido un error. Por favor, intente nuevamente más tarde');
-        },
-      });
-      this.title.set('Modificar Menú Diario');
-    }
-
-    await this.cargarMenus();
 
     this.camposDeMenus.forEach(campo => {
       campo.menus = this.menus.filter(menu => menu.vegetariano == campo.vegetariano);

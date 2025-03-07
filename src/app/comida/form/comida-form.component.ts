@@ -15,6 +15,8 @@ import {TitleComponent} from '../../components/title/title.component';
 import {
   FocusFirstInvalidFieldDirective
 } from '../../directives/focus-first-invalid-field.directive/focus-first-invalid-field.directive';
+import {FormStateHandler} from '../../utils/FormStateHandler';
+import {SpinnerComponent} from '../../components/spinner/spinner.component';
 
 @Component({
   selector: 'app-comida-form',
@@ -29,14 +31,14 @@ import {
     SubmitButtonComponent,
     TitleComponent,
     FocusFirstInvalidFieldDirective,
+    SpinnerComponent,
   ],
   templateUrl: './comida-form.component.html',
   standalone: true,
   styleUrl: './comida-form.component.css',
 })
-export class ComidaFormComponent implements OnInit {
+export class ComidaFormComponent extends FormStateHandler implements OnInit {
   comida: Comida | null = null;
-  error: boolean = false;
 
   tiposDeComida: TipoComida[] = ['OTRO', 'POSTRE', 'ENTRADA', 'BEBIDA', 'PLATO_PRINCIPAL'];
   tiposDeComidaOptions = this.tiposDeComida.map(tipoComida => ({
@@ -56,6 +58,8 @@ export class ComidaFormComponent implements OnInit {
     protected formService: FormService,
     private fb: FormBuilder,
   ) {
+    super();
+
     this.form = this.fb.group({
       nombre: [''],
       precio: ['', [Validators.min(0)]],
@@ -68,19 +72,25 @@ export class ComidaFormComponent implements OnInit {
   ngOnInit() {
     const id = this.route.snapshot.params['id'];
     if (id) {
+      this.loading = true;
       this.comidaService.getById(id).subscribe({
         next: (data) => {
           this.comida = data;
-          this.form.get('nombre')?.setValue(this.comida.nombre);
-          this.form.get('precio')?.setValue(this.comida.precio);
-          this.form.get('vegetariana')?.setValue(this.comida.vegetariana);
-          this.form.get('tipoComida')?.setValue(this.comida.tipoComida);
-          this.form.get('urlImagen')?.setValue(this.comida.urlImagen);
+          this.form.patchValue({
+            nombre: this.comida.nombre,
+            precio: this.comida.precio,
+            vegetariana: this.comida.vegetariana,
+            tipoComida: this.comida.tipoComida,
+            urlImagen: this.comida.urlImagen
+          });
         },
         error: error => {
           this.error = true;
           console.error('Error al obtener la comida', error);
           this.notificationService.show('Ha ocurrido un error. Por favor, intente nuevamente más tarde');
+        },
+        complete: () => {
+          this.loading = false;
         }
       });
       this.title.set('Modificar Comida');
