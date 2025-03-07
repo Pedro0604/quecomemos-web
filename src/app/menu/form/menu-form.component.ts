@@ -67,6 +67,7 @@ export class MenuFormComponent extends FormStateHandler implements OnInit {
   form: FormGroup
 
   readonly title = signal('Crear Menú')
+  readonly submittingText = signal('Creando Menú')
 
   camposSinComidas: CampoComida[] = [];
 
@@ -176,6 +177,7 @@ export class MenuFormComponent extends FormStateHandler implements OnInit {
         });
 
         this.title.set('Modificar Menú');
+        this.submittingText.set('Modificando Menú');
       }
     } catch (error) {
       this.error = true;
@@ -270,7 +272,7 @@ export class MenuFormComponent extends FormStateHandler implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.form.valid) {
+    if (this.form.valid && this.form.dirty) {
       const menuData = this.form.value;
       const comidaIds = [];
       if (menuData.entrada) {

@@ -56,6 +56,7 @@ export class MenuDiarioFormComponent extends FormStateHandler implements OnInit 
   form: FormGroup
 
   readonly title = signal('Crear Menú Diario')
+  readonly submittingText = signal('Creando Menú Diario')
 
   diasDeSemanaOptions = diasSemanaArray.map(diaSemana => ({
     value: diaSemana,
@@ -114,6 +115,7 @@ export class MenuDiarioFormComponent extends FormStateHandler implements OnInit 
           menuNoVegetariano: this.menuDiario.menuNoVegetariano
         });
         this.title.set('Modificar Menú Diario');
+        this.submittingText.set('Modificando Menú Diario');
       }
     } catch (error) {
       this.error = true;

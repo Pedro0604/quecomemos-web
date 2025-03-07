@@ -49,6 +49,7 @@ export class ComidaFormComponent extends FormStateHandler implements OnInit {
   form: FormGroup
 
   readonly title = signal('Crear Comida')
+  readonly submittingText = signal('Creando Comida')
 
   constructor(
     private comidaService: ComidaService,
@@ -94,6 +95,7 @@ export class ComidaFormComponent extends FormStateHandler implements OnInit {
         }
       });
       this.title.set('Modificar Comida');
+      this.submittingText.set('Modificando Comida');
     }
 
     const tipoComidaInicial = this.route.snapshot.queryParams['tipo-comida'] as TipoComida;

@@ -45,7 +45,7 @@
           <mat-error>Por favor, intente nuevamente más tarde</mat-error>
         }
       </div>
-      <app-submit-button [form]="form" pendingText="Creando comida">Crear comida</app-submit-button>
+      <app-submit-button [form]="form" [pendingText]="submittingText()">{{ title() }}</app-submit-button>
     </form>
   </mat-card-content>
 </mat-card>
