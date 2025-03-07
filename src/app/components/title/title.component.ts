@@ -1,4 +1,13 @@
-import {AfterViewInit, booleanAttribute, Component, Input, TemplateRef, ViewChild} from '@angular/core';
+import {
+  AfterViewInit,
+  booleanAttribute,
+  Component,
+  Input,
+  OnChanges,
+  SimpleChanges,
+  TemplateRef,
+  ViewChild
+} from '@angular/core';
 import {MatIcon} from '@angular/material/icon';
 import {MatButton} from '@angular/material/button';
 import {LayoutService} from '../../layout/layout.service';
@@ -13,7 +22,7 @@ import {capitalize} from '../../utils/utils';
   templateUrl: './title.component.html',
   standalone: true
 })
-export class TitleComponent implements AfterViewInit {
+export class TitleComponent implements AfterViewInit, OnChanges {
   @Input({transform: booleanAttribute}) showVegetariano: boolean = false;
   @Input({transform: booleanAttribute}) femenino: boolean = false;
   @Input({transform: booleanAttribute}) showVolver: boolean = false;
@@ -24,10 +33,14 @@ export class TitleComponent implements AfterViewInit {
 
   @ViewChild('extra') extraTemplate!: TemplateRef<any> | null;
 
-  ngAfterViewInit(): void {
-    this.layoutService.setExtra(this.extraTemplate);
+  setTitle(): void {
     this.title = this.title.split(' ').map(word => word.length > 3 ? capitalize(word) : word).join(' ');
     this.layoutService.setTitle(this.title);
+  }
+
+  ngAfterViewInit(): void {
+    this.layoutService.setExtra(this.extraTemplate);
+    this.setTitle();
   }
 
   getClasses(): string {
@@ -45,4 +58,10 @@ export class TitleComponent implements AfterViewInit {
   }
 
   protected readonly history = history;
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['title']) {
+      this.setTitle();
+    }
+  }
 }
