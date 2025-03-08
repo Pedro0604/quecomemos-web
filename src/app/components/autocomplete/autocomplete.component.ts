@@ -1,12 +1,7 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, TemplateRef} from '@angular/core';
 import {BaseFormFieldComponent} from '../base-form-field/base-form-field.component';
 import {MatError, MatFormField, MatLabel, MatPrefix, MatSuffix} from '@angular/material/form-field';
-import {
-  MatAutocomplete,
-  MatAutocompleteSelectedEvent,
-  MatAutocompleteTrigger,
-  MatOption
-} from '@angular/material/autocomplete';
+import {MatAutocomplete, MatAutocompleteTrigger, MatOption} from '@angular/material/autocomplete';
 import {MatHint, MatInput} from '@angular/material/input';
 import {AbstractControl, ReactiveFormsModule, ValidationErrors, ValidatorFn} from '@angular/forms';
 import {NgTemplateOutlet} from '@angular/common';
@@ -35,11 +30,14 @@ import {MatIcon} from '@angular/material/icon';
   templateUrl: './autocomplete.component.html',
   standalone: true
 })
-export class AutocompleteComponent<T extends { id: string | number; nombre: string }> extends BaseFormFieldComponent implements OnInit, OnChanges {
+export class AutocompleteComponent<T extends {
+  id: string | number;
+  nombre: string
+}> extends BaseFormFieldComponent implements OnInit, OnChanges {
   @Input({required: true}) opciones: T[] = [];
   @Input() displayWithFn: ((value: T) => string) | null = null;
   @Input() optionTemplate!: TemplateRef<{ $implicit: T }>;
-  @Output() onOptionSelected: EventEmitter<MatAutocompleteSelectedEvent> = new EventEmitter<MatAutocompleteSelectedEvent>();
+  @Output() onChange: EventEmitter<void> = new EventEmitter<void>();
 
   opcionesFiltradas: T[] = this.opciones;
   validator: ValidatorFn | null = null;
@@ -65,7 +63,7 @@ export class AutocompleteComponent<T extends { id: string | number; nombre: stri
     }
     this.validator = this.opcionSeleccionadaValidator(this.opcionesFiltradas);
     this.control.addValidators(this.validator);
-    this.control.updateValueAndValidity({ emitEvent: false });
+    this.control.updateValueAndValidity({emitEvent: false});
   }
 
   private opcionSeleccionadaValidator(opcionesFiltradas: T[]): ValidatorFn {
@@ -73,7 +71,7 @@ export class AutocompleteComponent<T extends { id: string | number; nombre: stri
       const opcionSeleccionada = control.value;
       if (opcionSeleccionada) {
         const esValida = opcionesFiltradas.some((opcion) => opcion.id === opcionSeleccionada.id);
-        return esValida ? null : { opcionInvalida: true };
+        return esValida ? null : {opcionInvalida: true};
       }
       return null;
     };
@@ -83,8 +81,8 @@ export class AutocompleteComponent<T extends { id: string | number; nombre: stri
     const stringValue = this.getStringValue(true);
     const opcionSeleccionada = this.opciones.find((opcion) => opcion.nombre.toLowerCase() === stringValue);
 
-    if (opcionSeleccionada ) {
-      this.control.setValue(opcionSeleccionada, { emitEvent: false });
+    if (opcionSeleccionada) {
+      this.control.setValue(opcionSeleccionada, {emitEvent: false});
     }
   }
 
@@ -107,15 +105,11 @@ export class AutocompleteComponent<T extends { id: string | number; nombre: stri
       if (this.opciones.length === 0) {
         this.hint = `No hay opciones disponibles`;
         this.control.disable();
-      } else {
+      } else if (this.control.parent?.enabled) {
         this.hint = '';
         this.control.enable();
       }
       this.filtrarOpciones();
     }
-  }
-
-  tieneValor(): boolean {
-    return !!this.control.value && (typeof this.control.value === 'string' || this.control.value.nombre);
   }
 }

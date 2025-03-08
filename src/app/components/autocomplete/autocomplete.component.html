@@ -7,13 +7,14 @@
     [formControl]="control"
     [matAutocomplete]="auto"
     [required]="required"
+    (change)="onChange.emit()"
   >
   <mat-autocomplete
     autoActiveFirstOption
     autoSelectActiveOption
     #auto="matAutocomplete"
     [displayWith]="displayWithFn"
-    (optionSelected)="onOptionSelected.emit($event)"
+    (optionSelected)="onChange.emit()"
   >
     @for (opcion of opcionesFiltradas; track opcion.id) {
       <mat-option [value]="opcion">
@@ -30,7 +31,7 @@
     <span matTextPrefix>{{ textPrefix }}</span>
   }
   @if (this.clearable && this.control.value) {
-    <button matSuffix mat-icon-button aria-label="Clear" (click)="this.control.setValue(null)">
+    <button matSuffix mat-icon-button aria-label="Clear" (click)="this.control.setValue(null); onChange.emit()">
       <mat-icon>close</mat-icon>
     </button>
   }
