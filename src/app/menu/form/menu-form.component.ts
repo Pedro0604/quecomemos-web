@@ -1,4 +1,4 @@
-import {Component, OnInit, signal} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Menu, MenuDTO} from '../menu.model';
 import {MenuService} from '../service/menu.service';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
@@ -21,15 +21,16 @@ import {MatCard, MatCardContent,} from '@angular/material/card';
 import {ComidaService} from '../../comida/service/comida.service';
 import {firstValueFrom} from 'rxjs';
 import {InputComponent} from '../../components/input/input.component';
-import {SpinnerComponent} from '../../components/spinner/spinner.component';
 import {AutocompleteComponent} from '../../components/autocomplete/autocomplete.component';
 import {FormService} from '../../form-service/form.service';
-import {FormStateHandler} from '../../utils/FormStateHandler';
 import {SubmitButtonComponent} from '../../components/submit-button/submit-button.component';
 import {TitleComponent} from '../../components/title/title.component';
 import {
   FocusFirstInvalidFieldDirective
 } from '../../directives/focus-first-invalid-field.directive/focus-first-invalid-field.directive';
+import {FormStateComponent} from '../../components/form-state/form-state.component';
+import {BaseEntityForm} from '../../utils/BaseEntityForm';
+import {FormComponent} from '../../components/form/form.component';
 
 type CampoComida = {
   nombre: string,
@@ -50,24 +51,20 @@ type CampoComida = {
     MatCard,
     MatCardContent,
     InputComponent,
-    SpinnerComponent,
     AutocompleteComponent,
     SubmitButtonComponent,
     TitleComponent,
-    FocusFirstInvalidFieldDirective
+    FocusFirstInvalidFieldDirective,
+    FormStateComponent,
+    FormComponent
   ],
   templateUrl: './menu-form.component.html',
   standalone: true,
   styleUrl: './menu-form.component.css'
 })
-export class MenuFormComponent extends FormStateHandler implements OnInit {
-  menu: Menu | null = null;
-  comidas: Comida[] = []
-
+export class MenuFormComponent extends BaseEntityForm<Menu, MenuDTO, Comida> implements OnInit {
   form: FormGroup
-
-  readonly title = signal('Crear Menú')
-  readonly submittingText = signal('Creando Menú')
+  redirectUrlOnCreation: string = '/menu';
 
   camposSinComidas: CampoComida[] = [];
 
@@ -99,7 +96,9 @@ export class MenuFormComponent extends FormStateHandler implements OnInit {
   ];
 
   updateComidasValidity() {
+    console.log("cambio")
     this.camposDeComida.forEach(campo => {
+      this.form.get(campo.nombre)?.markAsDirty();
       this.form.get(campo.nombre)?.updateValueAndValidity({onlySelf: true});
     })
     this.form.updateValueAndValidity();
@@ -127,15 +126,16 @@ export class MenuFormComponent extends FormStateHandler implements OnInit {
   }
 
   constructor(
-    private menuService: MenuService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private notificationService: NotificationService,
-    private comidaService: ComidaService,
-    protected formService: FormService,
     private fb: FormBuilder,
+    private comidaService: ComidaService,
+    protected override router: Router,
+    protected override notificationService: NotificationService,
+    protected override formService: FormService,
+    protected override service: MenuService,
+    protected override route: ActivatedRoute
   ) {
-    super();
+    super(router, notificationService, formService, service, route);
+
     this.form = this.fb.group({
       nombre: [''],
       precio: ['', [Validators.min(0)]],
@@ -147,49 +147,24 @@ export class MenuFormComponent extends FormStateHandler implements OnInit {
     }, {validators: this.alMenosUnaComidaSeleccionadaValidator()});
   }
 
-  async ngOnInit(): Promise<void> {
-    const id = this.route.snapshot.params['id'];
-    this.loading = true;
+  protected override loadRelatedData(): Promise<Comida[]> {
+    return firstValueFrom(this.comidaService.getAll());
+  }
 
-    try {
-      const menuPromise: Promise<Menu | null> = id
-        ? firstValueFrom(this.menuService.getById(id))
-        : Promise.resolve(null);
-      const comidasPromise: Promise<Comida[]> = firstValueFrom(this.comidaService.getAll());
-      const [menuData, comidas] = await Promise.all([menuPromise, comidasPromise]);
-      this.comidas = comidas;
-
-      if (menuData) {
-        this.menu = menuData;
-        this.form.patchValue({
-          nombre: this.menu.nombre,
-          precio: this.menu.precio,
-          vegetariano: this.menu.vegetariano
-        });
-
-        this.menu.comidas.forEach(comida => {
-          const campoComida = this.camposDeComida.find(campoComida => campoComida.tipoComida === comida.tipoComida);
-          if (campoComida) {
-            const comidaField = this.form.get(campoComida.nombre);
-            comidaField?.setValue(comida);
-            comidaField?.markAsTouched();
-          }
-        });
-
-        this.title.set('Modificar Menú');
-        this.submittingText.set('Modificando Menú');
-      }
-    } catch (error) {
-      this.error = true;
-      console.error('Error al obtener datos');
-      console.error(error);
-      this.notificationService.show('Ha ocurrido un error. Por favor, intente nuevamente más tarde');
-    } finally {
-      this.loading = false;
+  protected extraOnInit(): void {
+    if (this.entity) {
+      this.entity.comidas.forEach(comida => {
+        const campoComida = this.camposDeComida.find(campoComida => campoComida.tipoComida === comida.tipoComida);
+        if (campoComida) {
+          const comidaField = this.form.get(campoComida.nombre);
+          comidaField?.setValue(comida);
+          comidaField?.markAsTouched();
+        }
+      });
+    } else {
+      const vegetarianoInicial = this.route.snapshot.queryParams['vegetariano'] as boolean;
+      this.form.get('vegetariano')?.setValue(vegetarianoInicial);
     }
-
-    const vegetarianoInicial = this.route.snapshot.queryParams['vegetariano'] as boolean;
-    this.form.get('vegetariano')?.setValue(vegetarianoInicial);
 
     function filterComida(comida: Comida, tipoComida: TipoComida, menuVegetariano: boolean): boolean {
       return comida.tipoComida == tipoComida && (menuVegetariano ? comida.vegetariana : true);
@@ -200,17 +175,28 @@ export class MenuFormComponent extends FormStateHandler implements OnInit {
     }
 
     this.camposDeComida.forEach(campo => {
-      campo.comidas = this.comidas.filter(comida => filterComida(comida, campo.tipoComida, false));
+      campo.comidas = this.relatedData.filter(comida => filterComida(comida, campo.tipoComida, false));
     });
-
-    calculateCamposSinComidas();
 
     this.form.get('vegetariano')?.valueChanges.subscribe(menuVegetariano => {
       this.camposDeComida.forEach(campo => {
-        campo.comidas = this.comidas.filter(comida => filterComida(comida, campo.tipoComida, menuVegetariano));
+        campo.comidas = this.relatedData.filter(comida => filterComida(comida, campo.tipoComida, menuVegetariano));
       });
       calculateCamposSinComidas();
     });
+
+    calculateCamposSinComidas();
+  }
+
+  override mapToDTO(formValue: any): MenuDTO {
+    return {
+      nombre: formValue.nombre,
+      precio: formValue.precio,
+      vegetariano: formValue.vegetariano,
+      comidaIds: this.camposDeComida
+        .map(campo => formValue[campo.nombre]?.id)
+        .filter(id => !!id)
+    };
   }
 
   getTextoSinComidas(campo: CampoComida): string {
@@ -247,58 +233,5 @@ export class MenuFormComponent extends FormStateHandler implements OnInit {
     return comida && comida.nombre ? comida.nombre : '';
   }
 
-  // TODO - GENERALIZAR
-  private saveMenu(dto: MenuDTO): void {
-    const getPostOptions = (isModification: boolean) => {
-      return {
-        complete: () => {
-          this.notificationService.show(isModification ? 'Menú modificado exitosamente' : 'Menú creado exitosamente');
-          this.router.navigate(['/menu']);
-        },
-        error: (error: any) => {
-          const message = isModification ? 'Error al modificar el menú' : 'Error al crear el menú'
-          this.notificationService.show(message + ". Por favor, intente nuevamente");
-          console.error(message);
-          console.error(error);
-        }
-      };
-    }
-
-    if (this.menu) {
-      this.menuService.update(this.menu.id, dto).subscribe(getPostOptions(true));
-    } else {
-      this.menuService.create(dto).subscribe(getPostOptions(false));
-    }
-  }
-
-  onSubmit(): void {
-    if (this.form.valid && this.form.dirty) {
-      const menuData = this.form.value;
-      const comidaIds = [];
-      if (menuData.entrada) {
-        comidaIds.push(menuData.entrada.id);
-      }
-      if (menuData.principal) {
-        comidaIds.push(menuData.principal.id);
-      }
-      if (menuData.postre) {
-        comidaIds.push(menuData.postre.id);
-      }
-      if (menuData.bebida) {
-        comidaIds.push(menuData.bebida.id);
-      }
-      const menuDTO: MenuDTO = {
-        nombre: menuData.nombre,
-        precio: menuData.precio,
-        vegetariano: menuData.vegetariano,
-        comidaIds: comidaIds,
-      }
-      this.saveMenu(menuDTO);
-    } else {
-      this.formService.validateAllFields(this.form);
-    }
-  }
-
-  protected readonly history = history;
   protected readonly tipoComidaToString = tipoComidaToString;
 }

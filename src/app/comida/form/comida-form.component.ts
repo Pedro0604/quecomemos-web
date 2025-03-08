@@ -1,10 +1,9 @@
-import {Component, OnInit, signal} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {Comida, ComidaDTO, TipoComida, tipoComidaToString} from '../comida.model';
 import {ComidaService} from '../service/comida.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {NotificationService} from '../../notification/notification.service';
-import {MatError} from '@angular/material/form-field';
 import {MatCard, MatCardContent} from '@angular/material/card';
 import {MatCheckbox} from '@angular/material/checkbox';
 import {InputComponent} from '../../components/input/input.component';
@@ -15,13 +14,13 @@ import {TitleComponent} from '../../components/title/title.component';
 import {
   FocusFirstInvalidFieldDirective
 } from '../../directives/focus-first-invalid-field.directive/focus-first-invalid-field.directive';
-import {FormStateHandler} from '../../utils/FormStateHandler';
-import {SpinnerComponent} from '../../components/spinner/spinner.component';
+import {FormStateComponent} from '../../components/form-state/form-state.component';
+import {BaseEntityForm} from '../../utils/BaseEntityForm';
+import {FormComponent} from '../../components/form/form.component';
 
 @Component({
   selector: 'app-comida-form',
   imports: [
-    MatError,
     MatCard,
     MatCardContent,
     ReactiveFormsModule,
@@ -31,14 +30,17 @@ import {SpinnerComponent} from '../../components/spinner/spinner.component';
     SubmitButtonComponent,
     TitleComponent,
     FocusFirstInvalidFieldDirective,
-    SpinnerComponent,
+    FormStateComponent,
+    FormComponent,
   ],
   templateUrl: './comida-form.component.html',
   standalone: true,
   styleUrl: './comida-form.component.css',
 })
-export class ComidaFormComponent extends FormStateHandler implements OnInit {
-  comida: Comida | null = null;
+
+export class ComidaFormComponent extends BaseEntityForm<Comida, ComidaDTO, void> implements OnInit {
+  redirectUrlOnCreation: string = '/comidas';
+  form: FormGroup
 
   tiposDeComida: TipoComida[] = ['OTRO', 'POSTRE', 'ENTRADA', 'BEBIDA', 'PLATO_PRINCIPAL'];
   tiposDeComidaOptions = this.tiposDeComida.map(tipoComida => ({
@@ -46,20 +48,15 @@ export class ComidaFormComponent extends FormStateHandler implements OnInit {
     name: tipoComidaToString(tipoComida)
   }));
 
-  form: FormGroup
-
-  readonly title = signal('Crear Comida')
-  readonly submittingText = signal('Creando Comida')
-
   constructor(
-    private comidaService: ComidaService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private notificationService: NotificationService,
-    protected formService: FormService,
     private fb: FormBuilder,
+    protected override router: Router,
+    protected override notificationService: NotificationService,
+    protected override formService: FormService,
+    protected override service: ComidaService,
+    protected override route: ActivatedRoute
   ) {
-    super();
+    super(router, notificationService, formService, service, route);
 
     this.form = this.fb.group({
       nombre: [''],
@@ -70,72 +67,17 @@ export class ComidaFormComponent extends FormStateHandler implements OnInit {
     });
   }
 
-  ngOnInit() {
-    const id = this.route.snapshot.params['id'];
-    if (id) {
-      this.loading = true;
-      this.comidaService.getById(id).subscribe({
-        next: (data) => {
-          this.comida = data;
-          this.form.patchValue({
-            nombre: this.comida.nombre,
-            precio: this.comida.precio,
-            vegetariana: this.comida.vegetariana,
-            tipoComida: this.comida.tipoComida,
-            urlImagen: this.comida.urlImagen
-          });
-        },
-        error: error => {
-          this.error = true;
-          console.error('Error al obtener la comida', error);
-          this.notificationService.show('Ha ocurrido un error. Por favor, intente nuevamente más tarde');
-        },
-        complete: () => {
-          this.loading = false;
-        }
-      });
-      this.title.set('Modificar Comida');
-      this.submittingText.set('Modificando Comida');
-    }
+  protected extraOnInit(): void {
+    if (!this.isEdition()) {
+      const tipoComidaInicial = this.route.snapshot.queryParams['tipo-comida'] as TipoComida;
+      this.form.get('tipoComida')?.setValue(tipoComidaInicial);
 
-    const tipoComidaInicial = this.route.snapshot.queryParams['tipo-comida'] as TipoComida;
-    this.form.get('tipoComida')?.setValue(tipoComidaInicial);
-
-    const vegetarianaInicial = this.route.snapshot.queryParams['vegetariana'] as boolean;
-    this.form.get('vegetariana')?.setValue(vegetarianaInicial);
-  }
-
-  private saveComida(comidaDTO: ComidaDTO): void {
-    const getPostOptions = (isModification: boolean) => {
-      return {
-        complete: () => {
-          this.notificationService.show(isModification ? 'Comida modificada correctamente' : 'Comida creada correctamente');
-          this.router.navigate(['/comidas']);
-        },
-        error: (error: any) => {
-          const message = isModification ? 'Error al modificar la comida' : 'Error al crear la comida'
-          this.notificationService.show(message);
-          console.error(message);
-          console.error(error);
-        }
-      }
-    }
-
-    if (this.comida?.id) {
-      this.comidaService.update(this.comida.id, comidaDTO).subscribe(getPostOptions(true));
-    } else {
-      this.comidaService.create(comidaDTO).subscribe(getPostOptions(false));
+      const vegetarianaInicial = this.route.snapshot.queryParams['vegetariana'] as boolean;
+      this.form.get('vegetariana')?.setValue(vegetarianaInicial);
     }
   }
 
-  onSubmit(): void {
-    if (this.form.valid && this.form.dirty) {
-      const comidaDTO: ComidaDTO = this.form.value;
-      this.saveComida(comidaDTO);
-    } else {
-      this.formService.validateAllFields(this.form);
-    }
+  override mapToDTO(formValue: any): ComidaDTO {
+    return formValue as ComidaDTO;
   }
-
-  protected readonly history = history;
 }

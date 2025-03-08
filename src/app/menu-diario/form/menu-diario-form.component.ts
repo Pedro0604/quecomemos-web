@@ -9,18 +9,19 @@ import {MenuDiarioService} from '../service/menu-diario.service';
 import {firstValueFrom} from 'rxjs';
 import {MatAnchor} from '@angular/material/button';
 import {MatCard, MatCardContent} from '@angular/material/card';
-import {MatError} from '@angular/material/form-field';
 import {MatIcon} from '@angular/material/icon';
 import {SelectComponent} from '../../components/select/select.component';
-import {SpinnerComponent} from '../../components/spinner/spinner.component';
 import {AutocompleteComponent} from '../../components/autocomplete/autocomplete.component';
 import {FormService, inArrayValidator} from "../../form-service/form.service";
-import {FormStateHandler} from '../../utils/FormStateHandler';
 import {SubmitButtonComponent} from '../../components/submit-button/submit-button.component';
 import {TitleComponent} from '../../components/title/title.component';
 import {
   FocusFirstInvalidFieldDirective
 } from '../../directives/focus-first-invalid-field.directive/focus-first-invalid-field.directive';
+import {FormStateComponent} from '../../components/form-state/form-state.component';
+import {BaseEntityForm} from '../../utils/BaseEntityForm';
+import {MatError} from '@angular/material/input';
+import {FormComponent} from '../../components/form/form.component';
 
 type CampoMenu = {
   nombre: string,
@@ -40,23 +41,22 @@ type CampoMenu = {
     ReactiveFormsModule,
     RouterLink,
     SelectComponent,
-    SpinnerComponent,
     AutocompleteComponent,
     SubmitButtonComponent,
     TitleComponent,
     FocusFirstInvalidFieldDirective,
+    FormStateComponent,
+    FormComponent,
   ],
   templateUrl: './menu-diario-form.component.html',
   standalone: true,
 })
-export class MenuDiarioFormComponent extends FormStateHandler implements OnInit {
-  menuDiario: MenuDiario | null = null;
-  menus: Menu[] = [];
 
+// TODO - Agregar a Menu, MenuDiario y Comida una forma general de saber si son femenino o masculino y su nombre de entidad (aplicar a todos los lugares generales (list, form, eliminacion, ...))
+// TODO - QUIZAS TAMBIEN UNA DISPLAYFN GENERAL PARA MOSTRAR EL NOMBRE DE UNA ENTIDAD EN PARTICULAR
+export class MenuDiarioFormComponent extends BaseEntityForm<MenuDiario, MenuDiarioDTO, Menu> implements OnInit {
   form: FormGroup
-
-  readonly title = signal('Crear Menú Diario')
-  readonly submittingText = signal('Creando Menú Diario')
+  redirectUrlOnCreation: string = '/menu-diario';
 
   diasDeSemanaOptions = diasSemanaArray.map(diaSemana => ({
     value: diaSemana,
@@ -79,15 +79,16 @@ export class MenuDiarioFormComponent extends FormStateHandler implements OnInit 
   ];
 
   constructor(
-    private menuDiarioService: MenuDiarioService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private notificationService: NotificationService,
+    private fb: FormBuilder,
     private menuService: MenuService,
-    protected formService: FormService,
-    private fb: FormBuilder
+    protected override router: Router,
+    protected override notificationService: NotificationService,
+    protected override formService: FormService,
+    protected override service: MenuDiarioService,
+    protected override route: ActivatedRoute
   ) {
-    super();
+    super(router, notificationService, formService, service, route);
+
     this.form = this.fb.group({
       dia: ['', [inArrayValidator(diasSemanaArray)]],
       menuVegetariano: [{value: '', disabled: true}],
@@ -95,82 +96,25 @@ export class MenuDiarioFormComponent extends FormStateHandler implements OnInit 
     });
   }
 
-  async ngOnInit(): Promise<void> {
-    const id = this.route.snapshot.params['id'];
-    this.loading = true;
+  protected override loadRelatedData(): Promise<Menu[]> {
+    return firstValueFrom(this.menuService.getAll());
+  }
 
-    try {
-      const menuDiarioPromise: Promise<MenuDiario | null> = id
-        ? firstValueFrom(this.menuDiarioService.getById(id))
-        : Promise.resolve(null);
-      const menusPromise: Promise<Menu[]> = firstValueFrom(this.menuService.getAll());
-      const [menuDiarioData, menus] = await Promise.all([menuDiarioPromise, menusPromise]);
-      this.menus = menus;
+  protected extraOnInit(): void {
+      this.camposDeMenus.forEach(campo => {
+        campo.menus = this.relatedData.filter(menu => menu.vegetariano == campo.vegetariano);
+      });
+  }
 
-      if (menuDiarioData) {
-        this.menuDiario = menuDiarioData;
-        this.form.patchValue({
-          dia: this.menuDiario.dia,
-          menuVegetariano: this.menuDiario.menuVegetariano,
-          menuNoVegetariano: this.menuDiario.menuNoVegetariano
-        });
-        this.title.set('Modificar Menú Diario');
-        this.submittingText.set('Modificando Menú Diario');
-      }
-    } catch (error) {
-      this.error = true;
-      console.error('Error al obtener datos');
-      console.error(error);
-      this.notificationService.show('Ha ocurrido un error. Por favor, intente nuevamente más tarde');
-    } finally {
-      this.loading = false;
+  override mapToDTO(formValue: any): MenuDiarioDTO {
+    return {
+      dia: formValue.dia,
+      menuVegetarianoId: formValue.menuVegetariano.id,
+      menuNoVegetarianoId: formValue.menuNoVegetariano.id,
     }
-
-    this.camposDeMenus.forEach(campo => {
-      campo.menus = this.menus.filter(menu => menu.vegetariano == campo.vegetariano);
-    });
   }
 
   displayFn(menu: Menu): string {
     return menu && menu.nombre ? menu.nombre : '';
   }
-
-  private saveMenuDiario(dto: MenuDiarioDTO): void {
-    const getPostOptions = (isModification: boolean) => {
-      return {
-        complete: () => {
-          this.notificationService.show(isModification ? 'Menú diario modificado exitosamente' : 'Menú diario creado exitosamente');
-          this.router.navigate(['/menu-diario']);
-        },
-        error: (error: any) => {
-          const message = isModification ? 'Error al modificar el menú diario' : 'Error al crear el menú diario'
-          this.notificationService.show(message);
-          console.error(message);
-          console.error(error);
-        }
-      };
-    }
-
-    if (this.menuDiario) {
-      this.menuDiarioService.update(this.menuDiario.id, dto).subscribe(getPostOptions(true));
-    } else {
-      this.menuDiarioService.create(dto).subscribe(getPostOptions(false));
-    }
-  }
-
-  onSubmit(): void {
-    if (this.form.valid && this.form.dirty) {
-      const menuDiarioData = this.form.value;
-      const menuDiarioDTO: MenuDiarioDTO = {
-        dia: menuDiarioData.dia,
-        menuVegetarianoId: menuDiarioData.menuVegetariano.id,
-        menuNoVegetarianoId: menuDiarioData.menuNoVegetariano.id,
-      }
-      this.saveMenuDiario(menuDiarioDTO);
-    } else {
-      this.formService.validateAllFields(this.form);
-    }
-  }
-
-  protected readonly history = history;
 }
