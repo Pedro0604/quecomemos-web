@@ -21,5 +21,13 @@ export class AuthGuard implements CanActivate {
     }
     return true;
   }
+
+  allowAccessWithoutRedirect() {
+    this.redirectToLogin.set(false);
+  }
+
+  resetRedirect() {
+    this.redirectToLogin.set(true);
+  }
 }
 

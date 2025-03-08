@@ -50,7 +50,6 @@ export class LayoutComponent implements OnInit {
   constructor(private layoutService: LayoutService, private injector: Injector, protected authService: AuthService) {
   }
 
-  // TODO - MODIFICAR PARA QUE FILTRE SEGÚN EL PERMISO NECESARIO
   filtrarRutas() {
     this.rootRoutes = appRoutes.filter(route => {
       if (!route.path) {
@@ -70,9 +69,9 @@ export class LayoutComponent implements OnInit {
           }
 
           if (typeof guardInstance.canActivate === 'function') {
-            guardInstance.redirectToLogin.set(false);
+            guardInstance.allowAccessWithoutRedirect();
             const canActivateReturnValue = guardInstance.canActivate();
-            guardInstance.redirectToLogin.set(true);
+            guardInstance.resetRedirect();
             return canActivateReturnValue;
           }
 
