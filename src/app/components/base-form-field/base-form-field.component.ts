@@ -27,9 +27,13 @@ export abstract class BaseFormFieldComponent implements OnInit, OnDestroy {
   protected constructor(protected formService: FormService) {
   }
 
-  get clearable(): boolean {
+  protected isClearable() {
     // Se hace esto para que si no se define, por defecto sea clearable, pero se pueda seguir sobreescribiendo en los hijos
     return this._clearable == null ? true : this._clearable;
+  }
+
+  get clearable(): boolean {
+    return this.isClearable() && this.control.enabled;
   }
 
   ngOnInit() {
@@ -51,6 +55,7 @@ export abstract class BaseFormFieldComponent implements OnInit, OnDestroy {
 
   private subscribeToFieldChanges(): void {
     const eventsSub = this.control.events.subscribe(() => {
+      console.log(this.label + " " + this.control.disabled);
       if (this.control.touched || this.control.dirty) {
         this.showErrorMessage();
       }

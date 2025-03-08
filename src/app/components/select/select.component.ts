@@ -21,13 +21,13 @@ import {FormService} from "../../form-service/form.service";
   standalone: true,
 })
 export class SelectComponent extends BaseFormFieldComponent {
-  @Input({required: true}) opciones: {value: string | number, name: string}[] = [];
+  @Input({required: true}) opciones: { value: string | number, name: string }[] = [];
 
   constructor(formService: FormService) {
     super(formService);
   }
 
-  override get clearable(): boolean {
+  protected override isClearable(): boolean {
     return this._clearable == null ? !this.required : this._clearable;
   }
 }
