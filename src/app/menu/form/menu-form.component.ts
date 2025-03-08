@@ -17,20 +17,17 @@ import {MatAnchor} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
 import {MatCheckbox} from '@angular/material/checkbox';
 import {Comida, TipoComida, tipoComidaToString} from '../../comida/comida.model';
-import {MatCard, MatCardContent,} from '@angular/material/card';
 import {ComidaService} from '../../comida/service/comida.service';
 import {firstValueFrom} from 'rxjs';
-import {InputComponent} from '../../components/input/input.component';
-import {AutocompleteComponent} from '../../components/autocomplete/autocomplete.component';
-import {FormService} from '../../form-service/form.service';
-import {SubmitButtonComponent} from '../../components/submit-button/submit-button.component';
+import {InputComponent} from '../../forms/components/fields/input/input.component';
+import {AutocompleteComponent} from '../../forms/components/fields/autocomplete/autocomplete.component';
+import {FormService} from '../../forms/service/form.service';
+import {SubmitButtonComponent} from '../../forms/components/submit-button/submit-button.component';
 import {TitleComponent} from '../../components/title/title.component';
-import {
-  FocusFirstInvalidFieldDirective
-} from '../../directives/focus-first-invalid-field.directive/focus-first-invalid-field.directive';
-import {FormStateComponent} from '../../components/form-state/form-state.component';
-import {BaseEntityForm} from '../../utils/BaseEntityForm';
-import {FormComponent} from '../../components/form/form.component';
+import {BaseEntityForm} from '../../forms/BaseEntityForm';
+import {FormStateComponent} from '../../forms/components/form-state/form-state.component';
+import {FormComponent} from '../../forms/components/form/form.component';
+import {DefaultImageDirective} from '../../directives/default-image-directive/default-image.directive';
 
 type CampoComida = {
   nombre: string,
@@ -48,15 +45,13 @@ type CampoComida = {
     MatCheckbox,
     RouterLink,
     MatAnchor,
-    MatCard,
-    MatCardContent,
     InputComponent,
     AutocompleteComponent,
     SubmitButtonComponent,
     TitleComponent,
-    FocusFirstInvalidFieldDirective,
     FormStateComponent,
-    FormComponent
+    FormComponent,
+    DefaultImageDirective
   ],
   templateUrl: './menu-form.component.html',
   standalone: true,

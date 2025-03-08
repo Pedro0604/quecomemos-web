@@ -1,7 +1,7 @@
 import {Component, Input} from '@angular/core';
 import {MatButton} from '@angular/material/button';
 import {FormGroup} from '@angular/forms';
-import {FormService} from '../../form-service/form.service';
+import {FormService} from '../../service/form.service';
 import {MatTooltip} from '@angular/material/tooltip';
 
 @Component({

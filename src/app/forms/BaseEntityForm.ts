@@ -2,7 +2,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {NotificationService} from '../notification/notification.service';
 import {FormStateHandler} from './FormStateHandler';
 import {CrudService} from '../crud-service/crud.service';
-import {FormService} from '../form-service/form.service';
+import {FormService} from './service/form.service';
 import {Injectable, OnInit, signal} from '@angular/core';
 import {firstValueFrom} from 'rxjs';
 

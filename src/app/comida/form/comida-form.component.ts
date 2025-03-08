@@ -4,32 +4,25 @@ import {Comida, ComidaDTO, TipoComida, tipoComidaToString} from '../comida.model
 import {ComidaService} from '../service/comida.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {NotificationService} from '../../notification/notification.service';
-import {MatCard, MatCardContent} from '@angular/material/card';
 import {MatCheckbox} from '@angular/material/checkbox';
-import {InputComponent} from '../../components/input/input.component';
-import {SelectComponent} from '../../components/select/select.component';
-import {FormService, inArrayValidator, urlValidator} from '../../form-service/form.service';
-import {SubmitButtonComponent} from '../../components/submit-button/submit-button.component';
+import {InputComponent} from '../../forms/components/fields/input/input.component';
+import {SelectComponent} from '../../forms/components/fields/select/select.component';
+import {FormService, inArrayValidator, urlValidator} from '../../forms/service/form.service';
+import {SubmitButtonComponent} from '../../forms/components/submit-button/submit-button.component';
 import {TitleComponent} from '../../components/title/title.component';
-import {
-  FocusFirstInvalidFieldDirective
-} from '../../directives/focus-first-invalid-field.directive/focus-first-invalid-field.directive';
-import {FormStateComponent} from '../../components/form-state/form-state.component';
-import {BaseEntityForm} from '../../utils/BaseEntityForm';
-import {FormComponent} from '../../components/form/form.component';
+import {BaseEntityForm} from '../../forms/BaseEntityForm';
+import {FormComponent} from '../../forms/components/form/form.component';
+import {FormStateComponent} from '../../forms/components/form-state/form-state.component';
 
 @Component({
   selector: 'app-comida-form',
   imports: [
-    MatCard,
-    MatCardContent,
     ReactiveFormsModule,
     MatCheckbox,
     InputComponent,
     SelectComponent,
     SubmitButtonComponent,
     TitleComponent,
-    FocusFirstInvalidFieldDirective,
     FormStateComponent,
     FormComponent,
   ],

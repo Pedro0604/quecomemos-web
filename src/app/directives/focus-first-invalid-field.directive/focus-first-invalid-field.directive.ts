@@ -2,6 +2,7 @@ import {Directive, ElementRef, HostListener} from '@angular/core';
 
 @Directive({
   standalone: true,
+  // TODO - VER COMO HACER Q ANDE PARA TODAS LAS IMG
   selector: 'form'
 })
 export class FocusFirstInvalidFieldDirective {

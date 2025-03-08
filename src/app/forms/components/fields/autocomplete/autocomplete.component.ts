@@ -5,7 +5,7 @@ import {MatAutocomplete, MatAutocompleteTrigger, MatOption} from '@angular/mater
 import {MatHint, MatInput} from '@angular/material/input';
 import {AbstractControl, ReactiveFormsModule, ValidationErrors, ValidatorFn} from '@angular/forms';
 import {NgTemplateOutlet} from '@angular/common';
-import {FormService} from "../../form-service/form.service";
+import {FormService} from "../../../service/form.service";
 import {MatIconButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
 

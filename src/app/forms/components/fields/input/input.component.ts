@@ -5,7 +5,7 @@ import {MatHint, MatInput} from "@angular/material/input";
 import {MatIcon} from '@angular/material/icon';
 import {MatIconButton} from '@angular/material/button';
 import {BaseFormFieldComponent} from '../base-form-field/base-form-field.component';
-import {FormService} from '../../form-service/form.service';
+import {FormService} from '../../../service/form.service';
 
 @Component({
   selector: 'app-input',

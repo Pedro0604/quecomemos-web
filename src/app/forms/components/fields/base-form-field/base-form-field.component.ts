@@ -2,7 +2,7 @@ import {booleanAttribute, Component, Input, OnDestroy, OnInit} from '@angular/co
 import {AbstractControl, FormControl} from '@angular/forms';
 import {Subscription} from 'rxjs';
 import {FloatLabelType} from '@angular/material/form-field';
-import {FormService} from '../../form-service/form.service';
+import {FormService} from '../../../service/form.service';
 
 @Component({
   selector: 'app-base-form-field',

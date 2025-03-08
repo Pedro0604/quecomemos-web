@@ -3,7 +3,7 @@ import {MatError, MatFormField, MatHint, MatLabel, MatPrefix} from '@angular/mat
 import {MatOption, MatSelect} from '@angular/material/select';
 import {ReactiveFormsModule} from '@angular/forms';
 import {BaseFormFieldComponent} from '../base-form-field/base-form-field.component';
-import {FormService} from "../../form-service/form.service";
+import {FormService} from "../../../service/form.service";
 
 @Component({
   selector: 'app-select',

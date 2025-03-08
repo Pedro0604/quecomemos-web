@@ -7,7 +7,7 @@ import {FormGroup, ReactiveFormsModule} from '@angular/forms';
   imports: [
     MatCard,
     MatCardContent,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
   templateUrl: './form.component.html',
   standalone: true,

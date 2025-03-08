@@ -10,18 +10,15 @@ import {firstValueFrom} from 'rxjs';
 import {MatAnchor} from '@angular/material/button';
 import {MatCard, MatCardContent} from '@angular/material/card';
 import {MatIcon} from '@angular/material/icon';
-import {SelectComponent} from '../../components/select/select.component';
-import {AutocompleteComponent} from '../../components/autocomplete/autocomplete.component';
-import {FormService, inArrayValidator} from "../../form-service/form.service";
-import {SubmitButtonComponent} from '../../components/submit-button/submit-button.component';
+import {SelectComponent} from '../../forms/components/fields/select/select.component';
+import {AutocompleteComponent} from '../../forms/components/fields/autocomplete/autocomplete.component';
+import {FormService, inArrayValidator} from "../../forms/service/form.service";
+import {SubmitButtonComponent} from '../../forms/components/submit-button/submit-button.component';
 import {TitleComponent} from '../../components/title/title.component';
-import {
-  FocusFirstInvalidFieldDirective
-} from '../../directives/focus-first-invalid-field.directive/focus-first-invalid-field.directive';
-import {FormStateComponent} from '../../components/form-state/form-state.component';
-import {BaseEntityForm} from '../../utils/BaseEntityForm';
+import {BaseEntityForm} from '../../forms/BaseEntityForm';
 import {MatError} from '@angular/material/input';
-import {FormComponent} from '../../components/form/form.component';
+import {FormStateComponent} from '../../forms/components/form-state/form-state.component';
+import {FormComponent} from '../../forms/components/form/form.component';
 
 type CampoMenu = {
   nombre: string,
@@ -34,8 +31,6 @@ type CampoMenu = {
   selector: 'app-menu-diario-form',
   imports: [
     MatAnchor,
-    MatCard,
-    MatCardContent,
     MatError,
     MatIcon,
     ReactiveFormsModule,
@@ -44,7 +39,6 @@ type CampoMenu = {
     AutocompleteComponent,
     SubmitButtonComponent,
     TitleComponent,
-    FocusFirstInvalidFieldDirective,
     FormStateComponent,
     FormComponent,
   ],
@@ -101,9 +95,9 @@ export class MenuDiarioFormComponent extends BaseEntityForm<MenuDiario, MenuDiar
   }
 
   protected extraOnInit(): void {
-      this.camposDeMenus.forEach(campo => {
-        campo.menus = this.relatedData.filter(menu => menu.vegetariano == campo.vegetariano);
-      });
+    this.camposDeMenus.forEach(campo => {
+      campo.menus = this.relatedData.filter(menu => menu.vegetariano == campo.vegetariano);
+    });
   }
 
   override mapToDTO(formValue: any): MenuDiarioDTO {

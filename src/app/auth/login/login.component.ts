@@ -6,37 +6,30 @@ import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {NotificationService} from '../../notification/notification.service';
-import {MatCard, MatCardContent} from '@angular/material/card';
 import {AuthService, Credenciales, Role} from '../service/auth.service';
 import {concatMap, first, of} from 'rxjs';
 import {catchError} from 'rxjs/operators';
-import {InputComponent} from '../../components/input/input.component';
-import {FormService, onlyNumbersValidator} from "../../form-service/form.service";
-import {SubmitButtonComponent} from '../../components/submit-button/submit-button.component';
-import {
-  FocusFirstInvalidFieldDirective
-} from '../../directives/focus-first-invalid-field.directive/focus-first-invalid-field.directive';
+import {InputComponent} from '../../forms/components/fields/input/input.component';
+import {FormService, onlyNumbersValidator} from "../../forms/service/form.service";
+import {SubmitButtonComponent} from '../../forms/components/submit-button/submit-button.component';
 import {TitleComponent} from '../../components/title/title.component';
-import {FormComponent} from "../../components/form/form.component";
+import {FormComponent} from '../../forms/components/form/form.component';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   standalone: true,
-    imports: [
-        ReactiveFormsModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatButtonModule,
-        MatIconModule,
-        MatCard,
-        MatCardContent,
-        InputComponent,
-        SubmitButtonComponent,
-        FocusFirstInvalidFieldDirective,
-        TitleComponent,
-        FormComponent,
-    ],
+  imports: [
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    InputComponent,
+    SubmitButtonComponent,
+    TitleComponent,
+    FormComponent,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginComponent {

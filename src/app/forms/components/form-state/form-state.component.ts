@@ -1,6 +1,6 @@
 import {booleanAttribute, Component, Input} from '@angular/core';
-import {SpinnerComponent} from '../spinner/spinner.component';
 import {MatError} from '@angular/material/form-field';
+import {SpinnerComponent} from '../../../components/spinner/spinner.component';
 
 @Component({
   selector: 'app-form-state',
