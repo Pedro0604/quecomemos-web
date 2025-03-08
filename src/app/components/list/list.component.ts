@@ -6,12 +6,10 @@ import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {MatAnchor} from '@angular/material/button';
 import {RouterLink} from '@angular/router';
 import {NgTemplateOutlet} from '@angular/common';
-import {capitalize} from '../../utils/utils';
 
 // TODO - TODOS A HACER:
 // PONER LINK DENTRO DE LOS COMPONENTES POR EJEMPLO DENTRO DE COMIDA, PARA Q EN MENÚ SE PUEDA CLICKEAR UNA COMIDA E IR A MODIFICARLA
 // Y DENTRO DE MENÚ PARA LO MISMO CON MENU DIARIO
-// USAR @EMPTY EN LIST
 
 @Component({
   selector: 'app-list',
@@ -55,6 +53,4 @@ export class ListComponent<T, D> implements OnInit {
   handleDelete(id: number) {
     this.items = this.items.filter((item: any) => item.id !== id);
   }
-
-  protected readonly capitalize = capitalize;
 }
