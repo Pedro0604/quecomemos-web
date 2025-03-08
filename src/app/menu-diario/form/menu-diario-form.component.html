@@ -14,47 +14,38 @@
             </span>
 </ng-template>
 
-<mat-card class="w-full max-w-2xl h-full mx-auto overflow-hidden" appearance="outlined">
-  <mat-card-content class="my-4">
-    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
-      <app-select
-        label="Día del Menú Diario"
-        [abstractControl]="form.get('dia')"
-        placeholder="Seleccione un día para el menú diario"
-        [opciones]="diasDeSemanaOptions"
+<app-form [form]="form" (submit)="onSubmit()">
+  <app-select
+    label="Día del Menú Diario"
+    [abstractControl]="form.get('dia')"
+    placeholder="Seleccione un día para el menú diario"
+    [opciones]="diasDeSemanaOptions"
+  />
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    @for (campo of camposDeMenus; track campo.nombre) {
+      <app-autocomplete
+        [label]="loading ? 'Cargando...' : campo.label"
+        [abstractControl]="form.get(campo.nombre)"
+        [opciones]="campo.menus"
+        [placeholder]="('Seleccioná un ' + campo.label.toLowerCase())"
+        [displayWithFn]="displayFn"
+        [optionTemplate]="menuTemplate"
       />
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        @for (campo of camposDeMenus; track campo.nombre) {
-          <app-autocomplete
-            [label]="loading ? 'Cargando...' : campo.label"
-            [abstractControl]="form.get(campo.nombre)"
-            [opciones]="campo.menus"
-            [placeholder]="('Seleccioná un ' + campo.label.toLowerCase())"
-            [displayWithFn]="displayFn"
-            [optionTemplate]="menuTemplate"
-          />
+    }
+  </div>
+  <app-form-state [loading]="loading" [error]="error">
+    @if (relatedData.length === 0) {
+      <mat-error>No hay ningún menú</mat-error>
+      <a routerLink="/menu/create" mat-button class="-ms-3">Creá alguno para poder continuar</a>
+    } @else {
+      @for (campo of camposDeMenus; track campo.nombre) {
+        @if (campo.menus.length === 0) {
+          <mat-error>No hay ningún menú {{ campo.vegetariano ? '' : 'no ' }}vegetariano</mat-error>
+          <a routerLink="/menu/create" [queryParams]="campo.vegetariano ? { vegetariano: campo.vegetariano } : {}"
+             mat-button class="-ms-3">Creá alguno para poder continuar</a>
         }
-      </div>
-      <div class="ms-4">
-        @if (loading) {
-          <app-spinner [loading]="loading"/>
-        } @else if (error) {
-          <mat-error>Ha ocurrido un error</mat-error>
-          <mat-error>Por favor, intente nuevamente más tarde</mat-error>
-        } @else if (menus.length === 0) {
-          <mat-error>No hay ningún menú</mat-error>
-          <a routerLink="/menu/create" mat-button class="-ms-3">Creá alguno para poder continuar</a>
-        } @else {
-          @for (campo of camposDeMenus; track campo.nombre) {
-            @if (campo.menus.length === 0) {
-              <mat-error>No hay ningún menú {{ campo.vegetariano ? '' : 'no ' }}vegetariano</mat-error>
-              <a routerLink="/menu/create" [queryParams]="campo.vegetariano ? { vegetariano: campo.vegetariano } : {}"
-                 mat-button class="-ms-3">Creá alguno para poder continuar</a>
-            }
-          }
-        }
-      </div>
-      <app-submit-button [form]="form" [pendingText]="submittingText()">{{ title() }}</app-submit-button>
-    </form>
-  </mat-card-content>
-</mat-card>
+      }
+    }
+  </app-form-state>
+  <app-submit-button [form]="form" [pendingText]="submittingText()" [error]="error" [loading]="loading">{{ title() }}</app-submit-button>
+</app-form>

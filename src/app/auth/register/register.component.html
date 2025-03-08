@@ -1,69 +1,68 @@
 <app-title title="Registro de usuario"/>
 
-<div class="flex items-center justify-center">
-  <mat-card class="p-8 w-full max-w-4xl">
-    <form [formGroup]="registerForm" (ngSubmit)="register()" class="grid grid-cols-2 gap-6">
-      <app-input
-        label="DNI"
-        type="text"
-        placeholder="12345678"
-        [abstractControl]="this.registerForm.get('dni')"
-        minLength="7"
-        maxLength="8"
-      />
-      <app-input
-        label="Nombre"
-        type="text"
-        placeholder="Ingrese su nombre"
-        [abstractControl]="this.registerForm.get('nombre')"
-        minLength="3"
-        maxLength="255"
-      />
-      <app-input
-        label="Apellido"
-        type="text"
-        placeholder="Ingrese su apellido"
-        [abstractControl]="this.registerForm.get('apellido')"
-        minLength="3"
-        maxLength="255"
-      />
-      <app-input
-        label="Email"
-        type="email"
-        placeholder="ejemplo@gmail.com"
-        [abstractControl]="this.registerForm.get('email')"
-        minLength="3"
-        maxLength="255"
-      />
-      <app-input
-        label="URL de Imagen"
-        type="text"
-        placeholder="https://www.ejemplo.com"
-        [abstractControl]="this.registerForm.get('urlImagen')"
-        minLength="7"
-        maxLength="255"
-      />
-      <app-input
-        label="Contraseña"
-        type="password"
-        placeholder="************"
-        [abstractControl]="this.registerForm.get('clave')"
-        (input)="this.registerForm.get('confirmClave')?.updateValueAndValidity()"
-        minLength="6"
-        maxLength="30"
-      />
-      <app-input
-        label="Confirmación de Contraseña"
-        type="password"
-        placeholder="************"
-        [abstractControl]="this.registerForm.get('confirmClave')"
-        (input)="this.registerForm.get('clave')?.updateValueAndValidity()"
-        minLength="6"
-        maxLength="30"
-      />
-      <div class="col-span-2">
-        <app-submit-button [form]="registerForm" pendingText="Registrando usuario">Registrar usuario</app-submit-button>
-      </div>
-    </form>
-  </mat-card>
-</div>
+
+<app-form [form]="registerForm" (submit)="register()" maxWidth="max-w-4xl">
+  <div class="grid grid-cols-2 gap-6">
+    <app-input
+      label="DNI"
+      type="text"
+      placeholder="12345678"
+      [abstractControl]="this.registerForm.get('dni')"
+      minLength="7"
+      maxLength="8"
+    />
+    <app-input
+      label="Nombre"
+      type="text"
+      placeholder="Ingrese su nombre"
+      [abstractControl]="this.registerForm.get('nombre')"
+      minLength="3"
+      maxLength="255"
+    />
+    <app-input
+      label="Apellido"
+      type="text"
+      placeholder="Ingrese su apellido"
+      [abstractControl]="this.registerForm.get('apellido')"
+      minLength="3"
+      maxLength="255"
+    />
+    <app-input
+      label="Email"
+      type="email"
+      placeholder="ejemplo@gmail.com"
+      [abstractControl]="this.registerForm.get('email')"
+      minLength="3"
+      maxLength="255"
+    />
+    <app-input
+      label="URL de Imagen"
+      type="text"
+      placeholder="https://www.ejemplo.com"
+      [abstractControl]="this.registerForm.get('urlImagen')"
+      minLength="7"
+      maxLength="255"
+    />
+    <app-input
+      label="Contraseña"
+      type="password"
+      placeholder="************"
+      [abstractControl]="this.registerForm.get('clave')"
+      (input)="this.registerForm.get('confirmClave')?.updateValueAndValidity()"
+      minLength="6"
+      maxLength="30"
+    />
+    <app-input
+      label="Confirmación de Contraseña"
+      type="password"
+      placeholder="************"
+      [abstractControl]="this.registerForm.get('confirmClave')"
+      (input)="this.registerForm.get('clave')?.updateValueAndValidity()"
+      minLength="6"
+      maxLength="30"
+    />
+    <div class="col-span-2">
+      <app-submit-button [form]="registerForm" pendingText="Registrando usuario">Registrar usuario</app-submit-button>
+    </div>
+  </div>
+</app-form>

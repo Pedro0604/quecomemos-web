@@ -16,13 +16,15 @@ import {
   FocusFirstInvalidFieldDirective
 } from '../../directives/focus-first-invalid-field.directive/focus-first-invalid-field.directive';
 import {TitleComponent} from '../../components/title/title.component';
+import {FormComponent} from "../../components/form/form.component";
 
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   standalone: true,
-  imports: [ReactiveFormsModule,
+  imports: [
+    ReactiveFormsModule,
     CommonModule,
     MatFormFieldModule,
     MatInputModule,
@@ -31,7 +33,9 @@ import {TitleComponent} from '../../components/title/title.component';
     MatCardModule,
     InputComponent,
     SubmitButtonComponent,
-    FocusFirstInvalidFieldDirective, TitleComponent
+    FocusFirstInvalidFieldDirective,
+    TitleComponent,
+    FormComponent
   ],
 })
 export class RegisterComponent {

@@ -17,24 +17,26 @@ import {
   FocusFirstInvalidFieldDirective
 } from '../../directives/focus-first-invalid-field.directive/focus-first-invalid-field.directive';
 import {TitleComponent} from '../../components/title/title.component';
+import {FormComponent} from "../../components/form/form.component";
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatIconModule,
-    MatCard,
-    MatCardContent,
-    InputComponent,
-    SubmitButtonComponent,
-    FocusFirstInvalidFieldDirective,
-    TitleComponent,
-  ],
+    imports: [
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        MatIconModule,
+        MatCard,
+        MatCardContent,
+        InputComponent,
+        SubmitButtonComponent,
+        FocusFirstInvalidFieldDirective,
+        TitleComponent,
+        FormComponent,
+    ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginComponent {

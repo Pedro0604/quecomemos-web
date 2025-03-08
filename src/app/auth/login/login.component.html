@@ -1,30 +1,27 @@
 <app-title title="Iniciar sesión"/>
 
-<mat-card class="w-full max-w-xl h-full mx-auto" appearance="outlined">
-  <mat-card-content class="my-4">
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
-      <app-input
-        label="DNI"
-        type="text"
-        placeholder='12345678'
-        [abstractControl]="this.loginForm.get('dni')"
-        minLength="7"
-        maxLength="8"
-      />
-      <app-input
-        label="Contraseña"
-        type="password"
-        placeholder="************"
-        [abstractControl]="this.loginForm.get('clave')"
-        minLength="6"
-        maxLength="30"
-      />
 
-      @if (loginError()) {
-        <mat-error>Credenciales incorrectas</mat-error>
-      }
+<app-form [form]="loginForm" (submit)="onSubmit()" maxWidth="max-w-lg">
+  <app-input
+    label="DNI"
+    type="text"
+    placeholder='12345678'
+    [abstractControl]="this.loginForm.get('dni')"
+    minLength="7"
+    maxLength="8"
+  />
+  <app-input
+    label="Contraseña"
+    type="password"
+    placeholder="************"
+    [abstractControl]="this.loginForm.get('clave')"
+    minLength="6"
+    maxLength="30"
+  />
 
-      <app-submit-button [form]="loginForm" pendingText="Ingresando">Ingresar</app-submit-button>
-    </form>
-  </mat-card-content>
-</mat-card>
+  @if (loginError()) {
+    <mat-error>Credenciales incorrectas</mat-error>
+  }
+
+  <app-submit-button [form]="loginForm" pendingText="Ingresando">Ingresar</app-submit-button>
+</app-form>

@@ -1,51 +1,41 @@
 <app-title showVolver [title]="title()"/>
 
-<mat-card class="w-full max-w-2xl h-full mx-auto" appearance="outlined">
-  <mat-card-content class="my-4">
-    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <app-input
-          label="Nombre de la comida"
-          type="text"
-          placeholder="Nombre"
-          [abstractControl]="form.get('nombre')"
-          minLength="3"
-          maxLength="255"
-        />
-        <app-input
-          label="Precio de la comida"
-          type="number"
-          placeholder="0"
-          [abstractControl]="form.get('precio')"
-          textPrefix="$&nbsp;"
-          floatLabel="always"
-        />
-        <app-select
-          label="Tipo de comida"
-          [abstractControl]="form.get('tipoComida')"
-          placeholder="Seleccione un tipo de comida"
-          [opciones]="tiposDeComidaOptions"
-        />
-        <app-input
-          label="URL de la imagen"
-          type="text"
-          placeholder="https://www.ejemplo.com"
-          [abstractControl]="form.get('urlImagen')"
-          [required]="false"
-          minLength="7"
-          maxLength="255"
-        />
-      </div>
-      <mat-checkbox formControlName="vegetariana">¿Es vegetariana?</mat-checkbox>
-      <div class="ms-4">
-        @if (loading) {
-          <app-spinner [loading]="loading"/>
-        } @else if (error) {
-          <mat-error>Ha ocurrido un error</mat-error>
-          <mat-error>Por favor, intente nuevamente más tarde</mat-error>
-        }
-      </div>
-      <app-submit-button [form]="form" [pendingText]="submittingText()">{{ title() }}</app-submit-button>
-    </form>
-  </mat-card-content>
-</mat-card>
+<app-form [form]="form" (submit)="onSubmit()">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <app-input
+      label="Nombre de la comida"
+      type="text"
+      placeholder="Nombre"
+      [abstractControl]="form.get('nombre')"
+      minLength="3"
+      maxLength="255"
+    />
+    <app-input
+      label="Precio de la comida"
+      type="number"
+      placeholder="0"
+      [abstractControl]="form.get('precio')"
+      textPrefix="$&nbsp;"
+      floatLabel="always"
+    />
+    <app-select
+      label="Tipo de comida"
+      [abstractControl]="form.get('tipoComida')"
+      placeholder="Seleccione un tipo de comida"
+      [opciones]="tiposDeComidaOptions"
+    />
+    <app-input
+      label="URL de la imagen"
+      type="text"
+      placeholder="https://www.ejemplo.com"
+      [abstractControl]="form.get('urlImagen')"
+      [required]="false"
+      minLength="7"
+      maxLength="255"
+    />
+  </div>
+  <mat-checkbox formControlName="vegetariana">¿Es vegetariana?</mat-checkbox>
+  <app-form-state [loading]="loading" [error]="error"/>
+  <app-submit-button [form]="form" [pendingText]="submittingText()" [error]="error" [loading]="loading">{{ title() }}
+  </app-submit-button>
+</app-form>

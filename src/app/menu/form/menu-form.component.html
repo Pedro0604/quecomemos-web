@@ -1,5 +1,6 @@
 <app-title showVegetariano showVolver femenino [title]="title()"/>
 
+<!--Template para definir la opción del autocomplete de Comida -->
 <ng-template #comidaTemplate let-opcion>
   <span class="flex items-center gap-4">
       <div class="flex justify-center items-center w-14 h-14 my-1 ms-2">
@@ -16,85 +17,77 @@
   </span>
 </ng-template>
 
-<mat-card class="w-full max-w-2xl h-full mx-auto" appearance="outlined">
-  <mat-card-content class="my-4">
-    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <app-input
-          label="Nombre del menú"
-          type="text"
-          placeholder="Nombre"
-          [abstractControl]="form.get('nombre')"
-          minLength="3"
-          maxLength="255"
-        />
-        <app-input
-          label="Precio del menú"
-          type="number"
-          placeholder="0"
-          [abstractControl]="form.get('precio')"
-          textPrefix="$&nbsp;"
-          floatLabel="always"
-        />
-      </div>
-      <mat-checkbox formControlName="vegetariano">¿Es vegetariano?</mat-checkbox>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        @for (campo of camposDeComida; track campo.nombre) {
-          <app-autocomplete
-            [label]="loading ? 'Cargando...' : tipoComidaToString(campo.tipoComida)"
-            [abstractControl]="form.get(campo.nombre)"
-            [opciones]="campo.comidas"
-            [placeholder]="('Seleccioná un' + (campo.masculino ? '' : 'a') + ' ' + tipoComidaToString(campo.tipoComida))"
-            [displayWithFn]="displayFn"
-            [optionTemplate]="comidaTemplate"
-            [required]="false"
-            (onOptionSelected)="updateComidasValidity()"
-          />
-        }
-      </div>
-      <div class="ms-4">
-        @if (loading) {
-          <app-spinner [loading]="loading"/>
-        } @else if (error) {
-          <mat-error>Ha ocurrido un error</mat-error>
-          <mat-error>Por favor, intente nuevamente más tarde</mat-error>
-        } @else if (camposSinComidas.length === 4) {
-          <mat-error>No hay ninguna comida (entrada, plato principal, postre o
-            bebida) {{ this.form.get("vegetariano")?.value ? 'vegetariana' : '' }}
-          </mat-error>
-          <a routerLink="/comida/create" mat-button class="-ms-3">Creá alguna para poder continuar</a>
-        } @else {
-          @if (camposSinComidas.length === 1) {
-            <mat-error>
-              {{ getTextoSinComidas(camposSinComidas[0]) }}
-            </mat-error>
+<app-form [form]="form" (submit)="onSubmit()">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <app-input
+      label="Nombre del menú"
+      type="text"
+      placeholder="Nombre"
+      [abstractControl]="form.get('nombre')"
+      minLength="3"
+      maxLength="255"
+    />
+    <app-input
+      label="Precio del menú"
+      type="number"
+      placeholder="0"
+      [abstractControl]="form.get('precio')"
+      textPrefix="$&nbsp;"
+      floatLabel="always"
+    />
+  </div>
+  <mat-checkbox formControlName="vegetariano">¿Es vegetariano?</mat-checkbox>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    @for (campo of camposDeComida; track campo.nombre) {
+      <app-autocomplete
+        [label]="loading ? 'Cargando...' : tipoComidaToString(campo.tipoComida)"
+        [abstractControl]="form.get(campo.nombre)"
+        [opciones]="campo.comidas"
+        [placeholder]="('Seleccioná un' + (campo.masculino ? '' : 'a') + ' ' + tipoComidaToString(campo.tipoComida))"
+        [displayWithFn]="displayFn"
+        [optionTemplate]="comidaTemplate"
+        [required]="false"
+        (onChange)="updateComidasValidity()"
+      />
+    }
+  </div>
+  <app-form-state [loading]="loading" [error]="error">
+    @if (camposSinComidas.length === 4) {
+      <mat-error>No hay ninguna comida (entrada, plato principal, postre o
+        bebida) {{ this.form.get("vegetariano")?.value ? 'vegetariana' : '' }}
+      </mat-error>
+      <a routerLink="/comida/create" mat-button class="-ms-3">Creá alguna para poder continuar</a>
+    } @else {
+      @if (camposSinComidas.length === 1) {
+        <mat-error>
+          {{ getTextoSinComidas(camposSinComidas[0]) }}
+        </mat-error>
+        <a
+          routerLink="/comida/create"
+          [queryParams]="getQueryParams(camposSinComidas[0])"
+          mat-button class="-ms-2">
+          Creá algun{{ camposSinComidas[0].masculino ? 'o' : 'a' }} acá
+        </a>
+      } @else if (camposSinComidas.length > 1) {
+        <mat-error>
+          {{ getTextoSinComidasMultiple(camposSinComidas) }}
+        </mat-error>
+        <span class="ms-1">
+              Creá {{ camposSinComidas[0].masculino ? 'algún' : 'alguna' }}
+          @for (campo of camposSinComidas; track campo.nombre) {
             <a
               routerLink="/comida/create"
-              [queryParams]="getQueryParams(camposSinComidas[0])"
-              mat-button class="-ms-2">
-              Creá algun{{ camposSinComidas[0].masculino ? 'o' : 'a' }} acá
-            </a>
-          } @else if (camposSinComidas.length > 1) {
-            <mat-error>
-              {{ getTextoSinComidasMultiple(camposSinComidas) }}
-            </mat-error>
-            <span class="ms-1">
-              Creá {{ camposSinComidas[0].masculino ? 'algún' : 'alguna' }}
-              @for (campo of camposSinComidas; track campo.nombre) {
-                <a
-                  routerLink="/comida/create"
-                  [queryParams]="getQueryParams(campo)"
-                  mat-button>
+              [queryParams]="getQueryParams(campo)"
+              mat-button>
                   {{ tipoComidaToString(campo.tipoComida).toLowerCase() }}
                 </a>{{ !$last ? ' /' : '' }}
-              }
-              {{ this.form.get("vegetariano")?.value ? ('vegetarian' + (camposSinComidas[camposSinComidas.length - 1].masculino ? 'o' : 'a')) : '' }}
-              acá.
-            </span>
           }
-        }
-      </div>
-      <app-submit-button [form]="form" [pendingText]="submittingText()">{{ title() }}</app-submit-button>
-    </form>
-  </mat-card-content>
-</mat-card>
+          {{ this.form.get("vegetariano")?.value ? ('vegetarian' + (camposSinComidas[camposSinComidas.length - 1].masculino ? 'o' : 'a')) : '' }}
+          acá.
+            </span>
+      }
+    }
+  </app-form-state>
+  <app-submit-button [form]="form" [pendingText]="submittingText()" [error]="error" [loading]="loading">{{ title() }}
+  </app-submit-button>
+</app-form>
