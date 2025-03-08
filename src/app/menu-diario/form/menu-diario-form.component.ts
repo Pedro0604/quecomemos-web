@@ -1,4 +1,4 @@
-import {Component, OnInit, signal} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {diasSemanaArray, MenuDiario, MenuDiarioDTO, traduccionDiasSemana} from '../menu-diario.model';
 import {Menu} from '../../menu/menu.model';
 import {FormBuilder, FormGroup, ReactiveFormsModule} from '@angular/forms';
