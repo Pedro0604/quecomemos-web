@@ -57,7 +57,14 @@ export class FormService {
     group.updateValueAndValidity();
   }
 
-  getTooltipMessage(group: FormGroup): string {
+  getTooltipMessage(group: FormGroup, error: boolean = false, loading: boolean = false): string {
+    if (error) {
+      return 'Ha ocurrido un error. Inténtelo nuevamente más tarde'
+    }
+    if (loading) {
+      return 'Cargando...'
+    }
+
     if (group.invalid) {
       const requiredControls = Object.keys(group.controls).filter(controlName => {
         const control = group.get(controlName);
@@ -98,17 +105,17 @@ const withEmptyCheck = (validatorFn: (value: any) => ValidationErrors | null): V
 };
 
 export const inArrayValidator = (array: any[]): ValidatorFn => {
-  return withEmptyCheck((value) => (array.includes(value) ? null : { invalidValue: true, value }));
+  return withEmptyCheck((value) => (array.includes(value) ? null : {invalidValue: true, value}));
 };
 
 export const onlyNumbersValidator: ValidatorFn = withEmptyCheck((value) =>
-  /^\d+$/.test(value) ? null : { onlyNumbers: true }
+  /^\d+$/.test(value) ? null : {onlyNumbers: true}
 );
 
 export const onlyLettersValidator: ValidatorFn = withEmptyCheck((value) =>
-  /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(value) ? null : { onlyLetters: true }
+  /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(value) ? null : {onlyLetters: true}
 );
 
 export const urlValidator: ValidatorFn = withEmptyCheck((value) =>
-  /^(https?:\/\/[^\s$.?#].[^\s]*)$/.test(value) ? null : { url: true }
+  /^(https?:\/\/[^\s$.?#].[^\s]*)$/.test(value) ? null : {url: true}
 );
