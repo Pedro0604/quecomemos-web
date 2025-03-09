@@ -14,7 +14,7 @@
             </span>
 </ng-template>
 
-<app-form [form]="form" (submit)="onSubmit()">
+<app-form [formGroup]="form" (submit)="onSubmit()">
   <app-select
     label="Día del Menú Diario"
     [abstractControl]="form.get('dia')"

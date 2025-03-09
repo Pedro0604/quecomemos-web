@@ -1,6 +1,6 @@
 <app-title showVolver [title]="title()"/>
 
-<app-form [form]="form" (submit)="onSubmit()">
+<app-form [formGroup]="form" (submit)="onSubmit()">
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
     <app-input
       label="Nombre de la comida"

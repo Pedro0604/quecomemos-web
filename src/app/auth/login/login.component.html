@@ -1,7 +1,7 @@
 <app-title title="Iniciar sesión"/>
 
 
-<app-form [form]="loginForm" (submit)="onSubmit()" maxWidth="max-w-lg">
+<app-form [formGroup]="loginForm" (submit)="onSubmit()" maxWidth="max-w-lg">
   <app-input
     label="DNI"
     type="text"

@@ -1,7 +1,7 @@
 <app-title title="Registro de usuario"/>
 
 
-<app-form [form]="registerForm" (submit)="register()" maxWidth="max-w-4xl">
+<app-form [formGroup]="registerForm" (submit)="register()" maxWidth="max-w-4xl">
   <div class="grid grid-cols-2 gap-6">
     <app-input
       label="DNI"
