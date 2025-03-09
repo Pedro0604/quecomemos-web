@@ -1,6 +1,6 @@
 import {Component, inject, Injector, OnInit, TemplateRef} from '@angular/core';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
-import {AsyncPipe, NgOptimizedImage, NgTemplateOutlet} from '@angular/common';
+import {AsyncPipe, NgTemplateOutlet} from '@angular/common';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatButtonModule} from '@angular/material/button';
 import {MatSidenavModule} from '@angular/material/sidenav';
@@ -30,7 +30,6 @@ import {AuthService} from '../auth/service/auth.service';
     RouterLink,
     RouterLinkActive,
     NgTemplateOutlet,
-    NgOptimizedImage
   ]
 })
 export class LayoutComponent implements OnInit {

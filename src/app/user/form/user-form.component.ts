@@ -5,16 +5,16 @@ import {MatInput, MatLabel, MatHint} from '@angular/material/input';
 import {MatButton} from '@angular/material/button';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {User, UserDTO} from '../user.model';
-import {FormErrorService, onlyLettersValidator, urlValidator} from '../../formError/form-error.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {LayoutService} from '../../layout/layout.service';
 import {NotificationService} from '../../notification/notification.service';
 import {UserService} from '../service/user.service';
 import {MatDialog} from '@angular/material/dialog';
 import {ConfirmDialogComponent} from '../confirm-dialog/confirm-dialog.component';
-import {AuthService} from '../../auth/login/services/auth.service';
 import {concatMap, first, of} from 'rxjs';
 import {catchError} from 'rxjs/operators';
+import {AuthService, Credenciales} from '../../auth/service/auth.service';
+import {FormService, onlyLettersValidator, urlValidator} from '../../forms/service/form.service';
 
 type UserFormData = {
   nombre: string,
@@ -54,7 +54,7 @@ export class UserFormComponent implements OnInit, AfterViewInit {
   roles: ('clientes' | 'responsables' | 'administradores')[] = ['clientes', 'responsables', 'administradores'];
 
   constructor(
-    private formErrorService: FormErrorService,
+    private formService: FormService,
     private userService: UserService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -100,7 +100,7 @@ export class UserFormComponent implements OnInit, AfterViewInit {
 
   updateErrorMessage(controlName: string) {
     const control = this.form.get(controlName);
-    this.errorMessages[controlName] = this.formErrorService.updateErrorMessage(control);
+    this.errorMessages[controlName] = this.formService.updateErrorMessage(control);
   }
 
   saveUser(userData: UserFormData): void {
@@ -139,9 +139,8 @@ export class UserFormComponent implements OnInit, AfterViewInit {
 
       dialogRef.afterClosed().subscribe(password => {
         if (password) {
-
-          const credenciales = {
-            dni: userData.dni,
+          const credenciales: Credenciales = {
+            dni: userData.dni.toString(),
             clave: password
           };
 
