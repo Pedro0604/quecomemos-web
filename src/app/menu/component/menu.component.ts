@@ -23,6 +23,8 @@ export class MenuComponent {
   @Input() appearance: MatCardAppearance = "outlined";
   @Input({transform: booleanAttribute}) straightLeftBorder: boolean = false;
   @Input({transform: booleanAttribute}) straightRightBorder: boolean = false;
+  @Input({transform: booleanAttribute}) hasLink: boolean = false;
+
   @Output() onDelete = new EventEmitter<number>();
 
   constructor(private menuService: MenuService) {

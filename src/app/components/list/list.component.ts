@@ -7,10 +7,6 @@ import {MatAnchor} from '@angular/material/button';
 import {RouterLink} from '@angular/router';
 import {NgTemplateOutlet} from '@angular/common';
 
-// TODO - TODOS A HACER:
-// PONER LINK DENTRO DE LOS COMPONENTES POR EJEMPLO DENTRO DE COMIDA, PARA Q EN MENÚ SE PUEDA CLICKEAR UNA COMIDA E IR A MODIFICARLA
-// Y DENTRO DE MENÚ PARA LO MISMO CON MENU DIARIO
-
 @Component({
   selector: 'app-list',
   imports: [
