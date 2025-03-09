@@ -5,6 +5,7 @@
     <mat-card-title>
       @if (hasLink) {
         <!--        TODO - EL LINK DEBERÍA SER A UNA VISTA DEL MENÚ Y NO A LA EDICIÓN(?-->
+          <!--  TODO - SI TIENE LOS PERMISOS-->
         <a [routerLink]="['/menu/edit/', menu.id]" class="hover:underline hover:text-blue-600">
           {{ menu.nombre }}
         </a>
@@ -24,6 +25,7 @@
           <div>
             <p class="text-sm">{{ comida.tipoComida.replace("_", " ") }}</p>
             <!--        TODO - EL LINK DEBERÍA SER A UNA VISTA DE LA COMIDA Y NO A LA EDICIÓN(?-->
+            <!--  TODO - SI TIENE LOS PERMISOS-->
             <a [routerLink]="['/comida/edit/', comida.id]" class="hover:underline hover:text-blue-600">
               <p class="text-lg">{{ comida.nombre }}</p>
             </a>
@@ -44,7 +46,9 @@
   </mat-card-content>
   @if (showButtons) {
     <mat-card-actions class="mt-auto">
+      <!--  TODO - SI TIENE LOS PERMISOS Y SE PUEDE REALIZAR LA ACCIÓN -->
       <a mat-button [routerLink]="['/menu/edit/', menu.id]">MODIFICAR</a>
+      <!--  TODO - SI TIENE LOS PERMISOS Y SE PUEDE REALIZAR LA ACCIÓN -->
       <button mat-button class="violet-error" (click)="openDialogEliminar()">ELIMINAR</button>
     </mat-card-actions>
   }

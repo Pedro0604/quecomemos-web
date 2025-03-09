@@ -54,6 +54,8 @@
     }
   </div>
   <app-form-state [loading]="loading" [error]="error">
+    <!--    Muestra mensajes para los diferentes casos donde faltan uno o varios tipos de comidas-->
+    <!--  TODO - SI TIENE LOS PERMISOS-->
     @if (camposSinComidas.length === 4) {
       <mat-error>No hay ninguna comida (entrada, plato principal, postre o
         bebida) {{ this.form.get("vegetariano")?.value ? 'vegetariana' : '' }}

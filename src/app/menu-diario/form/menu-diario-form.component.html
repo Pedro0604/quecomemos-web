@@ -34,6 +34,7 @@
     }
   </div>
   <app-form-state [loading]="loading" [error]="error">
+    <!--  TODO - SI TIENE LOS PERMISOS-->
     @if (relatedData.length === 0) {
       <mat-error>No hay ningún menú</mat-error>
       <a routerLink="/menu/create" mat-button class="-ms-3">Creá alguno para poder continuar</a>

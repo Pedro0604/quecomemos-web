@@ -12,7 +12,7 @@ export class AuthGuard implements CanActivate {
   }
 
   canActivate(): boolean {
-    // TODO - MODIFICAR PARA QUE PERMITA ACCEDER SI TIENE EL PERMISO
+    // TODO - SI TIENE LOS PERMISOS
     if (!this.authService.isLoggedIn()) {
       if (this.redirectToLogin()) {
         this.router.navigate(['/login']);
