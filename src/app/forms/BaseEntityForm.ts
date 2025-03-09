@@ -13,10 +13,11 @@ export abstract class BaseEntityForm<T extends { id: number }, DTO, R> extends F
   entity: T | null = null;
   relatedData: R[] = [];
 
-  // TODO - VER SI TIENE SENTIDO ISEDITION APLICARLO
-  readonly isEdition = signal(false);
-  readonly title = signal('Crear Elemento')
-  readonly submittingText = signal('Creando Elemento')
+  readonly title = signal('');
+  readonly submittingText = signal('');
+
+  private articulo: string;
+  private entidadConArticulo: string;
 
   protected constructor(
     protected router: Router,
@@ -24,12 +25,19 @@ export abstract class BaseEntityForm<T extends { id: number }, DTO, R> extends F
     protected formService: FormService,
     protected service: CrudService<T, DTO>,
     protected route: ActivatedRoute,
+    private entityName: string,
+    private femenino: boolean
   ) {
     super();
     this.service = service;
+    this.articulo = femenino ? 'la' : 'el';
+    this.entidadConArticulo = `${this.articulo} ${entityName}`;
+
+    this.title.set(`Crear ${this.entityName}`);
+    this.submittingText.set(`Creando ${this.entityName}`);
   }
 
-  // Método para cargar datos relacionados como menús/comidas para autocomplete
+  // Metodo para cargar datos relacionados como menús/comidas para autocomplete
   protected loadRelatedData(): Promise<R[]> {
     return Promise.resolve([]);
   }
@@ -45,11 +53,9 @@ export abstract class BaseEntityForm<T extends { id: number }, DTO, R> extends F
 
       if (entityData) {
         this.entity = entityData;
-        console.log(this.entity)
         this.form.patchValue(this.entity);
-        this.isEdition.set(true);
-        this.title.set('Modificar Elemento');
-        this.submittingText.set('Modificando Elemento');
+        this.title.set(`Modificar ${this.entityName}`);
+        this.submittingText.set(`Modificando ${this.entityName}`);
       }
     } catch (error) {
       this.error = true;
@@ -61,7 +67,7 @@ export abstract class BaseEntityForm<T extends { id: number }, DTO, R> extends F
     }
   }
 
-  // Método abstracto para realizar acciones adicionales en el ngOnInit
+  // Metodo abstracto para realizar acciones adicionales en el ngOnInit
   protected abstract extraOnInit(): void;
 
   async ngOnInit(): Promise<void> {
@@ -82,14 +88,14 @@ export abstract class BaseEntityForm<T extends { id: number }, DTO, R> extends F
       error: (error: any) => {
         // TODO - DE ESTA MANERA SI SE CREA UN MENU CON EL MISMO NOMBRE Q UNO VIEJO, ME DEJA DE ANDAR EL FORM
         this.error = true;
-        this.notificationService.show(isModification ? 'Error al modificar el elemento' : 'Error al crear el elemento');
-        console.error(isModification ? 'Error al modificar el elemento' : 'Error al crear el elemento');
+        const errorMessage = `Error al ${isModification ? 'modificar' : 'crear'} ${this.entidadConArticulo}`;
+        this.notificationService.show(errorMessage);
+        console.error(errorMessage);
         console.error(error);
         this.loading = false;
       },
       complete: () => {
-        // TODO - REEMPLAZAR ELEMENTO POR NOMBRE DE ENTIDAD
-        this.notificationService.show(isModification ? 'Elemento modificado exitosamente' : 'Elemento creado exitosamente');
+        this.notificationService.show(`${isModification ? 'Modificación' : 'Creación'} exitosa de ${this.entidadConArticulo}`);
         this.router.navigate([this.redirectUrlOnCreation]);
         this.loading = false;
       }

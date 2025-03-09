@@ -8,7 +8,6 @@ import {NotificationService} from '../../notification/notification.service';
 import {MenuDiarioService} from '../service/menu-diario.service';
 import {firstValueFrom} from 'rxjs';
 import {MatAnchor} from '@angular/material/button';
-import {MatCard, MatCardContent} from '@angular/material/card';
 import {MatIcon} from '@angular/material/icon';
 import {SelectComponent} from '../../forms/components/fields/select/select.component';
 import {AutocompleteComponent} from '../../forms/components/fields/autocomplete/autocomplete.component';
@@ -46,8 +45,6 @@ type CampoMenu = {
   standalone: true,
 })
 
-// TODO - Agregar a Menu, MenuDiario y Comida una forma general de saber si son femenino o masculino y su nombre de entidad (aplicar a todos los lugares generales (list, form, eliminacion, ...))
-// TODO - QUIZAS TAMBIEN UNA DISPLAYFN GENERAL PARA MOSTRAR EL NOMBRE DE UNA ENTIDAD EN PARTICULAR
 export class MenuDiarioFormComponent extends BaseEntityForm<MenuDiario, MenuDiarioDTO, Menu> implements OnInit {
   form: FormGroup
   redirectUrlOnCreation: string = '/menu-diario';
@@ -81,7 +78,7 @@ export class MenuDiarioFormComponent extends BaseEntityForm<MenuDiario, MenuDiar
     protected override service: MenuDiarioService,
     protected override route: ActivatedRoute
   ) {
-    super(router, notificationService, formService, service, route);
+    super(router, notificationService, formService, service, route, 'menú diario', false);
 
     this.form = this.fb.group({
       dia: ['', [inArrayValidator(diasSemanaArray)]],

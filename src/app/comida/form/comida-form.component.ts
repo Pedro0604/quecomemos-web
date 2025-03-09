@@ -49,7 +49,7 @@ export class ComidaFormComponent extends BaseEntityForm<Comida, ComidaDTO, void>
     protected override service: ComidaService,
     protected override route: ActivatedRoute
   ) {
-    super(router, notificationService, formService, service, route);
+    super(router, notificationService, formService, service, route, 'comida', true);
 
     this.form = this.fb.group({
       nombre: [''],
@@ -61,7 +61,7 @@ export class ComidaFormComponent extends BaseEntityForm<Comida, ComidaDTO, void>
   }
 
   protected extraOnInit(): void {
-    if (!this.isEdition()) {
+    if (!this.entity) {
       const tipoComidaInicial = this.route.snapshot.queryParams['tipo-comida'] as TipoComida;
       this.form.get('tipoComida')?.setValue(tipoComidaInicial);
 

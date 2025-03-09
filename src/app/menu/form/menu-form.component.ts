@@ -91,7 +91,6 @@ export class MenuFormComponent extends BaseEntityForm<Menu, MenuDTO, Comida> imp
   ];
 
   updateComidasValidity() {
-    console.log("cambio")
     this.camposDeComida.forEach(campo => {
       this.form.get(campo.nombre)?.markAsDirty();
       this.form.get(campo.nombre)?.updateValueAndValidity({onlySelf: true});
@@ -129,7 +128,7 @@ export class MenuFormComponent extends BaseEntityForm<Menu, MenuDTO, Comida> imp
     protected override service: MenuService,
     protected override route: ActivatedRoute
   ) {
-    super(router, notificationService, formService, service, route);
+    super(router, notificationService, formService, service, route, 'menú', false);
 
     this.form = this.fb.group({
       nombre: [''],
