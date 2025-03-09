@@ -55,7 +55,6 @@ export abstract class BaseFormFieldComponent implements OnInit, OnDestroy {
 
   private subscribeToFieldChanges(): void {
     const eventsSub = this.control.events.subscribe(() => {
-      console.log(this.label + " " + this.control.disabled);
       if (this.control.touched || this.control.dirty) {
         this.showErrorMessage();
       }

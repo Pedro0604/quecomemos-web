@@ -4,8 +4,7 @@ import {Directive, ElementRef, Inject, Input, OnChanges, PLATFORM_ID, Renderer2,
 type ImageSrc = string | null | undefined;
 
 @Directive({
-  // TODO - VER COMO HACER Q ANDE PARA TODAS LAS IMG
-  selector: 'img',
+  selector: 'img[defaultImage]',
   standalone: true
 })
 export class DefaultImageDirective implements OnChanges {

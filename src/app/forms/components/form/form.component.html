@@ -1,6 +1,6 @@
 <mat-card [class]="'w-full h-full mx-auto overflow-hidden ' + maxWidth" appearance="outlined">
   <mat-card-content class="my-4">
-    <form [formGroup]="form" (ngSubmit)="submit.emit($event)" class="flex flex-col gap-4">
+    <form [formGroup]="form" (ngSubmit)="submit.emit($event)" class="flex flex-col gap-4" focusFirstInvalidField>
       <ng-content/>
     </form>
   </mat-card-content>

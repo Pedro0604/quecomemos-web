@@ -8,10 +8,11 @@ import {RouterLink} from '@angular/router';
 import {MatDialog} from '@angular/material/dialog';
 import {DialogEliminarComponent} from '../../components/dialog-eliminar/dialog-eliminar.component';
 import {MenuService} from '../service/menu.service';
+import {DefaultImageDirective} from '../../directives/default-image-directive/default-image.directive';
 
 @Component({
   selector: 'app-menu',
-  imports: [MatCardModule, MatIcon, MatDivider, MatButton, MatAnchor, RouterLink],
+  imports: [MatCardModule, MatIcon, MatDivider, MatButton, MatAnchor, RouterLink, DefaultImageDirective],
   templateUrl: './menu.component.html',
   standalone: true,
 })

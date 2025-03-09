@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, ViewChild} from '@angular/core';
 import {MatError, MatFormField, MatHint, MatLabel, MatPrefix} from '@angular/material/form-field';
 import {MatOption, MatSelect} from '@angular/material/select';
 import {ReactiveFormsModule} from '@angular/forms';
@@ -22,6 +22,8 @@ import {FormService} from "../../../service/form.service";
 })
 export class SelectComponent extends BaseFormFieldComponent {
   @Input({required: true}) opciones: { value: string | number, name: string }[] = [];
+
+  @ViewChild(MatSelect, {static: true}) matSelect!: MatSelect;
 
   constructor(formService: FormService) {
     super(formService);

@@ -1,6 +1,9 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {MatCard, MatCardContent} from '@angular/material/card';
 import {FormGroup, ReactiveFormsModule} from '@angular/forms';
+import {
+  FocusFirstInvalidFieldDirective
+} from '../../../directives/focus-first-invalid-field.directive/focus-first-invalid-field.directive';
 
 @Component({
   selector: 'app-form',
@@ -8,6 +11,7 @@ import {FormGroup, ReactiveFormsModule} from '@angular/forms';
     MatCard,
     MatCardContent,
     ReactiveFormsModule,
+    FocusFirstInvalidFieldDirective,
   ],
   templateUrl: './form.component.html',
   standalone: true,

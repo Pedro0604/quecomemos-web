@@ -4,6 +4,8 @@
     [formControl]="control"
     [placeholder]="placeholder"
     [required]="required"
+    (focus)="matSelect.open()"
+    (selectionChange)="matSelect.close()"
   >
     @if (this.clearable) {
       <mat-option>Ninguno</mat-option>

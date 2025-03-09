@@ -14,6 +14,7 @@ import {MatAnchor, MatButton} from '@angular/material/button';
 import {RouterLink} from '@angular/router';
 import {DialogEliminarComponent} from '../../components/dialog-eliminar/dialog-eliminar.component';
 import {ComidaService} from '../service/comida.service';
+import {DefaultImageDirective} from '../../directives/default-image-directive/default-image.directive';
 
 @Component({
   selector: 'app-comida',
@@ -30,6 +31,7 @@ import {ComidaService} from '../service/comida.service';
     MatAnchor,
     MatButton,
     RouterLink,
+    DefaultImageDirective,
   ],
 })
 
