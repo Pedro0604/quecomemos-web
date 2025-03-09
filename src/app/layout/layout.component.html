@@ -35,22 +35,33 @@
         </div>
         <div>
           @if (authService.isLoggedIn()) {
-            <span class="hidden md:block">
-              <button
-                mat-button
-                (click)="authService.logout()"
-              >
-                Cerrar sesión
-              </button>
-            </span>
-            <span class="block md:hidden">
-              <button
-                mat-icon-button
-                (click)="authService.logout()"
-              >
-                <mat-icon aria-label="Logout icon">logout</mat-icon>
-              </button>
-            </span>
+            <div class="flex items-center">
+              <span>
+                <a mat-button routerLink="clientes/{{ authService.getUserId() }}" routerLinkActive>
+                  <img
+                    class="w-10 h-10 p-1 rounded-full ring-2 ring-gray-300 dark:ring-gray-500"
+                    [src]="authService.getUserImg('clientes') | async"
+                    alt="Avatar"
+                  >
+                </a>
+              </span>
+              <span class="hidden md:block">
+                <button
+                  mat-button
+                  (click)="authService.logout()"
+                >
+                  Cerrar sesión
+                </button>
+              </span>
+              <span class="block md:hidden">
+                <button
+                  mat-icon-button
+                  (click)="authService.logout()"
+                >
+                  <mat-icon aria-label="Logout icon">logout</mat-icon>
+                </button>
+              </span>
+            </div>
           } @else {
             <div class="flex items-center">
               <span class="hidden md:block">

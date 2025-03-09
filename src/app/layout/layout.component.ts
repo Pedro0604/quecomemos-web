@@ -1,6 +1,6 @@
 import {Component, inject, Injector, OnInit, TemplateRef} from '@angular/core';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
-import {AsyncPipe, NgTemplateOutlet} from '@angular/common';
+import {AsyncPipe, NgOptimizedImage, NgTemplateOutlet} from '@angular/common';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatButtonModule} from '@angular/material/button';
 import {MatSidenavModule} from '@angular/material/sidenav';
@@ -29,7 +29,8 @@ import {AuthService} from '../auth/service/auth.service';
     AsyncPipe,
     RouterLink,
     RouterLinkActive,
-    NgTemplateOutlet
+    NgTemplateOutlet,
+    NgOptimizedImage
   ]
 })
 export class LayoutComponent implements OnInit {
@@ -41,7 +42,17 @@ export class LayoutComponent implements OnInit {
       shareReplay()
     );
 
-  excludedRoutes = ['login', '**', 'menu/edit/:id', 'comida/edit/:id', 'register', 'menu-diario/edit/:id'];
+  excludedRoutes = [
+    'login',
+    '**',
+    'menu/edit/:id',
+    'comida/edit/:id',
+    'register',
+    'menu-diario/edit/:id',
+    'clientes/:id',
+    'responsables/:id',
+    'administrador/:id'
+  ];
   rootRoutes: Routes = [];
 
   title: string = '';
