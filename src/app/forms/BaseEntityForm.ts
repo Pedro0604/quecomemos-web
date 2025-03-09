@@ -16,8 +16,8 @@ export abstract class BaseEntityForm<T extends { id: number }, DTO, R> extends F
   readonly title = signal('');
   readonly submittingText = signal('');
 
-  private articulo: string;
-  private entidadConArticulo: string;
+  private readonly articulo: string;
+  private readonly entidadConArticulo: string;
 
   protected constructor(
     protected router: Router,
@@ -86,9 +86,13 @@ export abstract class BaseEntityForm<T extends { id: number }, DTO, R> extends F
 
     request$.subscribe({
       error: (error: any) => {
-        // TODO - DE ESTA MANERA SI SE CREA UN MENU CON EL MISMO NOMBRE Q UNO VIEJO, ME DEJA DE ANDAR EL FORM
-        this.error = true;
-        const errorMessage = `Error al ${isModification ? 'modificar' : 'crear'} ${this.entidadConArticulo}`;
+        let errorMessage = `Error al ${isModification ? 'modificar' : 'crear'} ${this.entidadConArticulo}`;
+        if (error.status === 500) {
+          this.error = true;
+        } else {
+          errorMessage = error.error || errorMessage;
+        }
+
         this.notificationService.show(errorMessage);
         console.error(errorMessage);
         console.error(error);

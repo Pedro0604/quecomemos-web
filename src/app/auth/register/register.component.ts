@@ -96,7 +96,7 @@ export class RegisterComponent {
           })
         },
         error: (error) => {
-          const mensaje = error.status === 400 ? error.error?.message || 'El usuario ya existe.' : 'Error al registrar el usuario. Por favor, intente más tarde.';
+          const mensaje = error.status === 400 ? error.error || 'El usuario ya existe.' : 'Error al registrar el usuario. Por favor, intente más tarde.';
           this.notificationService.show(mensaje);
         }
       });
