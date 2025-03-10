@@ -13,6 +13,8 @@ import {appRoutes} from '../app.routes';
 import {LayoutService} from './layout.service';
 import {AuthGuard} from '../auth/guards/auth.guards';
 import {AuthService} from '../auth/service/auth.service';
+import {DefaultImageDirective} from '../directives/default-image-directive/default-image.directive';
+import {UserService} from '../user/service/user.service';
 
 
 @Component({
@@ -30,10 +32,12 @@ import {AuthService} from '../auth/service/auth.service';
     RouterLink,
     RouterLinkActive,
     NgTemplateOutlet,
+    DefaultImageDirective,
   ]
 })
 export class LayoutComponent implements OnInit {
   private breakpointObserver = inject(BreakpointObserver);
+  protected userImageSrc: string = 'Sample_User_Icon.png';
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
@@ -57,7 +61,12 @@ export class LayoutComponent implements OnInit {
   title: string = '';
   extra: TemplateRef<any> | null = null;
 
-  constructor(private layoutService: LayoutService, private injector: Injector, protected authService: AuthService) {
+  constructor(
+    private layoutService: LayoutService,
+    private injector: Injector,
+    protected authService: AuthService,
+    private userService: UserService
+  ) {
   }
 
   filtrarRutas() {
@@ -94,6 +103,25 @@ export class LayoutComponent implements OnInit {
     });
   }
 
+  setUserImg(): void {
+    const userId = this.authService.getUserId();
+    if (!userId) {
+      return;
+    }
+
+    this.userService.getById(userId).subscribe({
+      next: (user) => {
+        if (user.urlImagen) {
+          this.userImageSrc = user.urlImagen;
+        }
+      },
+      error: (error) => {
+        console.error('Error al obtener la imagen del usuario');
+        console.error(error);
+      }
+    });
+  }
+
   ngOnInit(): void {
     this.layoutService.currentTitle$.subscribe((title) => {
       this.title = title;
@@ -108,5 +136,6 @@ export class LayoutComponent implements OnInit {
     });
 
     this.filtrarRutas();
+    this.setUserImg();
   }
 }

@@ -40,8 +40,9 @@
                 <a mat-button routerLink="clientes/{{ authService.getUserId() }}" routerLinkActive>
                   <img
                     class="w-10 h-10 p-1 rounded-full ring-2 ring-gray-300 dark:ring-gray-500"
-                    [src]="authService.getUserImg('clientes') | async"
+                    [src]="userImageSrc"
                     alt="Avatar"
+                    defaultImage
                   >
                 </a>
               </span>
