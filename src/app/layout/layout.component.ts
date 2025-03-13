@@ -8,13 +8,12 @@ import {MatListModule} from '@angular/material/list';
 import {MatIconModule} from '@angular/material/icon';
 import {Observable} from 'rxjs';
 import {map, shareReplay} from 'rxjs/operators';
-import {RouterLink, RouterLinkActive, Routes} from '@angular/router';
+import {ActivatedRouteSnapshot, RouterLink, RouterLinkActive, Routes} from '@angular/router';
 import {appRoutes} from '../app.routes';
 import {LayoutService} from './layout.service';
 import {AuthGuard} from '../auth/guards/auth.guards';
 import {AuthService} from '../auth/service/auth.service';
 import {DefaultImageDirective} from '../directives/default-image-directive/default-image.directive';
-import {UserService} from '../user/service/user.service';
 
 
 @Component({
@@ -37,25 +36,12 @@ import {UserService} from '../user/service/user.service';
 })
 export class LayoutComponent implements OnInit {
   private breakpointObserver = inject(BreakpointObserver);
-  protected userImageSrc: string = 'Sample_User_Icon.png';
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
       map(result => result.matches),
       shareReplay()
     );
-
-  excludedRoutes = [
-    'login',
-    '**',
-    'menu/edit/:id',
-    'comida/edit/:id',
-    'register',
-    'menu-diario/edit/:id',
-    'clientes/:id',
-    'responsables/:id',
-    'administrador/:id'
-  ];
   rootRoutes: Routes = [];
 
   title: string = '';
@@ -64,8 +50,7 @@ export class LayoutComponent implements OnInit {
   constructor(
     private layoutService: LayoutService,
     private injector: Injector,
-    protected authService: AuthService,
-    private userService: UserService
+    protected authService: AuthService
   ) {
   }
 
@@ -74,7 +59,10 @@ export class LayoutComponent implements OnInit {
       if (!route.path) {
         return false;
       }
-      if (this.excludedRoutes.includes(route.path)) {
+      if (route.path.includes(':')) {
+        return false;
+      }
+      if (!route.data?.['includeInLayout']) {
         return false;
       }
 
@@ -88,9 +76,19 @@ export class LayoutComponent implements OnInit {
           }
 
           if (typeof guardInstance.canActivate === 'function') {
+            const mockActivatedRouteSnapshot = new ActivatedRouteSnapshot();
+
+            mockActivatedRouteSnapshot.params = {};
+            mockActivatedRouteSnapshot.queryParams = {};
+            mockActivatedRouteSnapshot.url = [];
+            if (route.data) {
+              mockActivatedRouteSnapshot.data = route.data;
+            }
+
             guardInstance.allowAccessWithoutRedirect();
-            const canActivateReturnValue = guardInstance.canActivate();
+            const canActivateReturnValue = guardInstance.canActivate(mockActivatedRouteSnapshot);
             guardInstance.resetRedirect();
+
             return canActivateReturnValue;
           }
 
@@ -103,25 +101,6 @@ export class LayoutComponent implements OnInit {
     });
   }
 
-  setUserImg(): void {
-    const userId = this.authService.getUserId();
-    if (!userId) {
-      return;
-    }
-
-    this.userService.getById(userId).subscribe({
-      next: (user) => {
-        if (user.urlImagen) {
-          this.userImageSrc = user.urlImagen;
-        }
-      },
-      error: (error) => {
-        console.error('Error al obtener la imagen del usuario');
-        console.error(error);
-      }
-    });
-  }
-
   ngOnInit(): void {
     this.layoutService.currentTitle$.subscribe((title) => {
       this.title = title;
@@ -131,11 +110,8 @@ export class LayoutComponent implements OnInit {
       this.extra = extra;
     });
 
-    this.authService.isLoggedIn$.subscribe(() => {
+    this.authService.usuario$.subscribe(() => {
       this.filtrarRutas();
     });
-
-    this.filtrarRutas();
-    this.setUserImg();
   }
 }

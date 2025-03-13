@@ -6,7 +6,7 @@ import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {NotificationService} from '../../notification/notification.service';
-import {AuthService, Credenciales, Role} from '../service/auth.service';
+import {AuthService} from '../service/auth.service';
 import {concatMap, first, of} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 import {InputComponent} from '../../forms/components/fields/input/input.component';
@@ -14,6 +14,7 @@ import {FormService, onlyNumbersValidator} from "../../forms/service/form.servic
 import {SubmitButtonComponent} from '../../forms/components/submit-button/submit-button.component';
 import {TitleComponent} from '../../components/title/title.component';
 import {FormComponent} from '../../forms/components/form/form.component';
+import {Credenciales, Role} from '../../user/user.model';
 
 @Component({
   selector: 'app-login',
@@ -51,13 +52,6 @@ export class LoginComponent {
     });
   }
 
-  private getRoleName(url: string): string {
-    if (url.includes('clientes')) return 'Cliente';
-    if (url.includes('responsables')) return 'Responsable de turno';
-    if (url.includes('administradores')) return 'Administrador';
-    return 'Usuario';
-  }
-
   onSubmit() {
     if (this.loginForm.valid) {
       const credenciales: Credenciales = this.loginForm.value;
@@ -76,8 +70,6 @@ export class LoginComponent {
             // Si hay una respuesta, se logró autenticar
             const token = response.headers.get('authorization');
             this.authService.login(token);
-            this.notificationService.show(`${this.getRoleName(response.url)} autenticado correctamente`);
-            this.router.navigate(['/carta']);
           } else {
             // Si no hay respuesta, no se logró autenticar
             this.loginError.set(true);

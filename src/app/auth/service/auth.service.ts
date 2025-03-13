@@ -1,99 +1,109 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {jwtDecode, JwtPayload} from 'jwt-decode';
-import {NotificationService} from '../../notification/notification.service';
-import {Router} from '@angular/router';
+import {jwtDecode} from 'jwt-decode';
 import {HttpClient} from '@angular/common/http';
+import {Credenciales, Role, UserRegisterDTO, UsuarioLogueado} from '../../user/user.model';
+import {environment} from '../../../environments/environment';
+import {ActivatedRouteSnapshot, Router} from '@angular/router';
+import {NotificationService} from '../../notification/notification.service';
 
-export type Role = 'clientes' | 'responsables' | 'administradores';
-
-export type Credenciales = { dni: string, clave: string };
-
-export type UserData = {
-  dni: string,
+interface CustomJwtPayload {
+  sub: string,
   nombre: string,
-  apellido: string,
-  urlImagen: string,
-  email: string,
-  clave: string
-};
+  imagen: string,
+  rol: string,
+  permisos: string[],
+  exp: number
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private userLoggedIn = new BehaviorSubject<boolean>(false);
-  private apiUrl = "http://localhost:8080";
+  private usuarioSubject = new BehaviorSubject<UsuarioLogueado | null>(null);
+  usuario$ = this.usuarioSubject.asObservable();
 
-  isLoggedIn$ = this.userLoggedIn.asObservable();
+  private apiUrl = environment.apiBaseUrl;
+  private tokenKey = 'authToken';
 
-  constructor(private router: Router, private notificationService: NotificationService, private http: HttpClient) {
+  constructor(private notificationService: NotificationService, private router: Router, private http: HttpClient) {
+    this.initFromLocalStorage();
+  }
+
+  private initFromLocalStorage() {
+    const token = localStorage.getItem(this.tokenKey);
+    if (token && this.isTokenValid(token)) {
+      this.setUserFromToken(token);
+    }
+  }
+
+  private isTokenValid(token: string): boolean {
+    try {
+      const decoded: CustomJwtPayload = jwtDecode(token);
+      return decoded.exp * 1000 > Date.now();
+    } catch {
+      return false;
+    }
+  }
+
+  private setUserFromToken(token: string) {
+    try {
+      const decoded: CustomJwtPayload = jwtDecode(token);
+
+      const usuario: UsuarioLogueado = {
+        id: decoded.sub,
+        nombre: decoded.nombre ?? 'Usuario',
+        imagen: decoded.imagen ?? 'Sample_User_Icon.png',
+        rol: decoded.rol ? decoded.rol as Role : 'clientes',
+        permisos: decoded.permisos ?? [],
+      };
+
+      this.usuarioSubject.next(usuario);
+      localStorage.setItem(this.tokenKey, token);
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      this.logout();
+    }
   }
 
   login(token: string) {
-    if (this.userLoggedIn.getValue()) {
-      return;
-    }
-
-    localStorage.setItem('authToken', token);
-    this.userLoggedIn.next(true);
+    this.setUserFromToken(token);
+    this.notificationService.show(`${this.usuario?.rol ?? 'Usuario'} autenticado correctamente`);
+    this.router.navigate(['/carta']);
   }
 
   logout() {
-    if (!this.userLoggedIn.getValue()) {
-      return;
-    }
-    localStorage.removeItem('authToken');
+    localStorage.removeItem(this.tokenKey);
+    this.usuarioSubject.next(null);
 
     this.notificationService.show('Sesión cerrada');
-
-    this.userLoggedIn.next(false);
     this.router.navigate(['/login']);
   }
 
-  isLoggedIn(): boolean {
-    const token = localStorage.getItem('authToken');
+  get usuario(): UsuarioLogueado | null {
+    return this.usuarioSubject.getValue();
+  }
 
-    if (!token) {
-      this.logout();
-      return false;
+  get isLoggedIn(): boolean {
+    return !!this.usuario;
+  }
+
+  hasPermission(permiso: string): boolean {
+    return this.usuario?.permisos.includes(permiso) ?? false;
+  }
+
+  canAccessRoute(route: ActivatedRouteSnapshot): boolean {
+    if (route.data?.['permiso']) {
+      return this.hasPermission(route.data['permiso']);
     }
-
-    try {
-      const decoded = jwtDecode<JwtPayload>(token);
-
-      if (decoded.exp && decoded.exp * 1000 >= Date.now()) {
-        this.login(token);
-        return true;
-      } else {
-        this.logout();
-        return false;
-      }
-    } catch (error) {
-      this.logout();
-      console.error('Error decoding token:', error);
-      return false;
-    }
+    return true;
   }
 
   authenticate(role: Role, credenciales: Credenciales): Observable<any> {
     return this.http.post(`${this.apiUrl}/${role}/autenticacion`, credenciales, {observe: 'response'});
   }
 
-  register(role: Role, userData: UserData): Observable<any> {
+  register(role: Role, userData: UserRegisterDTO): Observable<any> {
     return this.http.post(`${this.apiUrl}/${role}`, userData, {observe: 'response'});
-  }
-
-  getUserId(): string | null {
-    const token = localStorage.getItem('authToken');
-    if (!token) return null;
-
-    try {
-      const decoded = jwtDecode<{ sub: string }>(token);
-      return decoded.sub;
-    } catch (error) {
-      console.error('Error decoding user token:', error);
-      return null;
-    }
   }
 }

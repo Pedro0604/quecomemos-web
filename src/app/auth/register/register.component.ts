@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup, ReactiveFormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -8,11 +8,12 @@ import {MatIconModule} from '@angular/material/icon';
 import {Router} from '@angular/router';
 import {NotificationService} from '../../notification/notification.service';
 import {InputComponent} from '../../forms/components/fields/input/input.component';
-import {AuthService, UserData} from '../service/auth.service';
+import {AuthService} from '../service/auth.service';
 import {FormService, onlyLettersValidator, onlyNumbersValidator, urlValidator} from '../../forms/service/form.service';
 import {SubmitButtonComponent} from '../../forms/components/submit-button/submit-button.component';
 import {TitleComponent} from '../../components/title/title.component';
 import {FormComponent} from '../../forms/components/form/form.component';
+import {UserRegisterDTO} from '../../user/user.model';
 
 @Component({
   selector: 'app-register',
@@ -68,7 +69,7 @@ export class RegisterComponent {
 
   register() {
     if (this.registerForm.valid) {
-      const userData: UserData = {
+      const userData: UserRegisterDTO = {
         dni: this.registerForm.get('dni')?.value,
         nombre: this.registerForm.get('nombre')?.value,
         apellido: this.registerForm.get('apellido')?.value,
@@ -85,7 +86,6 @@ export class RegisterComponent {
               if (response && response.headers && response.headers.get('authorization')) {
                 const token = response.headers.get('authorization');
                 this.authService.login(token);
-                this.router.navigate(['/']);
               } else {
                 this.router.navigate(['/login']);
               }
