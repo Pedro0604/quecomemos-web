@@ -58,8 +58,8 @@ type CampoComida = {
   styleUrl: './menu-form.component.css'
 })
 export class MenuFormComponent extends BaseEntityForm<Menu, MenuDTO, Comida> implements OnInit {
-  form: FormGroup
-  redirectUrlOnCreation: string = '/menu';
+  protected override form: FormGroup
+  protected override redirectUrlOnCreation: string = '/menu';
 
   camposSinComidas: CampoComida[] = [];
 
@@ -145,7 +145,7 @@ export class MenuFormComponent extends BaseEntityForm<Menu, MenuDTO, Comida> imp
     return firstValueFrom(this.comidaService.getAll());
   }
 
-  protected extraOnInit(): void {
+  protected override extraOnInit(): void {
     if (this.entity) {
       this.entity.comidas.forEach(comida => {
         const campoComida = this.camposDeComida.find(campoComida => campoComida.tipoComida === comida.tipoComida);

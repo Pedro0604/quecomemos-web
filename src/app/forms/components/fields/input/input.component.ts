@@ -1,11 +1,12 @@
 import {Component, Input, numberAttribute, signal} from '@angular/core';
-import {ReactiveFormsModule} from "@angular/forms";
+import {ReactiveFormsModule, Validators} from "@angular/forms";
 import {MatError, MatFormField, MatLabel, MatPrefix, MatSuffix} from "@angular/material/form-field";
 import {MatHint, MatInput} from "@angular/material/input";
 import {MatIcon} from '@angular/material/icon';
 import {MatIconButton} from '@angular/material/button';
 import {BaseFormFieldComponent} from '../base-form-field/base-form-field.component';
 import {FormService} from '../../../service/form.service';
+import {MatTooltip} from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-input',
@@ -20,6 +21,7 @@ import {FormService} from '../../../service/form.service';
     MatSuffix,
     MatHint,
     MatPrefix,
+    MatTooltip,
   ],
   templateUrl: './input.component.html',
   standalone: true,
@@ -34,6 +36,14 @@ export class InputComponent extends BaseFormFieldComponent {
 
   constructor(formService: FormService) {
     super(formService);
+  }
+
+  override ngOnInit() {
+    super.ngOnInit();
+
+    if (this.type === 'email') {
+      this.control.addValidators([Validators.email]);
+    }
   }
 
   toggleHide() {

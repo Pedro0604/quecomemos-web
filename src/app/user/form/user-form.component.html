@@ -1,94 +1,51 @@
-<ng-template #extra>
-      <span class="flex justify-start mx-6">
-        <button mat-button (click)="history.back()">Volver</button>
-      </span>
-</ng-template>
+<app-title title="Modificar Usuario" [showVolver]="true"/>
 
-<mat-card class="w-full max-w-2xl h-full mx-auto" appearance="outlined">
-  <mat-card-content class="my-4">
-    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <mat-form-field>
-          <mat-label>Nombre</mat-label>
-          <input
-            matInput
-            type="text"
-            formControlName="nombre"
-            placeholder="Nombre"
-            (blur)="updateErrorMessage('nombre')"
-            required
-          >
-          <mat-hint align="end">{{ form.get('nombre')?.value?.length || 0 }}/255</mat-hint>
-          @if (errorMessages['nombre']) {
-            <mat-error>{{ errorMessages['nombre'] }}</mat-error>
-          }
-        </mat-form-field>
-        <mat-form-field floatLabel="always">
-          <mat-label>Apellido</mat-label>
-          <input
-            matInput
-            type="text"
-            formControlName="apellido"
-            placeholder="Apellido"
-            (blur)="updateErrorMessage('apellido')"
-            required
-          />
-          <mat-hint align="end">{{ form.get('apellido')?.value?.length || 0 }}/255</mat-hint>
-          @if (errorMessages['apellido']) {
-            <mat-error>{{ errorMessages['apellido'] }}</mat-error>
-          }
-        </mat-form-field>
-      </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <mat-form-field>
-          <mat-label>email</mat-label>
-          <input
-            matInput
-            type="text"
-            formControlName="email"
-            placeholder="ejemplo@gmail.com"
-            (blur)="updateErrorMessage('email')"
-            required
-          >
-          @if (errorMessages['email']) {
-            <mat-error>{{ errorMessages['email'] }}</mat-error>
-          }
-        </mat-form-field>
-        <mat-form-field>
-          <mat-label>Url Imagen</mat-label>
-          <input
-            matInput
-            type="text"
-            formControlName="urlImagen"
-            placeholder="Ingrese url de la imagen"
-            (blur)="updateErrorMessage('urlImagen')"
-          >
-          @if (errorMessages['urlImagen']) {
-            <mat-error>{{ errorMessages['urlImagen'] }}</mat-error>
-          }
-        </mat-form-field>
-      </div>
-      <mat-form-field class="pointer-events-none bg-gray-100 cursor-not-allowed">
-        <mat-label>DNI</mat-label>
-        <input
-          matInput
-          type="number"
-          formControlName="dni"
-          placeholder="DNI"
-          readonly
-          class="bg-transparent"
-        >
-      </mat-form-field>
-      <div class="col-span-2">
-        <button
-          mat-raised-button
-          class="w-full"
-          type="submit"
-          [disabled]="form.invalid"
-        >
-          Modificar
-        </button>
-      </div>
-    </form>
-  </mat-card-content>
-</mat-card>
+<app-form [formGroup]="form" (submit)="onSubmit()">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <app-input
+      label="DNI"
+      type="text"
+      placeholder="12345678"
+      [abstractControl]="this.form.get('dni')"
+      minLength="7"
+      maxLength="8"
+      [readonly]="true"
+      tooltipMessage="El DNI no puede ser modificado"
+    />
+    <app-input
+      label="Nombre"
+      type="text"
+      placeholder="Ingrese su nombre"
+      [abstractControl]="form.get('nombre')"
+      minLength="3"
+      maxLength="255"
+    />
+    <app-input
+      label="Apellido"
+      type="text"
+      placeholder="Ingrese su apellido"
+      [abstractControl]="this.form.get('apellido')"
+      minLength="3"
+      maxLength="255"
+    />
+    <app-input
+      label="Email"
+      type="email"
+      placeholder="ejemplo@gmail.com"
+      [abstractControl]="this.form.get('email')"
+      minLength="3"
+      maxLength="255"
+    />
+  </div>
+  <app-input
+    label="URL de la Imagen de Perfil"
+    type="text"
+    placeholder="https://www.ejemplo.com"
+    [abstractControl]="this.form.get('urlImagen')"
+    minLength="7"
+    maxLength="255"
+  />
+  <app-form-state [loading]="loading" [error]="error"/>
+  <app-submit-button [form]="form" [pendingText]="'Modificando Usuario'" [error]="error">Modificar Usuario
+  </app-submit-button>
+</app-form>

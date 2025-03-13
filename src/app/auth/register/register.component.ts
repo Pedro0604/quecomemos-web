@@ -46,7 +46,7 @@ export class RegisterComponent {
       nombre: ['', [onlyLettersValidator]],
       apellido: ['', [onlyLettersValidator]],
       urlImagen: ['', [urlValidator]],
-      email: ['', [Validators.email]],
+      email: [''],
       clave: [''],
       confirmClave: [''],
     }, {

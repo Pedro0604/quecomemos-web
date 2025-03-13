@@ -71,6 +71,7 @@ export class LoginComponent {
         first((response) => response && response.headers && response.headers.get("authorization"), null) // Detiene el flujo en el primer login exitoso
       ).subscribe({
         next: (response) => {
+          console.log(response)
           if (response) {
             // Si hay una respuesta, se logró autenticar
             const token = response.headers.get('authorization');

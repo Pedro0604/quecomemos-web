@@ -32,8 +32,8 @@ import {FormStateComponent} from '../../forms/components/form-state/form-state.c
 })
 
 export class ComidaFormComponent extends BaseEntityForm<Comida, ComidaDTO, void> implements OnInit {
-  redirectUrlOnCreation: string = '/comidas';
-  form: FormGroup
+  protected override redirectUrlOnCreation: string = '/comidas';
+  protected override form: FormGroup
 
   tiposDeComida: TipoComida[] = ['OTRO', 'POSTRE', 'ENTRADA', 'BEBIDA', 'PLATO_PRINCIPAL'];
   tiposDeComidaOptions = this.tiposDeComida.map(tipoComida => ({
@@ -60,7 +60,7 @@ export class ComidaFormComponent extends BaseEntityForm<Comida, ComidaDTO, void>
     });
   }
 
-  protected extraOnInit(): void {
+  protected override extraOnInit(): void {
     if (!this.entity) {
       const tipoComidaInicial = this.route.snapshot.queryParams['tipo-comida'] as TipoComida;
       this.form.get('tipoComida')?.setValue(tipoComidaInicial);

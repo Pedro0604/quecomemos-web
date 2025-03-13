@@ -46,8 +46,8 @@ type CampoMenu = {
 })
 
 export class MenuDiarioFormComponent extends BaseEntityForm<MenuDiario, MenuDiarioDTO, Menu> implements OnInit {
-  form: FormGroup
-  redirectUrlOnCreation: string = '/menu-diario';
+  protected override form: FormGroup
+  protected override redirectUrlOnCreation: string = '/menu-diario';
 
   diasDeSemanaOptions = diasSemanaArray.map(diaSemana => ({
     value: diaSemana,
@@ -91,7 +91,7 @@ export class MenuDiarioFormComponent extends BaseEntityForm<MenuDiario, MenuDiar
     return firstValueFrom(this.menuService.getAll());
   }
 
-  protected extraOnInit(): void {
+  protected override extraOnInit(): void {
     this.camposDeMenus.forEach(campo => {
       campo.menus = this.relatedData.filter(menu => menu.vegetariano == campo.vegetariano);
     });
