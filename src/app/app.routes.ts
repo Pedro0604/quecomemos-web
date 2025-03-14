@@ -43,6 +43,7 @@ export const appRoutes: Routes = [
     title: 'Menús Diarios',
     canActivate: [AuthGuard],
     data: {
+      permiso: 'ver_menu_diario',
       includeInLayout: true
     }
   },
@@ -71,6 +72,7 @@ export const appRoutes: Routes = [
     title: 'Menús',
     canActivate: [AuthGuard],
     data: {
+      permiso: 'ver_menu',
       includeInLayout: true
     }
   },
@@ -99,6 +101,7 @@ export const appRoutes: Routes = [
     title: 'Comidas',
     canActivate: [AuthGuard],
     data: {
+      permiso: 'ver_comida',
       includeInLayout: true
     }
   },
