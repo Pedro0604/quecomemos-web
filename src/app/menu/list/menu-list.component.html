@@ -1,9 +1,8 @@
 <app-list
   title="menús"
   [service]="menuService"
-  creationLink="/menu/create"
-  [itemTemplate]="menuTemplate"
-/>
+  entityName="menu"
+  [itemTemplate]="menuTemplate"/>
 
 <ng-template #menuTemplate let-menu let-onDelete="onDelete">
   <app-menu [menu]="menu" (onDelete)="onDelete(menu.id)"></app-menu>

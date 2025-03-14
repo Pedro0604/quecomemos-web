@@ -7,6 +7,7 @@ import {MatAnchor} from '@angular/material/button';
 import {RouterLink} from '@angular/router';
 import {NgTemplateOutlet} from '@angular/common';
 import {AuthService} from '../../auth/service/auth.service';
+import {kebabCase, snakeCase} from '../../utils/utils';
 
 @Component({
   selector: 'app-list',
@@ -25,14 +26,16 @@ export class ListComponent<T, D> implements OnInit {
   @Input({required: true}) title!: string;
   @Input({required: true}) service!: CrudService<T, D>;
   @Input() itemTemplate!: TemplateRef<{ $implicit: T, onDelete: (id: number) => void }>;
-  @Input({required: true}) creationPermission!: string;
-  @Input({required: true}) creationLink!: string;
+  @Input({required: true}) entityName!: string;
   @Input({transform: booleanAttribute}) femenino: boolean = false;
   @Input() gridCols: string = "grid-cols-1 md:grid-cols-2 xl:grid-cols-3";
 
   items: T[] = [];
   error = false;
   loading = true;
+
+  protected creationUrl = '';
+  protected creationPermission = '';
 
   constructor(protected authService: AuthService) {
   }
@@ -46,6 +49,9 @@ export class ListComponent<T, D> implements OnInit {
       },
       complete: () => (this.loading = false),
     });
+
+    this.creationUrl = `/${kebabCase(this.entityName)}/create`;
+    this.creationPermission = `crear_${snakeCase(this.entityName)}`;
   }
 
   handleDelete(id: number) {

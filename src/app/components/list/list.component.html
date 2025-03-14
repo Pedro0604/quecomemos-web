@@ -16,7 +16,7 @@
   </div>
   @if (authService.hasPermission(creationPermission)) {
     <span class="flex justify-center mt-4">
-      <a mat-button [routerLink]="creationLink">Creá un{{ femenino ? 'a' : 'o' }} ahora</a>
+      <a mat-button [routerLink]="creationUrl">Creá un{{ femenino ? 'a' : 'o' }} ahora</a>
     </span>
   }
 } @else {

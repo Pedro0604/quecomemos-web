@@ -6,6 +6,7 @@ import {Credenciales, Role, UserRegisterDTO, UsuarioLogueado} from '../../user/u
 import {environment} from '../../../environments/environment';
 import {ActivatedRouteSnapshot, Router} from '@angular/router';
 import {NotificationService} from '../../notification/notification.service';
+import {capitalize} from '../../utils/utils';
 
 interface CustomJwtPayload {
   sub: string,
@@ -68,7 +69,7 @@ export class AuthService {
 
   login(token: string) {
     this.setUserFromToken(token);
-    this.notificationService.show(`${this.usuario?.rol ?? 'Usuario'} autenticado correctamente`);
+    this.notificationService.show(`${capitalize(this.usuario?.rol ?? 'Usuario')} autenticado correctamente`);
     this.router.navigate(['/carta']);
   }
 
