@@ -1,0 +1,12 @@
+@if (showButtons && (puedeEditar || puedeEliminar)) {
+  <mat-card-actions class="mt-auto">
+    @if (puedeEditar) {
+      <!--  TODO - SI SE PUEDE REALIZAR LA ACCIÓN -->
+      <a mat-button [routerLink]="[editUrl, editId]">MODIFICAR</a>
+    }
+    @if (puedeEditar) {
+      <!--  TODO - SI SE PUEDE REALIZAR LA ACCIÓN -->
+      <button mat-button class="violet-error" (click)="deleteClick.emit()">ELIMINAR</button>
+    }
+  </mat-card-actions>
+}
