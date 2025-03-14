@@ -7,15 +7,15 @@ import {NotificationService} from '../../notification/notification.service';
   providedIn: 'root',
 })
 export class AuthGuard implements CanActivate {
-  redirectToLogin = signal(true);
+  // Solo si redirect es true redirige (para que no se redirija en el caso de que se llame a canActivate desde filterRoutes del layout)
+  redirect = signal(true);
 
   constructor(private router: Router, private authService: AuthService, private notificationService: NotificationService) {
   }
 
   canActivate(route: ActivatedRouteSnapshot): boolean {
-    // TODO - SI TIENE LOS PERMISOS
     if (!this.authService.isLoggedIn) {
-      if (this.redirectToLogin()) {
+      if (this.redirect()) {
         this.notificationService.show('Debés iniciar sesión para acceder a esta página');
         this.router.navigate(['/login']);
       }
@@ -25,18 +25,20 @@ export class AuthGuard implements CanActivate {
     if (this.authService.canAccessRoute(route)) {
       return true;
     } else {
-      this.notificationService.show('No tenés permisos para acceder a esta página');
-      this.router.navigate(['/unauthorized']);
+      if (this.redirect()) {
+        this.notificationService.show('No tenés permisos para acceder a esta página');
+        this.router.navigate(['/unauthorized']);
+      }
       return false;
     }
   }
 
   allowAccessWithoutRedirect() {
-    this.redirectToLogin.set(false);
+    this.redirect.set(false);
   }
 
   resetRedirect() {
-    this.redirectToLogin.set(true);
+    this.redirect.set(true);
   }
 }
 
