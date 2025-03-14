@@ -1,4 +1,4 @@
-import {booleanAttribute, Component, EventEmitter, inject, Input, Output} from '@angular/core';
+import {booleanAttribute, Component, computed, EventEmitter, inject, Input, Output} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {Comida} from '../comida.model';
 import {
@@ -15,6 +15,8 @@ import {RouterLink} from '@angular/router';
 import {DialogEliminarComponent} from '../../components/dialog-eliminar/dialog-eliminar.component';
 import {ComidaService} from '../service/comida.service';
 import {DefaultImageDirective} from '../../directives/default-image-directive/default-image.directive';
+import {AuthService} from '../../auth/service/auth.service';
+import {EntityCardActionsComponent} from '../../components/entity-card-actions/entity-card-actions.component';
 
 @Component({
   selector: 'app-comida',
@@ -32,6 +34,7 @@ import {DefaultImageDirective} from '../../directives/default-image-directive/de
     MatButton,
     RouterLink,
     DefaultImageDirective,
+    EntityCardActionsComponent,
   ],
 })
 
@@ -41,7 +44,12 @@ export class ComidaComponent {
   @Input({transform: booleanAttribute}) showButtons: boolean = true;
   @Output() onDelete = new EventEmitter<number>();
 
-  constructor(private comidaService: ComidaService) {
+  protected puedeEditar;
+  protected puedeEliminar;
+
+  constructor(private comidaService: ComidaService, protected authService: AuthService) {
+    this.puedeEditar = this.authService.hasPermission('editar_comida');
+    this.puedeEliminar = this.authService.hasPermission('eliminar_comida');
   }
 
   openDialogEliminar(): void {

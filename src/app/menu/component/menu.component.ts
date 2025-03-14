@@ -9,10 +9,12 @@ import {MatDialog} from '@angular/material/dialog';
 import {DialogEliminarComponent} from '../../components/dialog-eliminar/dialog-eliminar.component';
 import {MenuService} from '../service/menu.service';
 import {DefaultImageDirective} from '../../directives/default-image-directive/default-image.directive';
+import {AuthService} from '../../auth/service/auth.service';
+import {EntityCardActionsComponent} from '../../components/entity-card-actions/entity-card-actions.component';
 
 @Component({
   selector: 'app-menu',
-  imports: [MatCardModule, MatIcon, MatDivider, MatButton, MatAnchor, RouterLink, DefaultImageDirective],
+  imports: [MatCardModule, MatIcon, MatDivider, MatButton, MatAnchor, RouterLink, DefaultImageDirective, EntityCardActionsComponent],
   templateUrl: './menu.component.html',
   standalone: true,
 })
@@ -28,7 +30,12 @@ export class MenuComponent {
 
   @Output() onDelete = new EventEmitter<number>();
 
-  constructor(private menuService: MenuService) {
+  protected puedeEditar;
+  protected puedeEliminar;
+
+  constructor(private menuService: MenuService, protected authService: AuthService) {
+    this.puedeEditar = this.authService.hasPermission('editar_menu');
+    this.puedeEliminar = this.authService.hasPermission('eliminar_menu');
   }
 
   openDialogEliminar(): void {

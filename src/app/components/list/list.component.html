@@ -14,10 +14,11 @@
     <mat-icon class="error">warning</mat-icon>
     <span class="ml-2">No hay {{ title }} disponibles</span>
   </div>
-  <span class="flex justify-center mt-4">
-<!--    TODO - SI TIENE LOS PERMISOS-->
-    <a mat-button [routerLink]="creationLink">Creá un{{ femenino ? 'a' : 'o' }} ahora</a>
-  </span>
+  @if (authService.hasPermission(creationPermission)) {
+    <span class="flex justify-center mt-4">
+      <a mat-button [routerLink]="creationLink">Creá un{{ femenino ? 'a' : 'o' }} ahora</a>
+    </span>
+  }
 } @else {
   <div [class]="'grid gap-4 ' + gridCols">
     @for (item of items; track item) {

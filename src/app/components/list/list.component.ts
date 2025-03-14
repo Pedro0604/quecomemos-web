@@ -6,6 +6,7 @@ import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {MatAnchor} from '@angular/material/button';
 import {RouterLink} from '@angular/router';
 import {NgTemplateOutlet} from '@angular/common';
+import {AuthService} from '../../auth/service/auth.service';
 
 @Component({
   selector: 'app-list',
@@ -24,7 +25,8 @@ export class ListComponent<T, D> implements OnInit {
   @Input({required: true}) title!: string;
   @Input({required: true}) service!: CrudService<T, D>;
   @Input() itemTemplate!: TemplateRef<{ $implicit: T, onDelete: (id: number) => void }>;
-  @Input({required: true}) creationLink: string = '';
+  @Input({required: true}) creationPermission!: string;
+  @Input({required: true}) creationLink!: string;
   @Input({transform: booleanAttribute}) femenino: boolean = false;
   @Input() gridCols: string = "grid-cols-1 md:grid-cols-2 xl:grid-cols-3";
 
@@ -32,7 +34,7 @@ export class ListComponent<T, D> implements OnInit {
   error = false;
   loading = true;
 
-  constructor() {
+  constructor(protected authService: AuthService) {
   }
 
   ngOnInit(): void {

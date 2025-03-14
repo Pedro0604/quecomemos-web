@@ -18,6 +18,7 @@ import {BaseEntityForm} from '../../forms/BaseEntityForm';
 import {MatError} from '@angular/material/input';
 import {FormStateComponent} from '../../forms/components/form-state/form-state.component';
 import {FormComponent} from '../../forms/components/form/form.component';
+import {AuthService} from '../../auth/service/auth.service';
 
 type CampoMenu = {
   nombre: string,
@@ -76,7 +77,8 @@ export class MenuDiarioFormComponent extends BaseEntityForm<MenuDiario, MenuDiar
     protected override notificationService: NotificationService,
     protected override formService: FormService,
     protected override service: MenuDiarioService,
-    protected override route: ActivatedRoute
+    protected override route: ActivatedRoute,
+    protected authService: AuthService
   ) {
     super(router, notificationService, formService, service, route, 'menú diario', false);
 

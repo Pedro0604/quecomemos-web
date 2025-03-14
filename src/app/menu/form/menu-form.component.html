@@ -55,40 +55,45 @@
   </div>
   <app-form-state [loading]="loading" [error]="error">
     <!--    Muestra mensajes para los diferentes casos donde faltan uno o varios tipos de comidas-->
-    <!--  TODO - SI TIENE LOS PERMISOS-->
     @if (camposSinComidas.length === 4) {
       <mat-error>No hay ninguna comida (entrada, plato principal, postre o
         bebida) {{ this.form.get("vegetariano")?.value ? 'vegetariana' : '' }}
       </mat-error>
-      <a routerLink="/comida/create" mat-button class="-ms-3">Creá alguna para poder continuar</a>
+      @if (puedeCrearComida) {
+        <a routerLink="/comida/create" mat-button class="-ms-3">Creá alguna para poder continuar</a>
+      }
     } @else {
       @if (camposSinComidas.length === 1) {
         <mat-error>
           {{ getTextoSinComidas(camposSinComidas[0]) }}
         </mat-error>
-        <a
-          routerLink="/comida/create"
-          [queryParams]="getQueryParams(camposSinComidas[0])"
-          mat-button class="-ms-2">
-          Creá algun{{ camposSinComidas[0].masculino ? 'o' : 'a' }} acá
-        </a>
+        @if (puedeCrearComida) {
+          <a
+            routerLink="/comida/create"
+            [queryParams]="getQueryParams(camposSinComidas[0])"
+            mat-button class="-ms-2">
+            Creá algun{{ camposSinComidas[0].masculino ? 'o' : 'a' }} acá
+          </a>
+        }
       } @else if (camposSinComidas.length > 1) {
         <mat-error>
           {{ getTextoSinComidasMultiple(camposSinComidas) }}
         </mat-error>
-        <span class="ms-1">
+        @if (puedeCrearComida) {
+          <span class="ms-1">
               Creá {{ camposSinComidas[0].masculino ? 'algún' : 'alguna' }}
-          @for (campo of camposSinComidas; track campo.nombre) {
-            <a
-              routerLink="/comida/create"
-              [queryParams]="getQueryParams(campo)"
-              mat-button>
+            @for (campo of camposSinComidas; track campo.nombre) {
+              <a
+                routerLink="/comida/create"
+                [queryParams]="getQueryParams(campo)"
+                mat-button>
                   {{ tipoComidaToString(campo.tipoComida).toLowerCase() }}
                 </a>{{ !$last ? ' /' : '' }}
-          }
-          {{ this.form.get("vegetariano")?.value ? ('vegetarian' + (camposSinComidas[camposSinComidas.length - 1].masculino ? 'o' : 'a')) : '' }}
-          acá.
+            }
+            {{ this.form.get("vegetariano")?.value ? ('vegetarian' + (camposSinComidas[camposSinComidas.length - 1].masculino ? 'o' : 'a')) : '' }}
+            acá.
             </span>
+        }
       }
     }
   </app-form-state>

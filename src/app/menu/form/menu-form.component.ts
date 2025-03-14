@@ -28,6 +28,7 @@ import {BaseEntityForm} from '../../forms/BaseEntityForm';
 import {FormStateComponent} from '../../forms/components/form-state/form-state.component';
 import {FormComponent} from '../../forms/components/form/form.component';
 import {DefaultImageDirective} from '../../directives/default-image-directive/default-image.directive';
+import {AuthService} from '../../auth/service/auth.service';
 
 type CampoComida = {
   nombre: string,
@@ -60,6 +61,8 @@ type CampoComida = {
 export class MenuFormComponent extends BaseEntityForm<Menu, MenuDTO, Comida> implements OnInit {
   protected override form: FormGroup
   protected override redirectUrlOnCreation: string = '/menu';
+
+  protected puedeCrearComida;
 
   camposSinComidas: CampoComida[] = [];
 
@@ -126,9 +129,12 @@ export class MenuFormComponent extends BaseEntityForm<Menu, MenuDTO, Comida> imp
     protected override notificationService: NotificationService,
     protected override formService: FormService,
     protected override service: MenuService,
-    protected override route: ActivatedRoute
+    protected override route: ActivatedRoute,
+    protected authService: AuthService,
   ) {
     super(router, notificationService, formService, service, route, 'menú', false);
+
+    this.puedeCrearComida = authService.hasPermission('crear_comida');
 
     this.form = this.fb.group({
       nombre: [''],

@@ -7,6 +7,8 @@ import {RouterLink} from '@angular/router';
 import {MenuComponent} from '../../menu/component/menu.component';
 import {DialogEliminarComponent} from '../../components/dialog-eliminar/dialog-eliminar.component';
 import {MenuDiarioService} from '../service/menu-diario.service';
+import {AuthService} from '../../auth/service/auth.service';
+import {EntityCardActionsComponent} from '../../components/entity-card-actions/entity-card-actions.component';
 
 @Component({
   selector: 'app-menu-diario',
@@ -19,7 +21,8 @@ import {MenuDiarioService} from '../service/menu-diario.service';
     MatCardHeader,
     MatCardTitle,
     RouterLink,
-    MenuComponent
+    MenuComponent,
+    EntityCardActionsComponent
   ],
   templateUrl: './menu-diario.component.html',
   standalone: true,

@@ -34,10 +34,11 @@
     }
   </div>
   <app-form-state [loading]="loading" [error]="error">
-    <!--  TODO - SI TIENE LOS PERMISOS-->
     @if (relatedData.length === 0) {
       <mat-error>No hay ningún menú</mat-error>
-      <a routerLink="/menu/create" mat-button class="-ms-3">Creá alguno para poder continuar</a>
+      @if(authService.hasPermission('crear_menu')) {
+        <a routerLink="/menu/create" mat-button class="-ms-3">Creá alguno para poder continuar</a>
+      }
     } @else {
       @for (campo of camposDeMenus; track campo.nombre) {
         @if (campo.menus.length === 0) {

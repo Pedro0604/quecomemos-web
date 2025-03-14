@@ -23,12 +23,11 @@
       </div>
     </div>
   </mat-card-content>
-  @if (showButtons) {
-    <mat-card-actions class="mt-auto">
-      <!--  TODO - SI TIENE LOS PERMISOS Y SE PUEDE REALIZAR LA ACCIÓN -->
-      <a mat-button [routerLink]="['/comida/edit/', comida.id]">MODIFICAR</a>
-      <!--  TODO - SI TIENE LOS PERMISOS Y SE PUEDE REALIZAR LA ACCIÓN -->
-      <button mat-button class="violet-error" (click)="openDialogEliminar()">ELIMINAR</button>
-    </mat-card-actions>
-  }
+  <app-entity-card-actions
+    [showButtons]="showButtons"
+    entityName="comida"
+    editUrl="/comida/edit/"
+    [editId]="comida.id"
+    (deleteClick)="openDialogEliminar()"
+  />
 </mat-card>
