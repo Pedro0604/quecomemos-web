@@ -13,7 +13,7 @@ import {FormService, onlyLettersValidator, onlyNumbersValidator, urlValidator} f
 import {SubmitButtonComponent} from '../../forms/components/submit-button/submit-button.component';
 import {TitleComponent} from '../../components/title/title.component';
 import {FormComponent} from '../../forms/components/form/form.component';
-import {Credenciales, UserRegisterDTO} from '../../user/user.model';
+import {Credenciales, ClientRegisterDTO} from '../../user/user.model';
 
 @Component({
   selector: 'app-register',
@@ -69,7 +69,7 @@ export class RegisterComponent {
 
   register() {
     if (this.registerForm.valid) {
-      const userData: UserRegisterDTO = {
+      const clientData: ClientRegisterDTO = {
         dni: this.registerForm.get('dni')?.value,
         nombre: this.registerForm.get('nombre')?.value,
         apellido: this.registerForm.get('apellido')?.value,
@@ -78,12 +78,12 @@ export class RegisterComponent {
         clave: this.registerForm.get('clave')?.value,
       };
 
-      this.authService.register('clientes', userData).subscribe({
+      this.authService.registerClient(clientData).subscribe({
         next: () => {
           this.notificationService.show('Usuario registrado exitosamente');
           const credenciales: Credenciales = {
-            dni: userData.dni,
-            clave: userData.clave
+            dni: clientData.dni,
+            clave: clientData.clave
           };
           this.authService.authenticate(credenciales).subscribe({
             next: (response) => {

@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {jwtDecode} from 'jwt-decode';
 import {HttpClient} from '@angular/common/http';
-import {Credenciales, Role, UserRegisterDTO, UsuarioLogueado} from '../../user/user.model';
+import {Credenciales, RoleApiPath, RoleName, ClientRegisterDTO, LoggedUser} from '../../user/user.model';
 import {environment} from '../../../environments/environment';
 import {ActivatedRouteSnapshot, Router} from '@angular/router';
 import {NotificationService} from '../../notification/notification.service';
@@ -12,7 +12,8 @@ interface CustomJwtPayload {
   sub: string,
   nombre: string,
   imagen: string,
-  rol: string,
+  rolName: RoleName,
+  rolApiPath: RoleApiPath,
   permisos: string[],
   exp: number
 }
@@ -21,7 +22,7 @@ interface CustomJwtPayload {
   providedIn: 'root'
 })
 export class AuthService {
-  private usuarioSubject = new BehaviorSubject<UsuarioLogueado | null>(null);
+  private usuarioSubject = new BehaviorSubject<LoggedUser | null>(null);
   usuario$ = this.usuarioSubject.asObservable();
 
   private apiUrl = environment.apiBaseUrl;
@@ -51,11 +52,12 @@ export class AuthService {
     try {
       const decoded: CustomJwtPayload = jwtDecode(token);
 
-      const usuario: UsuarioLogueado = {
+      const usuario: LoggedUser = {
         id: decoded.sub,
         nombre: decoded.nombre ?? 'Usuario',
         imagen: decoded.imagen ?? 'Sample_User_Icon.png',
-        rol: decoded.rol ? decoded.rol as Role : 'clientes',
+        rolName: decoded.rolName ? decoded.rolName as RoleName : 'cliente',
+        rolApiPath: decoded.rolApiPath ? decoded.rolApiPath as RoleApiPath : 'clientes',
         permisos: decoded.permisos ?? [],
       };
 
@@ -69,7 +71,7 @@ export class AuthService {
 
   login(token: string) {
     this.setUserFromToken(token);
-    this.notificationService.show(`${capitalize(this.usuario?.rol ?? 'Usuario')} autenticado correctamente`);
+    this.notificationService.show(`${capitalize(this.usuario?.rolName ?? 'Usuario')} autenticado correctamente`);
     this.router.navigate(['/carta']);
   }
 
@@ -81,7 +83,7 @@ export class AuthService {
     this.router.navigate(['/login']);
   }
 
-  get usuario(): UsuarioLogueado | null {
+  get usuario(): LoggedUser | null {
     return this.usuarioSubject.getValue();
   }
 
@@ -104,7 +106,7 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/auth`, credenciales, {observe: 'response'});
   }
 
-  register(role: Role, userData: UserRegisterDTO): Observable<any> {
-    return this.http.post(`${this.apiUrl}/${role}`, userData, {observe: 'response'});
+  registerClient(clientData: ClientRegisterDTO): Observable<any> {
+    return this.http.post(`${this.apiUrl}/clientes`, clientData, {observe: 'response'});
   }
 }

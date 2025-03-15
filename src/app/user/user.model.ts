@@ -16,7 +16,7 @@ export interface UserDTO {
   clave: string;
 }
 
-export interface UserRegisterDTO {
+export interface ClientRegisterDTO {
   dni: string,
   nombre: string,
   apellido: string,
@@ -25,13 +25,15 @@ export interface UserRegisterDTO {
   clave: string
 }
 
-export interface UsuarioLogueado {
+export interface LoggedUser {
   id: string;
   nombre: string;
   imagen: string;
-  rol: Role;
+  rolName: RoleName,
+  rolApiPath: RoleApiPath;
   permisos: string[];
 }
 
-export type Role = 'clientes' | 'responsables' | 'administradores';
+export type RoleName = 'cliente' | 'responsable' | 'administrador';
+export type RoleApiPath = 'clientes' | 'responsables' | 'administradores';
 export interface Credenciales { dni: string, clave: string }
