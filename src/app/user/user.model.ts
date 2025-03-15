@@ -5,7 +5,6 @@ export interface User {
   dni: number;
   email: string;
   urlImagen: string | null;
-  clave: string;
 }
 
 export interface ClientDTO {

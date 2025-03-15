@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {jwtDecode} from 'jwt-decode';
 import {HttpClient} from '@angular/common/http';
-import {ClientDTO, Credenciales, LoggedUser, RoleApiPath, RoleName, User} from '../../user/user.model';
+import {ClientDTO, Credenciales, LoggedUser, RoleApiPath, RoleName} from '../../user/user.model';
 import {environment} from '../../../environments/environment';
 import {ActivatedRouteSnapshot, Router} from '@angular/router';
 import {NotificationService} from '../../notification/notification.service';
@@ -65,16 +65,20 @@ export class AuthService {
     return true;
   }
 
-  updateUserInfo(updated: User) {
-    const current = this.usuario;
-    if (current) {
-      const updatedUser: LoggedUser = {
-        ...current,
-        nombre: updated.nombre ?? current.nombre,
-        imagen: updated.urlImagen ?? current.imagen,
-      };
-      this.usuarioSubject.next(updatedUser);
-    }
+  refreshUserToken() {
+    this.http.post<any>(`${this.apiUrl}/auth/refresh`, {}, {observe: "response"}).subscribe({
+      next: response => {
+        const token = response?.headers?.get('Authorization');
+        if (token) {
+          this.setUserFromToken(token);
+        } else {
+          console.error('No se recibió token al refrescar');
+        }
+      },
+      error: err => {
+        console.error('Error al refrescar token', err);
+      }
+    });
   }
 
   authenticate(credenciales: Credenciales): Observable<any> {

@@ -93,6 +93,6 @@ export class UserFormComponent extends BaseEntityForm<User, ClientDTO, void> imp
   }
 
   protected override onSubmitSuccess(usuarioCreado: User): void {
-    this.authService.updateUserInfo(usuarioCreado);
+    this.authService.refreshUserToken();
   }
 }
