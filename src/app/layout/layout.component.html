@@ -35,16 +35,29 @@
         </div>
         <div>
           @if (authService.isLoggedIn) {
-            <div class="flex items-center">
+            <div class="flex items-center gap-4">
               <span>
-                <a mat-button routerLink="{{authService.usuario?.rolApiPath}}/{{ authService.usuario?.id }}" routerLinkActive>
+                Bienvenido {{authService.usuario?.nombre}}
+              </span>
+              <span>
+                @if (authService.hasPermission('editar_' + authService.usuario?.rolName)) {
+                  <a mat-button routerLink="{{authService.usuario?.rolApiPath}}/{{ authService.usuario?.id }}"
+                     routerLinkActive>
+                    <img
+                      class="w-10 h-10 p-1 rounded-full ring-2 ring-gray-300 dark:ring-gray-500"
+                      [src]="authService.usuario?.imagen"
+                      alt="Avatar"
+                      defaultImage
+                    >
+                  </a>
+                } @else {
                   <img
                     class="w-10 h-10 p-1 rounded-full ring-2 ring-gray-300 dark:ring-gray-500"
                     [src]="authService.usuario?.imagen"
                     alt="Avatar"
                     defaultImage
                   >
-                </a>
+                }
               </span>
               <span class="hidden md:block">
                 <button
