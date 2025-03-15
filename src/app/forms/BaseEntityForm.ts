@@ -5,6 +5,7 @@ import {CrudService} from '../crud-service/crud.service';
 import {FormService} from './service/form.service';
 import {Injectable, OnInit, signal} from '@angular/core';
 import {firstValueFrom} from 'rxjs';
+import {HttpHeaders} from '@angular/common/http';
 
 @Injectable()
 export abstract class BaseEntityForm<T extends { id: number }, DTO, R> extends FormStateHandler implements OnInit {
@@ -26,7 +27,8 @@ export abstract class BaseEntityForm<T extends { id: number }, DTO, R> extends F
     protected service: CrudService<T, DTO>,
     protected route: ActivatedRoute,
     private entityName: string,
-    femenino: boolean
+    femenino: boolean,
+    protected readonly submitHeaders: HttpHeaders = new HttpHeaders(),
   ) {
     super();
     this.service = service;
@@ -58,14 +60,10 @@ export abstract class BaseEntityForm<T extends { id: number }, DTO, R> extends F
         this.submittingText.set(`Modificando ${this.entityName}`);
       }
     } catch (error: any) {
-      if (error.status == 403) {
-        await this.router.navigate(['/forbidden']);
-      } else {
-        this.error = true;
-        console.error(`Error al obtener ${this.entidadConArticulo}`);
-        console.error(error);
-        this.notificationService.show('Ha ocurrido un error. Por favor, intente nuevamente más tarde');
-      }
+      this.error = true;
+      console.error(`Error al obtener ${this.entidadConArticulo}`);
+      console.error(error);
+      this.notificationService.show('Ha ocurrido un error. Por favor, intente nuevamente más tarde');
     } finally {
       this.loading = false;
     }
@@ -99,7 +97,7 @@ export abstract class BaseEntityForm<T extends { id: number }, DTO, R> extends F
     const dto: DTO = this.mapToDTO(this.form.value);
 
     const isModification = !!this.entity;
-    const request$ = isModification ? this.service.update(this.entity!.id, dto) : this.service.create(dto);
+    const request$ = isModification ? this.service.update(this.entity!.id, dto, this.submitHeaders) : this.service.create(dto, this.submitHeaders);
 
     this.loading = true;
     request$.subscribe({

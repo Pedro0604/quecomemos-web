@@ -11,7 +11,6 @@ import {ComidaListComponent} from './comida/list/comida-list.component';
 import {MenuDiarioListComponent} from './menu-diario/list/menu-diario-list.component';
 import {MenuDiarioFormComponent} from './menu-diario/form/menu-diario-form.component';
 import {UserFormComponent} from './user/form/user-form.component';
-import {UnauthorizedComponent} from './error-pages/unauthorized-page/unauthorized.component';
 import {GuestGuard} from './auth/guards/guest.guards';
 import {ForbiddenComponent} from './error-pages/forbidden-page/forbidden.component';
 
@@ -136,11 +135,6 @@ export const appRoutes: Routes = [
     data: {
       permiso: 'editar_cliente'
     }
-  },
-  {
-    path: 'unauthorized',
-    component: UnauthorizedComponent,
-    title: 'Acceso Denegado'
   },
   {
     path: 'forbidden',
