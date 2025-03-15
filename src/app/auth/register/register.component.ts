@@ -13,7 +13,7 @@ import {FormService, onlyLettersValidator, onlyNumbersValidator, urlValidator} f
 import {SubmitButtonComponent} from '../../forms/components/submit-button/submit-button.component';
 import {TitleComponent} from '../../components/title/title.component';
 import {FormComponent} from '../../forms/components/form/form.component';
-import {UserRegisterDTO} from '../../user/user.model';
+import {Credenciales, UserRegisterDTO} from '../../user/user.model';
 
 @Component({
   selector: 'app-register',
@@ -81,10 +81,14 @@ export class RegisterComponent {
       this.authService.register('clientes', userData).subscribe({
         next: () => {
           this.notificationService.show('Usuario registrado exitosamente');
-          this.authService.authenticate('clientes', this.registerForm.value).subscribe({
+          const credenciales: Credenciales = {
+            dni: userData.dni,
+            clave: userData.clave
+          };
+          this.authService.authenticate(credenciales).subscribe({
             next: (response) => {
-              if (response && response.headers && response.headers.get('authorization')) {
-                const token = response.headers.get('authorization');
+              if (response && response.headers && response.headers.get('Authorization')) {
+                const token = response.headers.get('Authorization');
                 this.authService.login(token);
               } else {
                 this.router.navigate(['/login']);

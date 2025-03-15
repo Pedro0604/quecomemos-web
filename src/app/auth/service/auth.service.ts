@@ -100,8 +100,8 @@ export class AuthService {
     return true;
   }
 
-  authenticate(role: Role, credenciales: Credenciales): Observable<any> {
-    return this.http.post(`${this.apiUrl}/${role}/autenticacion`, credenciales, {observe: 'response'});
+  authenticate(credenciales: Credenciales): Observable<any> {
+    return this.http.post(`${this.apiUrl}/auth`, credenciales, {observe: 'response'});
   }
 
   register(role: Role, userData: UserRegisterDTO): Observable<any> {
