@@ -20,5 +20,5 @@ export class FormComponent {
   @Input({required: true}) formGroup!: FormGroup;
   @Input() maxWidth: string = 'max-w-2xl';
 
-  @Output() submit = new EventEmitter<any>();
+  @Output() submit = new EventEmitter<SubmitEvent>();
 }

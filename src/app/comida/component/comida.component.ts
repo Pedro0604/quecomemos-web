@@ -1,17 +1,8 @@
-import {booleanAttribute, Component, computed, EventEmitter, inject, Input, Output} from '@angular/core';
+import {booleanAttribute, Component, EventEmitter, inject, Input, Output} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {Comida} from '../comida.model';
-import {
-  MatCard,
-  MatCardActions,
-  MatCardContent,
-  MatCardHeader,
-  MatCardSubtitle,
-  MatCardTitle
-} from '@angular/material/card';
+import {MatCard, MatCardContent, MatCardHeader, MatCardSubtitle, MatCardTitle} from '@angular/material/card';
 import {MatIcon} from '@angular/material/icon';
-import {MatAnchor, MatButton} from '@angular/material/button';
-import {RouterLink} from '@angular/router';
 import {DialogEliminarComponent} from '../../components/dialog-eliminar/dialog-eliminar.component';
 import {ComidaService} from '../service/comida.service';
 import {DefaultImageDirective} from '../../directives/default-image-directive/default-image.directive';
@@ -27,12 +18,8 @@ import {EntityCardActionsComponent} from '../../components/entity-card-actions/e
     MatCardHeader,
     MatIcon,
     MatCardContent,
-    MatCardActions,
     MatCardTitle,
     MatCardSubtitle,
-    MatAnchor,
-    MatButton,
-    RouterLink,
     DefaultImageDirective,
     EntityCardActionsComponent,
   ],

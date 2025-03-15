@@ -13,7 +13,7 @@ import {FormService, onlyLettersValidator, onlyNumbersValidator, urlValidator} f
 import {SubmitButtonComponent} from '../../forms/components/submit-button/submit-button.component';
 import {TitleComponent} from '../../components/title/title.component';
 import {FormComponent} from '../../forms/components/form/form.component';
-import {Credenciales, ClientRegisterDTO} from '../../user/user.model';
+import {Credenciales, ClientDTO} from '../../user/user.model';
 
 @Component({
   selector: 'app-register',
@@ -69,7 +69,7 @@ export class RegisterComponent {
 
   register() {
     if (this.registerForm.valid) {
-      const clientData: ClientRegisterDTO = {
+      const clientData: ClientDTO = {
         dni: this.registerForm.get('dni')?.value,
         nombre: this.registerForm.get('nombre')?.value,
         apellido: this.registerForm.get('apellido')?.value,

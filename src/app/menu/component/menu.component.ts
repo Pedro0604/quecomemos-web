@@ -2,7 +2,6 @@ import {booleanAttribute, Component, EventEmitter, inject, Input, Output} from '
 import {MatCardAppearance, MatCardModule} from '@angular/material/card';
 import {MatIcon} from '@angular/material/icon';
 import {MatDivider} from '@angular/material/divider';
-import {MatAnchor, MatButton} from '@angular/material/button';
 import {Menu} from '../menu.model';
 import {RouterLink} from '@angular/router';
 import {MatDialog} from '@angular/material/dialog';
@@ -14,7 +13,7 @@ import {EntityCardActionsComponent} from '../../components/entity-card-actions/e
 
 @Component({
   selector: 'app-menu',
-  imports: [MatCardModule, MatIcon, MatDivider, MatButton, MatAnchor, RouterLink, DefaultImageDirective, EntityCardActionsComponent],
+  imports: [MatCardModule, MatIcon, MatDivider, RouterLink, DefaultImageDirective, EntityCardActionsComponent],
   templateUrl: './menu.component.html',
   standalone: true,
 })
