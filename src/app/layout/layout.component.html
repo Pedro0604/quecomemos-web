@@ -1,8 +1,8 @@
 <mat-sidenav-container class="sidenav-container">
-  <mat-sidenav #drawer class="sidenav" fixedInViewport
-               [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
-               [mode]="(isHandset$ | async) ? 'over' : 'side'"
-               [opened]="(isHandset$ | async) === false">
+  <mat-sidenav #drawer [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'" [mode]="(isHandset$ | async) ? 'over' : 'side'"
+               [opened]="(isHandset$ | async) === false"
+               class="sidenav"
+               fixedInViewport>
     <mat-toolbar><a routerLink="/carta">¿Qué Comemos?</a></mat-toolbar>
     <mat-nav-list>
       @for (item of rootRoutes; track $index) {
@@ -34,16 +34,30 @@
           }
         </div>
         <div>
-          @if (authService.isLoggedIn()) {
-            <div class="flex items-center">
+          @if (authService.isLoggedIn) {
+            <div class="flex items-center gap-4">
               <span>
-                <a mat-button routerLink="clientes/{{ authService.getUserId() }}" routerLinkActive>
+                Bienvenido {{ authService.usuario?.nombre }}
+              </span>
+              <span>
+                @if (authService.hasPermission('editar_' + authService.usuario?.rolName)) {
+                  <a mat-button routerLink="{{authService.usuario?.rolApiPath}}/{{ authService.usuario?.id }}"
+                     routerLinkActive>
+                    <img
+                      class="w-10 h-10 p-1 rounded-full ring-2 ring-gray-300 dark:ring-gray-500"
+                      [src]="authService.usuario?.imagen"
+                      alt="Avatar"
+                      defaultImage
+                    >
+                  </a>
+                } @else {
                   <img
                     class="w-10 h-10 p-1 rounded-full ring-2 ring-gray-300 dark:ring-gray-500"
-                    [src]="authService.getUserImg('clientes') | async"
+                    [src]="authService.usuario?.imagen"
                     alt="Avatar"
+                    defaultImage
                   >
-                </a>
+                }
               </span>
               <span class="hidden md:block">
                 <button

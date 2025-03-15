@@ -1,6 +1,6 @@
 import {Component, inject, Injector, OnInit, TemplateRef} from '@angular/core';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
-import {AsyncPipe, NgOptimizedImage, NgTemplateOutlet} from '@angular/common';
+import {AsyncPipe, NgTemplateOutlet} from '@angular/common';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatButtonModule} from '@angular/material/button';
 import {MatSidenavModule} from '@angular/material/sidenav';
@@ -8,11 +8,12 @@ import {MatListModule} from '@angular/material/list';
 import {MatIconModule} from '@angular/material/icon';
 import {Observable} from 'rxjs';
 import {map, shareReplay} from 'rxjs/operators';
-import {RouterLink, RouterLinkActive, Routes} from '@angular/router';
+import {ActivatedRouteSnapshot, RouterLink, RouterLinkActive, Routes} from '@angular/router';
 import {appRoutes} from '../app.routes';
 import {LayoutService} from './layout.service';
 import {AuthGuard} from '../auth/guards/auth.guards';
-import {AuthService} from '../auth/login/services/auth.service';
+import {AuthService} from '../auth/service/auth.service';
+import {DefaultImageDirective} from '../directives/default-image-directive/default-image.directive';
 
 
 @Component({
@@ -30,35 +31,25 @@ import {AuthService} from '../auth/login/services/auth.service';
     RouterLink,
     RouterLinkActive,
     NgTemplateOutlet,
-    NgOptimizedImage
+    DefaultImageDirective,
   ]
 })
 export class LayoutComponent implements OnInit {
+  rootRoutes: Routes = [];
+  title: string = '';
+  extra: TemplateRef<any> | null = null;
   private breakpointObserver = inject(BreakpointObserver);
-
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
       map(result => result.matches),
       shareReplay()
     );
 
-  excludedRoutes = [
-    'login',
-    '**',
-    'menu/edit/:id',
-    'comida/edit/:id',
-    'register',
-    'menu-diario/edit/:id',
-    'clientes/:id',
-    'responsables/:id',
-    'administrador/:id'
-  ];
-  rootRoutes: Routes = [];
-
-  title: string = '';
-  extra: TemplateRef<any> | null = null;
-
-  constructor(private layoutService: LayoutService, private injector: Injector, protected authService: AuthService) {
+  constructor(
+    private layoutService: LayoutService,
+    private injector: Injector,
+    protected authService: AuthService
+  ) {
   }
 
   filtrarRutas() {
@@ -66,7 +57,10 @@ export class LayoutComponent implements OnInit {
       if (!route.path) {
         return false;
       }
-      if (this.excludedRoutes.includes(route.path)) {
+      if (route.path.includes(':')) {
+        return false;
+      }
+      if (!route.data?.['includeInLayout']) {
         return false;
       }
 
@@ -80,9 +74,19 @@ export class LayoutComponent implements OnInit {
           }
 
           if (typeof guardInstance.canActivate === 'function') {
-            guardInstance.redirectToLogin.set(false);
-            const canActivateReturnValue = guardInstance.canActivate();
-            guardInstance.redirectToLogin.set(true);
+            const mockActivatedRouteSnapshot = new ActivatedRouteSnapshot();
+
+            mockActivatedRouteSnapshot.params = {};
+            mockActivatedRouteSnapshot.queryParams = {};
+            mockActivatedRouteSnapshot.url = [];
+            if (route.data) {
+              mockActivatedRouteSnapshot.data = route.data;
+            }
+
+            guardInstance.allowAccessWithoutRedirect();
+            const canActivateReturnValue = guardInstance.canActivate(mockActivatedRouteSnapshot);
+            guardInstance.resetRedirect();
+
             return canActivateReturnValue;
           }
 
@@ -104,10 +108,8 @@ export class LayoutComponent implements OnInit {
       this.extra = extra;
     });
 
-    this.authService.isLoggedIn$.subscribe(() => {
+    this.authService.usuario$.subscribe(() => {
       this.filtrarRutas();
     });
-
-    this.filtrarRutas();
   }
 }

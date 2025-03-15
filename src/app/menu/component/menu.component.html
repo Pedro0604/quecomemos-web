@@ -1,6 +1,17 @@
-<mat-card class="w-full h-full {{straightLeftBorder ? '!rounded-l-none' : ''}} {{straightRightBorder ? '!rounded-r-none' : ''}}" [appearance]="appearance">
+<mat-card
+  [appearance]="appearance"
+  class="w-full h-full {{straightLeftBorder ? '!rounded-l-none' : ''}} {{straightRightBorder ? '!rounded-r-none' : ''}}">
   <mat-card-header class="flex justify-between">
-    <mat-card-title>{{ menu.nombre }}</mat-card-title>
+    <mat-card-title>
+      @if (hasLink && authService.hasPermission('editar_menu')) {
+        <!--        TODO - EL LINK Y EL PERMISO DEBERÍAN SER A UNA VISTA DEL MENÚ Y NO A LA EDICIÓN(?-->
+        <a [routerLink]="['/menu/edit/', menu.id]" class="hover:underline hover:text-blue-600">
+          {{ menu.nombre }}
+        </a>
+      } @else {
+        {{ menu.nombre }}
+      }
+    </mat-card-title>
     <mat-card-subtitle>${{ menu.precio }}</mat-card-subtitle>
     @if (menu.vegetariano) {
       <mat-icon class="text-green-600">eco</mat-icon>
@@ -12,14 +23,21 @@
         <div class="flex justify-between gap-2">
           <div>
             <p class="text-sm">{{ comida.tipoComida.replace("_", " ") }}</p>
-            <p class="text-lg">{{ comida.nombre }}</p>
+            @if (authService.hasPermission('editar_comida')) {
+              <!--        TODO - EL LINK Y EL PERMISO DEBERÍA SER A UNA VISTA DE LA COMIDA Y NO A LA EDICIÓN(?-->
+              <a [routerLink]="['/comida/edit/', comida.id]" class="hover:underline hover:text-blue-600">
+                <p class="text-lg">{{ comida.nombre }}</p>
+              </a>
+            } @else {
+              <p class="text-lg">{{ comida.nombre }}</p>
+            }
           </div>
           <div class="flex justify-center items-center w-20 h-20 border image-container">
-            @if (comida.urlImagen) {
-              <img class="object-cover aspect-square" [src]="comida.urlImagen" [alt]="comida.nombre">
-            } @else {
-              <mat-icon class="text-5xl !w-fit !h-fit">no_photography</mat-icon>
-            }
+            <img class="object-cover aspect-square w-full h-full"
+                 [src]="comida.urlImagen"
+                 [alt]="comida.nombre"
+                 defaultImage
+            >
           </div>
         </div>
         @if (!$last) {
@@ -28,10 +46,10 @@
       }
     </div>
   </mat-card-content>
-  @if (showButtons) {
-    <mat-card-actions class="mt-auto">
-      <a mat-button [routerLink]="['/menu/edit/', menu.id]">MODIFICAR</a>
-      <button mat-button class="error" (click)="openDialogEliminar()">ELIMINAR</button>
-    </mat-card-actions>
-  }
+  <app-entity-card-actions
+    (deleteClick)="openDialogEliminar()"
+    [editId]="menu.id"
+    [showButtons]="showButtons"
+    entityName="menu"
+  />
 </mat-card>

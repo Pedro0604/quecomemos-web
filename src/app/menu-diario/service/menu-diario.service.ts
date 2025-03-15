@@ -1,37 +1,15 @@
-import { Injectable } from '@angular/core';
-import {environment} from '../../../environments/environment';
+import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {MenuDiario, MenuDiarioDTO} from '../menu-diario.model';
+import {CrudService} from '../../crud-service/crud.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class MenuDiarioService {
-
-  private apiUrl = environment.apiBaseUrl + "/menus-diarios";
-
-  constructor(private http: HttpClient) {
-  }
-
-  getMenusDiarios(): Observable<MenuDiario[]> {
-    return this.http.get<MenuDiario[]>(this.apiUrl);
-  }
-
-  getMenuDiarioById(id: string): Observable<MenuDiario> {
-    return this.http.get<MenuDiario>(this.apiUrl + "/" + id);
-  }
-
-  createMenuDiario(menu: MenuDiarioDTO): Observable<MenuDiarioDTO> {
-    return this.http.post<MenuDiarioDTO>(this.apiUrl, menu);
-  }
-
-  updateMenuDiario(id: number, menu: MenuDiarioDTO): Observable<MenuDiarioDTO> {
-    return this.http.put<MenuDiarioDTO>(this.apiUrl + "/" + id, menu);
-  }
-
-  deleteMenuDiario(id: number): Observable<void> {
-    return this.http.delete<void>(this.apiUrl + "/" + id);
+export class MenuDiarioService extends CrudService<MenuDiario, MenuDiarioDTO> {
+  constructor(http: HttpClient) {
+    super(http, 'menus-diarios');
   }
 
   getMenusDiariosSemanal(): Observable<MenuDiario[]> {

@@ -1,0 +1,11 @@
+<div class="ms-4">
+  @if (loading) {
+    <app-spinner [loading]="loading"></app-spinner>
+  } @else if (error) {
+    <mat-error>Ha ocurrido un error</mat-error>
+    <mat-error>Por favor, intente nuevamente más tarde</mat-error>
+
+  } @else {
+    <ng-content/>
+  }
+</div>

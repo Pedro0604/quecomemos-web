@@ -1,4 +1,4 @@
-<mat-card class="w-full h-full" appearance="outlined">
+<mat-card appearance="outlined" class="w-full h-full">
   <mat-card-header class="flex justify-between">
     <mat-card-title>{{ comida.nombre }}</mat-card-title>
     <mat-card-subtitle>${{ comida.precio }}</mat-card-subtitle>
@@ -14,19 +14,19 @@
           <p class="text-lg">{{ comida.nombre }}</p>
         </div>
         <div class="flex justify-center items-center w-20 h-20 border image-container">
-          @if (comida.urlImagen) {
-            <img class="object-cover aspect-square" [src]="comida.urlImagen" [alt]="comida.nombre">
-          } @else {
-            <mat-icon class="text-5xl !w-fit !h-fit">no_photography</mat-icon>
-          }
+          <img [alt]="comida.nombre"
+               [src]="comida.urlImagen"
+               class="object-cover aspect-square w-full h-full"
+               defaultImage
+          >
         </div>
       </div>
     </div>
   </mat-card-content>
-  @if (showButtons) {
-    <mat-card-actions class="mt-auto">
-      <a mat-button [routerLink]="['/comida/edit/', comida.id]">MODIFICAR</a>
-      <button mat-button class="error" (click)="openDialogEliminar()">ELIMINAR</button>
-    </mat-card-actions>
-  }
+  <app-entity-card-actions
+    (deleteClick)="openDialogEliminar()"
+    [editId]="comida.id"
+    [showButtons]="showButtons"
+    entityName="comida"
+  />
 </mat-card>

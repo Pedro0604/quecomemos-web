@@ -1,44 +1,28 @@
-<mat-card class="w-full max-w-xl h-full mx-auto" appearance="outlined">
-  <mat-card-content class="my-4">
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="flex flex-col items-center gap-4">
-      <mat-form-field appearance="fill" class="w-full">
-        <mat-label>DNI</mat-label>
-        <input matInput type="text" formControlName="dni" placeholder="12345678"
-               (blur)="updateErrorMessage('dni')" required>
-        @if (errorMessages['dni']) {
-          <mat-error>{{ errorMessages['dni'] }}</mat-error>
-        }
-      </mat-form-field>
-      <mat-form-field appearance="fill" class="w-full">
-        <mat-label>Ingrese su contraseña</mat-label>
-        <input matInput [type]="hide() ? 'password' : 'text'" formControlName="clave" placeholder="Contraseña"
-               (blur)="updateErrorMessage('clave')"/>
-        <button
-          type="button"
-          mat-icon-button
-          matSuffix
-          (click)="toggleHide()"
-          [attr.aria-label]="'Toggle password visibility'"
-        >
-          <mat-icon>{{ hide() ? 'visibility_off' : 'visibility' }}</mat-icon>
-        </button>
-        @if (errorMessages['clave']) {
-          <mat-error>{{ errorMessages['clave'] }}</mat-error>
-        }
-      </mat-form-field>
+<app-title title="Iniciar sesión"/>
 
-      @if (loginError()) {
-        <mat-error>Credenciales incorrectas. Inténtelo nuevamente.</mat-error>
-      }
 
-      <button
-        type="submit"
-        mat-raised-button
-        class="w-full"
-        [disabled]="loginForm.invalid"
-      >
-        Ingresar
-      </button>
-    </form>
-  </mat-card-content>
-</mat-card>
+<app-form (submit)="onSubmit()" [formGroup]="loginForm" maxWidth="max-w-lg">
+  <app-input
+    [abstractControl]="this.loginForm.get('dni')"
+    label="DNI"
+    maxLength="8"
+    minLength="7"
+    placeholder='12345678'
+    type="text"
+  />
+  <app-input
+    [abstractControl]="this.loginForm.get('clave')"
+    label="Contraseña"
+    maxLength="30"
+    minLength="6"
+    placeholder="************"
+    type="password"
+  />
+
+  @if (loginError()) {
+    <mat-error>Credenciales incorrectas</mat-error>
+  }
+
+  <app-submit-button [disabled]="loginForm.disabled" [form]="loginForm" pendingText="Ingresando">Ingresar
+  </app-submit-button>
+</app-form>

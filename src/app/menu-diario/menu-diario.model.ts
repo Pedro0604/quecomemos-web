@@ -1,8 +1,8 @@
 import {Menu} from '../menu/menu.model';
 
-export type diasSemana = 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY';
+export type DiasSemana = 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY';
 
-export function traduccionDiasSemana(dia: diasSemana): string {
+export function traduccionDiasSemana(dia: DiasSemana): string {
   switch (dia) {
     case 'MONDAY':
       return 'Lunes';
@@ -17,23 +17,17 @@ export function traduccionDiasSemana(dia: diasSemana): string {
   }
 }
 
-export const diasSemanaArray: diasSemana[] = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY'];
+export const diasSemanaArray: DiasSemana[] = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY'];
 
 export type MenuDiario = {
   id: number;
-  dia: diasSemana;
+  dia: DiasSemana;
   menuVegetariano: Menu;
   menuNoVegetariano: Menu;
 }
 
 export type MenuDiarioDTO = {
-  dia: diasSemana;
+  dia: DiasSemana;
   menuVegetarianoId: number;
   menuNoVegetarianoId: number;
-}
-
-export type MenuDiarioFormData = {
-  dia: diasSemana;
-  menuVegetariano: Menu;
-  menuNoVegetariano: Menu;
 }

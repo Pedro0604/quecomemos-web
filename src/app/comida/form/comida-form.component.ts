@@ -1,162 +1,75 @@
-import {AfterViewInit, Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators
-} from '@angular/forms';
-import {Comida, ComidaDTO, TipoComida} from '../comida.model';
+import {Component, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {Comida, ComidaDTO, TipoComida, tipoComidaToString} from '../comida.model';
 import {ComidaService} from '../service/comida.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import {LayoutService} from '../../layout/layout.service';
 import {NotificationService} from '../../notification/notification.service';
-import {MatError, MatFormField, MatPrefix} from '@angular/material/form-field';
-import {MatCard, MatCardContent} from '@angular/material/card';
-import {MatInput, MatLabel, MatHint} from '@angular/material/input';
-import {MatButton} from '@angular/material/button';
-import {MatOption} from '@angular/material/core';
 import {MatCheckbox} from '@angular/material/checkbox';
-import {MatSelect} from '@angular/material/select';
-import {FormErrorService} from '../../formError/form-error.service';
-
-type ComidaFormData = {
-  nombre: string,
-  precio: number,
-  vegetariana: boolean,
-  tipoComida: TipoComida,
-  urlImagen: string
-}
+import {InputComponent} from '../../forms/components/fields/input/input.component';
+import {SelectComponent} from '../../forms/components/fields/select/select.component';
+import {FormService, inArrayValidator, urlValidator} from '../../forms/service/form.service';
+import {SubmitButtonComponent} from '../../forms/components/submit-button/submit-button.component';
+import {TitleComponent} from '../../components/title/title.component';
+import {BaseEntityForm} from '../../forms/BaseEntityForm';
+import {FormComponent} from '../../forms/components/form/form.component';
+import {FormStateComponent} from '../../forms/components/form-state/form-state.component';
 
 @Component({
   selector: 'app-comida-form',
   imports: [
-    MatError,
-    MatCard,
-    MatCardContent,
     ReactiveFormsModule,
-    MatFormField,
-    MatInput,
-    MatPrefix,
-    MatButton,
-    MatOption,
     MatCheckbox,
-    MatLabel,
-    MatHint,
-    MatSelect,
+    InputComponent,
+    SelectComponent,
+    SubmitButtonComponent,
+    TitleComponent,
+    FormStateComponent,
+    FormComponent,
   ],
   templateUrl: './comida-form.component.html',
   standalone: true,
-  styleUrl: './comida-form.component.css'
+  styleUrl: './comida-form.component.css',
 })
-export class ComidaFormComponent implements OnInit, AfterViewInit {
-    comida: Comida | null = null;
 
-    error: boolean = false;
+export class ComidaFormComponent extends BaseEntityForm<Comida, ComidaDTO, void> implements OnInit {
+  tiposDeComida: TipoComida[] = ['OTRO', 'POSTRE', 'ENTRADA', 'BEBIDA', 'PLATO_PRINCIPAL'];
+  tiposDeComidaOptions = this.tiposDeComida.map(tipoComida => ({
+    value: tipoComida,
+    name: tipoComidaToString(tipoComida)
+  }));
+  protected override redirectUrlOnCreation: string = '/comidas';
+  protected override form: FormGroup
 
-    tiposDeComida: TipoComida[] = ['OTRO', 'POSTRE', 'ENTRADA', 'BEBIDA', 'PLATO_PRINCIPAL'];
+  constructor(
+    router: Router,
+    notificationService: NotificationService,
+    formService: FormService,
+    service: ComidaService,
+    route: ActivatedRoute,
+    private fb: FormBuilder
+  ) {
+    super(router, notificationService, formService, service, route, 'comida', true);
 
-    form: FormGroup
+    this.form = this.fb.group({
+      nombre: [''],
+      precio: ['', [Validators.min(0)]],
+      vegetariana: [false],
+      tipoComida: ['', [inArrayValidator(this.tiposDeComida)]],
+      urlImagen: ['', [urlValidator]]
+    });
+  }
 
-    errorMessages: { [key: string]: string } = {};
+  override mapToDTO(formValue: any): ComidaDTO {
+    return formValue as ComidaDTO;
+  }
 
-    constructor(
-      private comidaService: ComidaService,
-      private route: ActivatedRoute,
-      private router: Router,
-      private layoutService: LayoutService,
-      private notificationService: NotificationService,
-      private formErrorService: FormErrorService
-    ) {
-      this.form = new FormGroup({
-        nombre: new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]),
-        precio: new FormControl('', [Validators.required, Validators.min(0), Validators.max(10000)]),
-        vegetariana: new FormControl(false),
-        tipoComida: new FormControl('', [Validators.required]),
-        urlImagen: new FormControl('', [])
-      });
+  protected override extraOnInit(): void {
+    if (!this.entity) {
+      const tipoComidaInicial = this.route.snapshot.queryParams['tipo-comida'] as TipoComida;
+      this.form.get('tipoComida')?.setValue(tipoComidaInicial);
+
+      const vegetarianaInicial = this.route.snapshot.queryParams['vegetariana'] as boolean;
+      this.form.get('vegetariana')?.setValue(vegetarianaInicial);
     }
-
-    ngOnInit() {
-      const id = this.route.snapshot.params['id'];
-      if (id) {
-        this.comidaService.getComidaById(id).subscribe({
-          next: (data) => {
-            this.comida = data;
-            this.form.get('nombre')?.setValue(this.comida.nombre);
-            this.form.get('precio')?.setValue(this.comida.precio);
-            this.form.get('vegetariana')?.setValue(this.comida.vegetariana);
-            this.form.get('tipoComida')?.setValue(this.comida.tipoComida);
-            this.form.get('urlImagen')?.setValue(this.comida.urlImagen);
-          },
-          error: error => {
-            this.error = true;
-            console.error('Error al obtener la comida', error);
-            this.notificationService.show('Ha ocurrido un error. Por favor, intente nuevamente más tarde');
-          }
-        });
-
-        this.layoutService.setTitle('Modificar comida');
-      } else {
-        this.layoutService.setTitle('Crear comida');
-      }
-    }
-
-    updateErrorMessage(controlName: string) {
-      const control = this.form.get(controlName);
-      this.errorMessages[controlName] = this.formErrorService.updateErrorMessage(control);
-    }
-
-    saveComida(comidaData: ComidaFormData): void {
-      const dto: ComidaDTO = {
-        nombre: comidaData.nombre,
-        precio: comidaData.precio,
-        vegetariana: comidaData.vegetariana,
-        tipoComida: comidaData.tipoComida,
-        urlImagen: comidaData.urlImagen
-      }
-
-      if (this.comida?.id) {
-        this.comidaService.updateComida(this.comida.id, dto).subscribe({
-          complete: () => {
-            this.notificationService.show('Comida modificada correctamente');
-            this.router.navigate(['/comidas']);
-          },
-          error: error => {
-            this.notificationService.show('Error al modificar la comida');
-            console.error("Error al modificar la comida");
-            console.error(error);
-          }
-        });
-      } else {
-        this.comidaService.createComida(dto).subscribe({
-          complete: () => {
-            this.notificationService.show('Comida creada correctamente');
-            this.router.navigate(['/comidas']);
-          },
-          error: error => {
-            this.notificationService.show('Error al crear la comida');
-            console.error("Error al crear la comida");
-            console.error(error);
-          }
-        });
-      }
-
-    }
-
-    onSubmit(): void {
-      if (this.form.valid) {
-        const comidaData: ComidaFormData = this.form.value;
-        this.saveComida(comidaData);
-      } else {
-        this.notificationService.show('Error al enviar el formuladrio. Vuelva a intentarlo.');
-      }
-    }
-
-    @ViewChild('extra') extraTemplate!: TemplateRef<any> | null;
-
-    ngAfterViewInit(): void {
-      this.layoutService.setExtra(this.extraTemplate);
-    }
-
-    protected readonly history = history;
+  }
 }

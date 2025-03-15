@@ -1,0 +1,12 @@
+<ng-template #extra>
+    <span [class]="'flex items-center mx-6 ' + getClasses()">
+      @if (showVolver) {
+        <button mat-button (click)="history.back()">Volver</button>
+      }
+      @if (showVegetariano) {
+        <span class="flex items-center">
+          <mat-icon class="text-green-600">eco</mat-icon> = Vegetarian{{ femenino ? 'a' : 'o' }}
+        </span>
+      }
+    </span>
+</ng-template>
