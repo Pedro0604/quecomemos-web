@@ -8,15 +8,7 @@ export interface User {
   clave: string;
 }
 
-export interface UserDTO {
-  nombre: string;
-  apellido: string;
-  email: string;
-  urlImagen: string | null;
-  clave: string;
-}
-
-export interface ClientRegisterDTO {
+export interface ClientDTO {
   dni: string,
   nombre: string,
   apellido: string,

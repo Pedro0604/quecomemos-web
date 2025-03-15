@@ -1,20 +1,20 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule} from '@angular/forms';
-import {User, UserDTO} from '../user.model';
-import {ActivatedRoute, Router, RouterLink} from '@angular/router';
+import {ClientDTO, User} from '../user.model';
+import {ActivatedRoute, Router} from '@angular/router';
 import {NotificationService} from '../../notification/notification.service';
 import {MatDialog} from '@angular/material/dialog';
-import {AuthService} from '../../auth/service/auth.service';
 import {FormService, onlyLettersValidator, urlValidator} from '../../forms/service/form.service';
 import {SubmitButtonComponent} from '../../forms/components/submit-button/submit-button.component';
 import {FormComponent} from '../../forms/components/form/form.component';
 import {TitleComponent} from '../../components/title/title.component';
 import {InputComponent} from '../../forms/components/fields/input/input.component';
 import {FormStateComponent} from '../../forms/components/form-state/form-state.component';
-import {MatAnchor} from '@angular/material/button';
 import {BaseEntityForm} from '../../forms/BaseEntityForm';
-import {UserService} from '../service/user.service';
-import {MatError} from '@angular/material/input';
+import {ClienteService} from '../service/cliente.service';
+import {DialogConfirmWithPassword} from '../confirm-dialog/dialog-confirm-with-password.component';
+import {firstValueFrom} from 'rxjs';
+import {AuthService} from '../../auth/service/auth.service';
 
 @Component({
   selector: 'app-user-form',
@@ -25,19 +25,14 @@ import {MatError} from '@angular/material/input';
     TitleComponent,
     InputComponent,
     FormStateComponent,
-    MatAnchor,
-    MatError,
-    RouterLink,
   ],
   templateUrl: './user-form.component.html',
   standalone: true
 })
-export class UserFormComponent extends BaseEntityForm<User, UserDTO, void> implements OnInit {
+export class UserFormComponent extends BaseEntityForm<User, ClientDTO, void> implements OnInit {
   user: User | null = null;
 
   form: FormGroup
-
-  // roles: Role[] = ['clientes', 'responsables', 'administradores'];
 
   protected override redirectUrlOnCreation: string = '/carta';
 
@@ -48,10 +43,10 @@ export class UserFormComponent extends BaseEntityForm<User, UserDTO, void> imple
     router: Router,
     notificationService: NotificationService,
     formService: FormService,
-    service: UserService,
+    service: ClienteService,
     route: ActivatedRoute,
   ) {
-    super(router, notificationService, formService, service, route, 'usuario', false);
+    super(router, notificationService, formService, service, route, 'cliente', false);
     this.form = this.fb.group({
       nombre: ['', [onlyLettersValidator]],
       apellido: ['', [onlyLettersValidator]],
@@ -68,68 +63,35 @@ export class UserFormComponent extends BaseEntityForm<User, UserDTO, void> imple
     }
   }
 
-  // saveUser(): void {
-  //   const dto: UserDTO = this.form.value;
-  //
-  //   if (this.user?.id) {
-  //     this.service.update(this.user.id, dto).subscribe({
-  //       complete: () => {
-  //         this.notificationService.show('Usuario actualizado correctamente');
-  //         this.router.navigate(['/carta']);
-  //       },
-  //       error: error => {
-  //         this.notificationService.show('Ha ocurrido un error. Por favor, intente nuevamente más tarde.');
-  //         console.error('Error al modificar el usuario', error);
-  //       }
-  //     });
-  //   }
-  // }
-
-  mapToDTO(formValue: any): UserDTO {
-    return formValue as UserDTO;
+  mapToDTO(formValue: any): ClientDTO {
+    formValue.dni = this.form.get('dni')?.value;
+    return formValue as ClientDTO;
   }
 
-  // TODO - HACER Q SE MUESTRE LA CONFIRMACIÓN
-  // onSubmit(): void {
-  //   if (this.form.valid && this.form.dirty && !this.error && !this.loading) {
-  //     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-  //       width: '400px',
-  //       disableClose: true // Evita que se cierre sin elegir una opción
-  //     });
-  //
-  //     dialogRef.afterClosed().subscribe(password => {
-  //       if (password) {
-  //         const credenciales: Credenciales = {
-  //           dni: this.user!.dni.toString(),
-  //           clave: password
-  //         };
-  //
-  //         of(...this.roles).pipe(
-  //           concatMap((role) =>
-  //             this.authService.authenticate(role, credenciales).pipe(
-  //               catchError(() => of(null)) // Si falla, retorna null y sigue con el siguiente rol
-  //             )
-  //           ),
-  //           first((response) => response && response.headers && response.headers.get("authorization"), null)// Detiene el flujo en el primer login exitoso
-  //         ).subscribe({
-  //           next: (response) => {
-  //             if (response) {
-  //               this.saveUser();
-  //             } else {
-  //               this.notificationService.show('La contraseña ingresada es incorrecta. Vuelva a intentarlo');
-  //             }
-  //           },
-  //           error: () => {
-  //             this.notificationService.show('Error en la autenticación. Vuelva a intentarlo');
-  //           }
-  //         });
-  //
-  //       } else {
-  //         console.log('Modificación cancelada');
-  //       }
-  //     });
-  //   } else {
-  //     this.formService.validateAllFields(this.form);
-  //   }
-  // }
+  protected override async beforeSavingEntity(): Promise<boolean> {
+    const dialogRef = this.dialog.open(DialogConfirmWithPassword, {
+      width: '400px',
+      disableClose: true
+    });
+
+    const password = await firstValueFrom(dialogRef.afterClosed());
+
+    if (password) {
+      this.form.get('clave')?.setValue(password);
+      return true;
+    }
+    return false;
+  }
+
+  protected override onSubmitError(error: any): boolean {
+    if (error.status == 403) {
+      this.notificationService.show('Contraseña incorrecta. Intentá nuevamente.')
+      return true
+    }
+    return false;
+  }
+
+  protected override onSubmitSuccess(usuarioCreado: User): void {
+    this.authService.updateUserInfo(usuarioCreado);
+  }
 }

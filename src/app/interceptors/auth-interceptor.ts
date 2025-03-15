@@ -17,10 +17,8 @@ export class AuthInterceptor implements HttpInterceptor {
   constructor(private router: Router) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    // Obtener el token JWT del localStorage
     const token = localStorage.getItem('authToken');
 
-    // Clonar la solicitud y agregar el token si existe
     let authReq = req;
     if (token) {
       authReq = req.clone({
@@ -30,11 +28,9 @@ export class AuthInterceptor implements HttpInterceptor {
       });
     }
 
-    // Manejar la respuesta y redirigir si hay errores de autenticación
     return next.handle(authReq).pipe(
       catchError((error: HttpErrorResponse) => {
-        if (error.status === 401 || error.status === 403) {
-          // Redirigir al usuario al login si no está autenticado
+        if (error.status === 401) {
           this.router.navigate(['/login']);
         }
         return throwError(() => error);

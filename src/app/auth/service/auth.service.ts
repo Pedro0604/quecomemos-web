@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {jwtDecode} from 'jwt-decode';
 import {HttpClient} from '@angular/common/http';
-import {Credenciales, RoleApiPath, RoleName, ClientRegisterDTO, LoggedUser} from '../../user/user.model';
+import {Credenciales, RoleApiPath, RoleName, ClientDTO, LoggedUser, User} from '../../user/user.model';
 import {environment} from '../../../environments/environment';
 import {ActivatedRouteSnapshot, Router} from '@angular/router';
 import {NotificationService} from '../../notification/notification.service';
@@ -102,11 +102,24 @@ export class AuthService {
     return true;
   }
 
+  updateUserInfo(updated: User) {
+    const current = this.usuario;
+    if (current) {
+      const updatedUser: LoggedUser = {
+        ...current,
+        nombre: updated.nombre ?? current.nombre,
+        imagen: updated.urlImagen ?? current.imagen,
+      };
+      this.usuarioSubject.next(updatedUser);
+    }
+  }
+
+
   authenticate(credenciales: Credenciales): Observable<any> {
     return this.http.post(`${this.apiUrl}/auth`, credenciales, {observe: 'response'});
   }
 
-  registerClient(clientData: ClientRegisterDTO): Observable<any> {
+  registerClient(clientData: ClientDTO): Observable<any> {
     return this.http.post(`${this.apiUrl}/clientes`, clientData, {observe: 'response'});
   }
 }
