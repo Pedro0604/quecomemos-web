@@ -26,7 +26,6 @@ export class AuthGuard implements CanActivate {
       return true;
     } else {
       if (this.redirect()) {
-        this.notificationService.show('No tenés permisos para acceder a esta página');
         this.router.navigate(['/unauthorized']);
       }
       return false;

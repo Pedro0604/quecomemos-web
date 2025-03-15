@@ -1,7 +1,7 @@
 import {Routes} from '@angular/router';
 import {LoginComponent} from './auth/login/login.component';
 import {RegisterComponent} from './auth/register/register.component';
-import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
+import {NotFoundComponent} from './error-pages/page-not-found/not-found.component';
 import {MenuListComponent} from './menu/list/menu-list.component';
 import {HomeComponent} from './home/home.component';
 import {AuthGuard} from './auth/guards/auth.guards';
@@ -11,7 +11,9 @@ import {ComidaListComponent} from './comida/list/comida-list.component';
 import {MenuDiarioListComponent} from './menu-diario/list/menu-diario-list.component';
 import {MenuDiarioFormComponent} from './menu-diario/form/menu-diario-form.component';
 import {UserFormComponent} from './user/form/user-form.component';
-import {UnauthorizedPageComponent} from './unauthorized-page/unauthorized-page.component';
+import {UnauthorizedComponent} from './error-pages/unauthorized-page/unauthorized.component';
+import {GuestGuard} from './auth/guards/guest.guards';
+import {ForbiddenComponent} from './error-pages/forbidden-page/forbidden.component';
 
 export const appRoutes: Routes = [
   {
@@ -30,12 +32,14 @@ export const appRoutes: Routes = [
   {
     path: 'login',
     component: LoginComponent,
-    title: 'Inicio de Sesión'
+    title: 'Inicio de Sesión',
+    canActivate: [GuestGuard]
   },
   {
     path: 'register',
     component: RegisterComponent,
-    title: 'Registro de Usuario'
+    title: 'Registro de Usuario',
+    canActivate: [GuestGuard]
   },
   {
     path: 'menu-diario',
@@ -135,12 +139,17 @@ export const appRoutes: Routes = [
   },
   {
     path: 'unauthorized',
-    component: UnauthorizedPageComponent,
+    component: UnauthorizedComponent,
     title: 'Acceso Denegado'
   },
   {
+    path: 'forbidden',
+    component: ForbiddenComponent,
+    title: 'Acceso Prohibido'
+  },
+  {
     path: '**',
-    component: PageNotFoundComponent,
+    component: NotFoundComponent,
     title: 'No encontrado'
   }
 ];
