@@ -12,7 +12,7 @@ import {InputComponent} from '../../forms/components/fields/input/input.componen
 import {FormStateComponent} from '../../forms/components/form-state/form-state.component';
 import {BaseEntityForm} from '../../forms/BaseEntityForm';
 import {ClienteService} from '../service/cliente.service';
-import {DialogConfirmWithPassword} from '../confirm-dialog/dialog-confirm-with-password.component';
+import {DialogConfirmWithPassword} from '../../components/dialog-confirmar/dialog-confirm-with-password.component';
 import {firstValueFrom} from 'rxjs';
 import {AuthService} from '../../auth/service/auth.service';
 
