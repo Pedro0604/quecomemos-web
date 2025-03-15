@@ -23,19 +23,19 @@ export class EntityCardActionsComponent implements OnInit {
 
   @Output() deleteClick = new EventEmitter<void>();
 
-  protected puedeEditar;
-  protected puedeEliminar;
+  protected puedeEditar = false;
+  protected puedeEliminar = false;
 
   protected editUrl = '';
   protected entityPermissionName = '';
 
   constructor(protected authService: AuthService) {
-    this.puedeEditar = authService.hasPermission(`editar_${this.entityPermissionName}`);
-    this.puedeEliminar = authService.hasPermission(`eliminar_${this.entityPermissionName}`);
   }
 
   ngOnInit(): void {
     this.editUrl = `/${kebabCase(this.entityName)}/edit`;
     this.entityPermissionName = snakeCase(this.entityName);
+    this.puedeEditar = this.authService.hasPermission(`editar_${this.entityPermissionName}`);
+    this.puedeEliminar = this.authService.hasPermission(`eliminar_${this.entityPermissionName}`);
   }
 }
