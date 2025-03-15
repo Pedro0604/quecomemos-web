@@ -64,7 +64,7 @@ export class MenuFormComponent extends BaseEntityForm<Menu, MenuDTO, Comida> imp
 
   protected puedeCrearComida;
 
-  protected tooltipMessage: string|undefined;
+  protected tooltipMessage: string | undefined;
 
   camposSinComidas: CampoComida[] = [];
 
@@ -125,13 +125,13 @@ export class MenuFormComponent extends BaseEntityForm<Menu, MenuDTO, Comida> imp
   }
 
   constructor(
+    router: Router,
+    notificationService: NotificationService,
+    formService: FormService,
+    service: MenuService,
+    route: ActivatedRoute,
     private fb: FormBuilder,
     private comidaService: ComidaService,
-    protected override router: Router,
-    protected override notificationService: NotificationService,
-    protected override formService: FormService,
-    protected override service: MenuService,
-    protected override route: ActivatedRoute,
     protected authService: AuthService,
   ) {
     super(router, notificationService, formService, service, route, 'menú', false);

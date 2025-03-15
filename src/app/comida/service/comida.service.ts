@@ -7,7 +7,7 @@ import {CrudService} from '../../crud-service/crud.service';
   providedIn: 'root'
 })
 export class ComidaService extends CrudService<Comida, ComidaDTO> {
-  constructor(protected override http: HttpClient) {
+  constructor(http: HttpClient) {
     super(http, 'comidas');
   }
 }

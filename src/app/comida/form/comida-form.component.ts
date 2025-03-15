@@ -42,12 +42,12 @@ export class ComidaFormComponent extends BaseEntityForm<Comida, ComidaDTO, void>
   }));
 
   constructor(
-    private fb: FormBuilder,
-    protected override router: Router,
-    protected override notificationService: NotificationService,
-    protected override formService: FormService,
-    protected override service: ComidaService,
-    protected override route: ActivatedRoute
+    router: Router,
+    notificationService: NotificationService,
+    formService: FormService,
+    service: ComidaService,
+    route: ActivatedRoute,
+    private fb: FormBuilder
   ) {
     super(router, notificationService, formService, service, route, 'comida', true);
 

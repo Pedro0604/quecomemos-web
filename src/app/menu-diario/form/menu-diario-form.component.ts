@@ -50,7 +50,7 @@ export class MenuDiarioFormComponent extends BaseEntityForm<MenuDiario, MenuDiar
   protected override form: FormGroup
   protected override redirectUrlOnCreation: string = '/menu-diario';
 
-  protected tooltipMessage: string|undefined;
+  protected tooltipMessage: string | undefined;
 
   diasDeSemanaOptions = diasSemanaArray.map(diaSemana => ({
     value: diaSemana,
@@ -73,13 +73,13 @@ export class MenuDiarioFormComponent extends BaseEntityForm<MenuDiario, MenuDiar
   ];
 
   constructor(
+    router: Router,
+    notificationService: NotificationService,
+    formService: FormService,
+    service: MenuDiarioService,
+    route: ActivatedRoute,
     private fb: FormBuilder,
     private menuService: MenuService,
-    protected override router: Router,
-    protected override notificationService: NotificationService,
-    protected override formService: FormService,
-    protected override service: MenuDiarioService,
-    protected override route: ActivatedRoute,
     protected authService: AuthService
   ) {
     super(router, notificationService, formService, service, route, 'menú diario', false);

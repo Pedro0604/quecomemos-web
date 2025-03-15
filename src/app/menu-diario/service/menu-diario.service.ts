@@ -8,7 +8,7 @@ import {CrudService} from '../../crud-service/crud.service';
   providedIn: 'root'
 })
 export class MenuDiarioService extends CrudService<MenuDiario, MenuDiarioDTO> {
-  constructor(protected override http: HttpClient) {
+  constructor(http: HttpClient) {
     super(http, 'menus-diarios');
   }
 
