@@ -1,4 +1,4 @@
-import { FocusFirstInvalidFieldDirective } from './focus-first-invalid-field.directive';
+import {FocusFirstInvalidFieldDirective} from './focus-first-invalid-field.directive';
 
 describe('FormFocusDirective', () => {
   it('should create an instance', () => {

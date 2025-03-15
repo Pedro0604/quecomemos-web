@@ -1,42 +1,42 @@
-<mat-form-field appearance="fill" class="w-full" [floatLabel]="floatLabel">
-    <mat-label>{{ label }}</mat-label>
-    <input
-            matInput
-            [type]="type === 'password' ? (hide() ? 'password' : 'text') : type"
-            [formControl]="control"
-            [placeholder]="placeholder"
-            [required]="required"
-            [class]="type === 'number' ? 'number-input' : ''"
-            [minlength]="minLength"
-            [maxlength]="maxLength"
-            [readonly]="readonly"
-            [disabledInteractive]="readonly"
-            [matTooltip]="tooltipMessage || (readonly ? 'El campo no puede ser modificado' : '')"
-            [matTooltipPosition]="tooltipPosition"
-    />
-    @if (type === 'password') {
-        <button
-                type="button"
-                mat-icon-button
-                matSuffix
-                (click)="toggleHide()"
-                [attr.aria-label]="'Alternar visibilidad de la contraseña'"
-        >
-            <mat-icon>{{ hide() ? 'visibility_off' : 'visibility' }}</mat-icon>
-        </button>
-    }
-    @if (clearable && control.value) {
-        <button matSuffix mat-icon-button aria-label="Clear" type="button" tabindex="-1" (click)="control.setValue('')">
-            <mat-icon>close</mat-icon>
-        </button>
-    }
-    @if (textPrefix) {
-        <span matTextPrefix>{{ textPrefix }}</span>
-    }
-    @if (type !== 'number' && !readonly) {
-        <mat-hint align="end" [class]="getHintClass()">{{ hint || getHintText() }}</mat-hint>
-    }
-    @if (errorMessage) {
-        <mat-error>{{ errorMessage }}</mat-error>
-    }
+<mat-form-field [floatLabel]="floatLabel" appearance="fill" class="w-full">
+  <mat-label>{{ label }}</mat-label>
+  <input
+    [class]="type === 'number' ? 'number-input' : ''"
+    [disabledInteractive]="readonly"
+    [formControl]="control"
+    [matTooltipPosition]="tooltipPosition"
+    [matTooltip]="tooltipMessage || (readonly ? 'El campo no puede ser modificado' : '')"
+    [maxlength]="maxLength"
+    [minlength]="minLength"
+    [placeholder]="placeholder"
+    [readonly]="readonly"
+    [required]="required"
+    [type]="type === 'password' ? (hide() ? 'password' : 'text') : type"
+    matInput
+  />
+  @if (type === 'password') {
+    <button
+      type="button"
+      mat-icon-button
+      matSuffix
+      (click)="toggleHide()"
+      [attr.aria-label]="'Alternar visibilidad de la contraseña'"
+    >
+      <mat-icon>{{ hide() ? 'visibility_off' : 'visibility' }}</mat-icon>
+    </button>
+  }
+  @if (clearable && control.value) {
+    <button matSuffix mat-icon-button aria-label="Clear" type="button" tabindex="-1" (click)="control.setValue('')">
+      <mat-icon>close</mat-icon>
+    </button>
+  }
+  @if (textPrefix) {
+    <span matTextPrefix>{{ textPrefix }}</span>
+  }
+  @if (type !== 'number' && !readonly) {
+    <mat-hint align="end" [class]="getHintClass()">{{ hint || getHintText() }}</mat-hint>
+  }
+  @if (errorMessage) {
+    <mat-error>{{ errorMessage }}</mat-error>
+  }
 </mat-form-field>

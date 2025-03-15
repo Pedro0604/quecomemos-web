@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { EntityCardActionsComponent } from './entity-card-actions.component';
+import {EntityCardActionsComponent} from './entity-card-actions.component';
 
 describe('EntityCardActionsComponent', () => {
   let component: EntityCardActionsComponent;
@@ -10,7 +10,7 @@ describe('EntityCardActionsComponent', () => {
     await TestBed.configureTestingModule({
       imports: [EntityCardActionsComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(EntityCardActionsComponent);
     component = fixture.componentInstance;

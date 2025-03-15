@@ -26,6 +26,7 @@ export class MenuDiarioComponent {
   @Input({transform: booleanAttribute}) showButtons: boolean = true;
   @Input({transform: booleanAttribute}) showDia: boolean = true;
   @Output() onDelete = new EventEmitter<number>();
+  protected readonly traduccionDiasSemana = traduccionDiasSemana;
 
   constructor(private menuDiarioService: MenuDiarioService) {
   }
@@ -44,6 +45,4 @@ export class MenuDiarioComponent {
       }
     });
   }
-
-  protected readonly traduccionDiasSemana = traduccionDiasSemana;
 }

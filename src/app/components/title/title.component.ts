@@ -27,11 +27,11 @@ export class TitleComponent implements AfterViewInit, OnChanges {
   @Input({transform: booleanAttribute}) femenino: boolean = false;
   @Input({transform: booleanAttribute}) showVolver: boolean = false;
   @Input({required: true}) title!: string;
+  @ViewChild('extra') extraTemplate!: TemplateRef<any> | null;
+  protected readonly history = history;
 
   constructor(private layoutService: LayoutService) {
   }
-
-  @ViewChild('extra') extraTemplate!: TemplateRef<any> | null;
 
   setTitle(): void {
     this.title = this.title.split(' ').map(word => word.length > 3 ? capitalize(word) : word).join(' ');
@@ -56,8 +56,6 @@ export class TitleComponent implements AfterViewInit, OnChanges {
     }
     return '';
   }
-
-  protected readonly history = history;
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['title']) {

@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { BaseFormFieldComponent } from './base-form-field.component';
+import {BaseFormFieldComponent} from './base-form-field.component';
 
 describe('BaseFormFieldComponent', () => {
   let component: BaseFormFieldComponent;
@@ -10,7 +10,7 @@ describe('BaseFormFieldComponent', () => {
     await TestBed.configureTestingModule({
       imports: [BaseFormFieldComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     // @ts-ignore
     fixture = TestBed.createComponent(BaseFormFieldComponent);

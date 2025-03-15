@@ -7,24 +7,24 @@
   </mat-dialog-content>
   <mat-dialog-actions>
     <button
-      type="button"
-      mat-button
-      cdkFocusInitial
       (click)="onNoClick()"
       [disabled]="isDeleting"
       [matTooltip]="isDeleting ? 'Eliminando...' : ''"
+      cdkFocusInitial
       disabledInteractive
+      mat-button
+      type="button"
     >
       {{ isDeleting ? 'Eliminando...' : 'Cancelar' }}
     </button>
     <button
-      type="button"
-      mat-button
-      class="violet-error"
       (click)="deleteEntity()"
       [disabled]="isDeleting"
       [matTooltip]="isDeleting ? 'Eliminando...' : ''"
+      class="violet-error"
       disabledInteractive
+      mat-button
+      type="button"
     >
       {{ isDeleting ? 'Eliminando...' : 'Eliminar' }}
     </button>

@@ -1,12 +1,12 @@
-<app-title showVegetariano showVolver femenino [title]="title()"/>
+<app-title [title]="title()" femenino showVegetariano showVolver/>
 
 <!--Template para definir la opción del autocomplete de Comida -->
 <ng-template #comidaTemplate let-opcion>
   <span class="flex items-center gap-4">
       <div class="flex justify-center items-center w-14 h-14 my-1 ms-2">
-            <img class="object-cover aspect-square image w-full h-full"
-                 [src]="opcion.urlImagen"
+            <img [src]="opcion.urlImagen"
                  alt=""
+                 class="object-cover aspect-square image w-full h-full"
                  defaultImage
             >
       </div>
@@ -19,23 +19,23 @@
   </span>
 </ng-template>
 
-<app-form [formGroup]="form" (submit)="onSubmit()">
+<app-form (submit)="onSubmit()" [formGroup]="form">
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
     <app-input
-      label="Nombre del menú"
-      type="text"
-      placeholder="Nombre"
       [abstractControl]="form.get('nombre')"
-      minLength="3"
+      label="Nombre del menú"
       maxLength="255"
+      minLength="3"
+      placeholder="Nombre"
+      type="text"
     />
     <app-input
-      label="Precio del menú"
-      type="number"
-      placeholder="0"
       [abstractControl]="form.get('precio')"
-      textPrefix="$&nbsp;"
       floatLabel="always"
+      label="Precio del menú"
+      placeholder="0"
+      textPrefix="$&nbsp;"
+      type="number"
     />
   </div>
   <mat-checkbox formControlName="vegetariano">¿Es vegetariano?</mat-checkbox>
@@ -53,7 +53,7 @@
       />
     }
   </div>
-  <app-form-state [loading]="loading" [error]="error">
+  <app-form-state [error]="error" [loading]="loading">
     <!--    Muestra mensajes para los diferentes casos donde faltan uno o varios tipos de comidas-->
     @if (camposSinComidas.length === 4) {
       <mat-error>No hay ninguna comida (entrada, plato principal, postre o
@@ -97,7 +97,7 @@
       }
     }
   </app-form-state>
-  <app-submit-button [form]="form" [pendingText]="submittingText()" [error]="error" [loading]="loading"
-                     [tooltipMessage]="tooltipMessage" [disabled]="form.disabled">{{ title() }}
+  <app-submit-button [disabled]="form.disabled" [error]="error" [form]="form" [loading]="loading"
+                     [pendingText]="submittingText()" [tooltipMessage]="tooltipMessage">{{ title() }}
   </app-submit-button>
 </app-form>

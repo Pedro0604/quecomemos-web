@@ -1,68 +1,70 @@
 <app-title title="Registro de usuario"/>
 
 
-<app-form [formGroup]="registerForm" (submit)="register()" maxWidth="max-w-4xl">
+<app-form (submit)="register()" [formGroup]="registerForm" maxWidth="max-w-4xl">
   <div class="grid grid-cols-2 gap-6">
     <app-input
-      label="DNI"
-      type="text"
-      placeholder="12345678"
       [abstractControl]="this.registerForm.get('dni')"
-      minLength="7"
+      label="DNI"
       maxLength="8"
-    />
-    <app-input
-      label="Nombre"
-      type="text"
-      placeholder="Ingrese su nombre"
-      [abstractControl]="this.registerForm.get('nombre')"
-      minLength="3"
-      maxLength="255"
-    />
-    <app-input
-      label="Apellido"
-      type="text"
-      placeholder="Ingrese su apellido"
-      [abstractControl]="this.registerForm.get('apellido')"
-      minLength="3"
-      maxLength="255"
-    />
-    <app-input
-      label="Email"
-      type="email"
-      placeholder="ejemplo@gmail.com"
-      [abstractControl]="this.registerForm.get('email')"
-      minLength="3"
-      maxLength="255"
-    />
-    <app-input
-      label="URL de la Imagen de Perfil"
-      type="text"
-      placeholder="https://www.ejemplo.com"
-      [abstractControl]="this.registerForm.get('urlImagen')"
       minLength="7"
+      placeholder="12345678"
+      type="text"
+    />
+    <app-input
+      [abstractControl]="this.registerForm.get('nombre')"
+      label="Nombre"
       maxLength="255"
+      minLength="3"
+      placeholder="Ingrese su nombre"
+      type="text"
     />
     <app-input
-      label="Contraseña"
-      type="password"
-      placeholder="************"
-      [abstractControl]="this.registerForm.get('clave')"
+      [abstractControl]="this.registerForm.get('apellido')"
+      label="Apellido"
+      maxLength="255"
+      minLength="3"
+      placeholder="Ingrese su apellido"
+      type="text"
+    />
+    <app-input
+      [abstractControl]="this.registerForm.get('email')"
+      label="Email"
+      maxLength="255"
+      minLength="3"
+      placeholder="ejemplo@gmail.com"
+      type="email"
+    />
+    <app-input
+      [abstractControl]="this.registerForm.get('urlImagen')"
+      label="URL de la Imagen de Perfil"
+      maxLength="255"
+      minLength="7"
+      placeholder="https://www.ejemplo.com"
+      type="text"
+    />
+    <app-input
       (input)="this.registerForm.get('confirmClave')?.updateValueAndValidity()"
-      minLength="6"
+      [abstractControl]="this.registerForm.get('clave')"
+      label="Contraseña"
       maxLength="30"
+      minLength="6"
+      placeholder="************"
+      type="password"
     />
     <app-input
-      label="Confirmación de Contraseña"
-      type="password"
-      placeholder="************"
-      [abstractControl]="this.registerForm.get('confirmClave')"
       (input)="this.registerForm.get('clave')?.updateValueAndValidity()"
-      minLength="6"
+      [abstractControl]="this.registerForm.get('confirmClave')"
+      label="Confirmación de Contraseña"
       maxLength="30"
+      minLength="6"
+      placeholder="************"
+      type="password"
     />
     <div class="col-span-2">
-      <app-submit-button [form]="registerForm" pendingText="Registrando usuario" [disabled]="registerForm.disabled">Registrar usuario</app-submit-button>
+      <app-submit-button [disabled]="registerForm.disabled" [form]="registerForm" pendingText="Registrando usuario">
+        Registrar usuario
+      </app-submit-button>
     </div>
   </div>
 </app-form>

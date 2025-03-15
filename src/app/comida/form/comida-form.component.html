@@ -1,41 +1,42 @@
-<app-title showVolver [title]="title()"/>
+<app-title [title]="title()" showVolver/>
 
-<app-form [formGroup]="form" (submit)="onSubmit()">
+<app-form (submit)="onSubmit()" [formGroup]="form">
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
     <app-input
-      label="Nombre de la comida"
-      type="text"
-      placeholder="Nombre"
       [abstractControl]="form.get('nombre')"
-      minLength="3"
+      label="Nombre de la comida"
       maxLength="255"
+      minLength="3"
+      placeholder="Nombre"
+      type="text"
     />
     <app-input
-      label="Precio de la comida"
-      type="number"
-      placeholder="0"
       [abstractControl]="form.get('precio')"
-      textPrefix="$&nbsp;"
       floatLabel="always"
+      label="Precio de la comida"
+      placeholder="0"
+      textPrefix="$&nbsp;"
+      type="number"
     />
     <app-select
-      label="Tipo de comida"
       [abstractControl]="form.get('tipoComida')"
-      placeholder="Seleccione un tipo de comida"
       [opciones]="tiposDeComidaOptions"
+      label="Tipo de comida"
+      placeholder="Seleccione un tipo de comida"
     />
     <app-input
-      label="URL de la imagen"
-      type="text"
-      placeholder="https://www.ejemplo.com"
       [abstractControl]="form.get('urlImagen')"
       [required]="false"
-      minLength="7"
+      label="URL de la imagen"
       maxLength="255"
+      minLength="7"
+      placeholder="https://www.ejemplo.com"
+      type="text"
     />
   </div>
   <mat-checkbox formControlName="vegetariana">¿Es vegetariana?</mat-checkbox>
-  <app-form-state [loading]="loading" [error]="error"/>
-  <app-submit-button [form]="form" [pendingText]="submittingText()" [error]="error" [loading]="loading" [disabled]="form.disabled">{{ title() }}
+  <app-form-state [error]="error" [loading]="loading"/>
+  <app-submit-button [disabled]="form.disabled" [error]="error" [form]="form" [loading]="loading"
+                     [pendingText]="submittingText()">{{ title() }}
   </app-submit-button>
 </app-form>

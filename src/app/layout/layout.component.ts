@@ -35,17 +35,15 @@ import {DefaultImageDirective} from '../directives/default-image-directive/defau
   ]
 })
 export class LayoutComponent implements OnInit {
+  rootRoutes: Routes = [];
+  title: string = '';
+  extra: TemplateRef<any> | null = null;
   private breakpointObserver = inject(BreakpointObserver);
-
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
       map(result => result.matches),
       shareReplay()
     );
-  rootRoutes: Routes = [];
-
-  title: string = '';
-  extra: TemplateRef<any> | null = null;
 
   constructor(
     private layoutService: LayoutService,

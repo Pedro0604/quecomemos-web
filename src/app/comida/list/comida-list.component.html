@@ -1,11 +1,11 @@
 <app-list
-  title="comidas"
+  [itemTemplate]="comidaTemplate"
   [service]="comidaService"
   entityName="comida"
-  [itemTemplate]="comidaTemplate"
   femenino
+  title="comidas"
 />
 
 <ng-template #comidaTemplate let-comida let-onDelete="onDelete">
-  <app-comida [comida]="comida" (onDelete)="onDelete(comida.id)"></app-comida>
+  <app-comida (onDelete)="onDelete(comida.id)" [comida]="comida"></app-comida>
 </ng-template>

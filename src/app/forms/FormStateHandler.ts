@@ -1,16 +1,12 @@
 import {FormGroup} from '@angular/forms';
 
 export abstract class FormStateHandler {
-  private _error = false;
-  private _loading = false;
   protected abstract form: FormGroup;
 
-  private toggleFormState(): void {
-    if (this._loading || this._error) {
-      this.form.disable();
-    } else {
-      this.form.enable();
-    }
+  private _error = false;
+
+  get error(): boolean {
+    return this._error;
   }
 
   set error(value: boolean) {
@@ -18,16 +14,22 @@ export abstract class FormStateHandler {
     this.toggleFormState();
   }
 
+  private _loading = false;
+
+  get loading(): boolean {
+    return this._loading;
+  }
+
   set loading(value: boolean) {
     this._loading = value;
     this.toggleFormState();
   }
 
-  get error(): boolean {
-    return this._error;
-  }
-
-  get loading(): boolean {
-    return this._loading;
+  private toggleFormState(): void {
+    if (this._loading || this._error) {
+      this.form.disable();
+    } else {
+      this.form.enable();
+    }
   }
 }

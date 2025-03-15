@@ -1,27 +1,28 @@
 <app-title title="Iniciar sesión"/>
 
 
-<app-form [formGroup]="loginForm" (submit)="onSubmit()" maxWidth="max-w-lg">
+<app-form (submit)="onSubmit()" [formGroup]="loginForm" maxWidth="max-w-lg">
   <app-input
-    label="DNI"
-    type="text"
-    placeholder='12345678'
     [abstractControl]="this.loginForm.get('dni')"
-    minLength="7"
+    label="DNI"
     maxLength="8"
+    minLength="7"
+    placeholder='12345678'
+    type="text"
   />
   <app-input
-    label="Contraseña"
-    type="password"
-    placeholder="************"
     [abstractControl]="this.loginForm.get('clave')"
-    minLength="6"
+    label="Contraseña"
     maxLength="30"
+    minLength="6"
+    placeholder="************"
+    type="password"
   />
 
   @if (loginError()) {
     <mat-error>Credenciales incorrectas</mat-error>
   }
 
-  <app-submit-button [form]="loginForm" pendingText="Ingresando" [disabled]="loginForm.disabled">Ingresar</app-submit-button>
+  <app-submit-button [disabled]="loginForm.disabled" [form]="loginForm" pendingText="Ingresando">Ingresar
+  </app-submit-button>
 </app-form>

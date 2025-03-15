@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { DialogConfirmWithPassword } from './dialog-confirm-with-password.component';
+import {DialogConfirmWithPassword} from './dialog-confirm-with-password.component';
 
 describe('DialogConfirmarComponent', () => {
   let component: DialogConfirmWithPassword;
@@ -10,7 +10,7 @@ describe('DialogConfirmarComponent', () => {
     await TestBed.configureTestingModule({
       imports: [DialogConfirmWithPassword]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(DialogConfirmWithPassword);
     component = fixture.componentInstance;

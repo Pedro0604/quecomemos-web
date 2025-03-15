@@ -6,8 +6,8 @@ import {
   MatDialogRef,
   MatDialogTitle
 } from '@angular/material/dialog';
-import { NotificationService } from '../../notification/notification.service';
-import { MatButton } from '@angular/material/button';
+import {NotificationService} from '../../notification/notification.service';
+import {MatButton} from '@angular/material/button';
 import {Deletable} from '../../crud-service/Deletable';
 import {SpinnerComponent} from '../spinner/spinner.component';
 import {MatTooltip} from '@angular/material/tooltip';
@@ -30,7 +30,8 @@ export class DialogEliminarComponent<T extends { id: number }, S extends Deletab
   readonly data = inject<DeleteDialogData<T, S>>(MAT_DIALOG_DATA);
   protected isDeleting = false;
 
-  constructor(private notificationService: NotificationService) {}
+  constructor(private notificationService: NotificationService) {
+  }
 
   onNoClick(): void {
     if (this.isDeleting) {

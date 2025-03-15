@@ -1,4 +1,4 @@
-<mat-card class="w-full h-full" appearance="outlined">
+<mat-card appearance="outlined" class="w-full h-full">
   <mat-card-header class="flex justify-between">
     <mat-card-title>{{ comida.nombre }}</mat-card-title>
     <mat-card-subtitle>${{ comida.precio }}</mat-card-subtitle>
@@ -14,9 +14,9 @@
           <p class="text-lg">{{ comida.nombre }}</p>
         </div>
         <div class="flex justify-center items-center w-20 h-20 border image-container">
-          <img class="object-cover aspect-square w-full h-full"
+          <img [alt]="comida.nombre"
                [src]="comida.urlImagen"
-               [alt]="comida.nombre"
+               class="object-cover aspect-square w-full h-full"
                defaultImage
           >
         </div>
@@ -24,9 +24,9 @@
     </div>
   </mat-card-content>
   <app-entity-card-actions
+    (deleteClick)="openDialogEliminar()"
+    [editId]="comida.id"
     [showButtons]="showButtons"
     entityName="comida"
-    [editId]="comida.id"
-    (deleteClick)="openDialogEliminar()"
   />
 </mat-card>

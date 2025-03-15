@@ -59,15 +59,7 @@ type CampoComida = {
   styleUrl: './menu-form.component.css'
 })
 export class MenuFormComponent extends BaseEntityForm<Menu, MenuDTO, Comida> implements OnInit {
-  protected override form: FormGroup
-  protected override redirectUrlOnCreation: string = '/menu';
-
-  protected puedeCrearComida;
-
-  protected tooltipMessage: string | undefined;
-
   camposSinComidas: CampoComida[] = [];
-
   camposDeComida: CampoComida[] = [
     {
       nombre: 'entrada',
@@ -94,6 +86,36 @@ export class MenuFormComponent extends BaseEntityForm<Menu, MenuDTO, Comida> imp
       tipoComida: 'BEBIDA'
     },
   ];
+  protected override form: FormGroup
+  protected override redirectUrlOnCreation: string = '/menu';
+  protected puedeCrearComida;
+  protected tooltipMessage: string | undefined;
+  protected readonly tipoComidaToString = tipoComidaToString;
+
+  constructor(
+    router: Router,
+    notificationService: NotificationService,
+    formService: FormService,
+    service: MenuService,
+    route: ActivatedRoute,
+    private fb: FormBuilder,
+    private comidaService: ComidaService,
+    protected authService: AuthService,
+  ) {
+    super(router, notificationService, formService, service, route, 'menú', false);
+
+    this.puedeCrearComida = authService.hasPermission('crear_comida');
+
+    this.form = this.fb.group({
+      nombre: [''],
+      precio: ['', [Validators.min(0)]],
+      vegetariano: [false],
+      entrada: [''],
+      principal: [''],
+      postre: [''],
+      bebida: [''],
+    }, {validators: this.alMenosUnaComidaSeleccionadaValidator()});
+  }
 
   updateComidasValidity() {
     this.camposDeComida.forEach(campo => {
@@ -124,29 +146,49 @@ export class MenuFormComponent extends BaseEntityForm<Menu, MenuDTO, Comida> imp
     };
   }
 
-  constructor(
-    router: Router,
-    notificationService: NotificationService,
-    formService: FormService,
-    service: MenuService,
-    route: ActivatedRoute,
-    private fb: FormBuilder,
-    private comidaService: ComidaService,
-    protected authService: AuthService,
-  ) {
-    super(router, notificationService, formService, service, route, 'menú', false);
+  override mapToDTO(formValue: any): MenuDTO {
+    return {
+      nombre: formValue.nombre,
+      precio: formValue.precio,
+      vegetariano: formValue.vegetariano,
+      comidaIds: this.camposDeComida
+        .map(campo => formValue[campo.nombre]?.id)
+        .filter(id => !!id)
+    };
+  }
 
-    this.puedeCrearComida = authService.hasPermission('crear_comida');
+  getTextoSinComidas(campo: CampoComida): string {
+    return `No hay
+    ${campo.masculino ? 'ningún' : 'ninguna'} ${tipoComidaToString(campo.tipoComida).toLowerCase()} ${this.form.get("vegetariano")?.value ? ('vegetarian' + (campo.masculino ? 'o' : 'a')) : ''}
+    disponible`
+  }
 
-    this.form = this.fb.group({
-      nombre: [''],
-      precio: ['', [Validators.min(0)]],
-      vegetariano: [false],
-      entrada: [''],
-      principal: [''],
-      postre: [''],
-      bebida: [''],
-    }, {validators: this.alMenosUnaComidaSeleccionadaValidator()});
+  getTextoSinComidasMultiple(campos: CampoComida[]): string {
+    const tiposComida = campos.map(campo => {
+      return tipoComidaToString(campo.tipoComida).toLowerCase();
+    });
+
+    const listaFormateada = this.formatearLista(tiposComida);
+    const allFemeninas = campos.every(campo => !campo.masculino);
+
+    return `No hay ${campos[0].masculino ? 'ningún' : 'ninguna'} ${listaFormateada} ${this.form.get("vegetariano")?.value ? (allFemeninas ? 'vegetarianas' : 'vegetarianos') : ''} disponibles.`;
+  }
+
+  formatearLista(items: string[]): string {
+    if (items.length === 1) return items[0];
+    if (items.length === 2) return items.join(' o ');
+    return items.slice(0, -1).join(', ') + ' o ' + items[items.length - 1];
+  }
+
+  getQueryParams(campo: CampoComida): { [key: string]: string } {
+    return {
+      'tipo-comida': campo.tipoComida,
+      ...(this.form.get('vegetariano')?.value ? {vegetariana: '1'} : {})
+    }
+  }
+
+  displayFn(comida: Comida): string {
+    return comida && comida.nombre ? comida.nombre : '';
   }
 
   protected override loadRelatedData(): Promise<Comida[]> {
@@ -197,51 +239,4 @@ export class MenuFormComponent extends BaseEntityForm<Menu, MenuDTO, Comida> imp
 
     calculateCamposSinComidas(true);
   }
-
-  override mapToDTO(formValue: any): MenuDTO {
-    return {
-      nombre: formValue.nombre,
-      precio: formValue.precio,
-      vegetariano: formValue.vegetariano,
-      comidaIds: this.camposDeComida
-        .map(campo => formValue[campo.nombre]?.id)
-        .filter(id => !!id)
-    };
-  }
-
-  getTextoSinComidas(campo: CampoComida): string {
-    return `No hay
-    ${campo.masculino ? 'ningún' : 'ninguna'} ${tipoComidaToString(campo.tipoComida).toLowerCase()} ${this.form.get("vegetariano")?.value ? ('vegetarian' + (campo.masculino ? 'o' : 'a')) : ''}
-    disponible`
-  }
-
-  getTextoSinComidasMultiple(campos: CampoComida[]): string {
-    const tiposComida = campos.map(campo => {
-      return tipoComidaToString(campo.tipoComida).toLowerCase();
-    });
-
-    const listaFormateada = this.formatearLista(tiposComida);
-    const allFemeninas = campos.every(campo => !campo.masculino);
-
-    return `No hay ${campos[0].masculino ? 'ningún' : 'ninguna'} ${listaFormateada} ${this.form.get("vegetariano")?.value ? (allFemeninas ? 'vegetarianas' : 'vegetarianos') : ''} disponibles.`;
-  }
-
-  formatearLista(items: string[]): string {
-    if (items.length === 1) return items[0];
-    if (items.length === 2) return items.join(' o ');
-    return items.slice(0, -1).join(', ') + ' o ' + items[items.length - 1];
-  }
-
-  getQueryParams(campo: CampoComida): { [key: string]: string } {
-    return {
-      'tipo-comida': campo.tipoComida,
-      ...(this.form.get('vegetariano')?.value ? {vegetariana: '1'} : {})
-    }
-  }
-
-  displayFn(comida: Comida): string {
-    return comida && comida.nombre ? comida.nombre : '';
-  }
-
-  protected readonly tipoComidaToString = tipoComidaToString;
 }

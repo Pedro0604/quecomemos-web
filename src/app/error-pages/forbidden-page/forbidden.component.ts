@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {ErrorPageComponent} from '../../components/error-page/error-page.component';
 
 @Component({

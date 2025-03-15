@@ -1,6 +1,6 @@
 <mat-card
-  class="w-full h-full {{straightLeftBorder ? '!rounded-l-none' : ''}} {{straightRightBorder ? '!rounded-r-none' : ''}}"
-  [appearance]="appearance">
+  [appearance]="appearance"
+  class="w-full h-full {{straightLeftBorder ? '!rounded-l-none' : ''}} {{straightRightBorder ? '!rounded-r-none' : ''}}">
   <mat-card-header class="flex justify-between">
     <mat-card-title>
       @if (hasLink && authService.hasPermission('editar_menu')) {
@@ -47,9 +47,9 @@
     </div>
   </mat-card-content>
   <app-entity-card-actions
+    (deleteClick)="openDialogEliminar()"
+    [editId]="menu.id"
     [showButtons]="showButtons"
     entityName="menu"
-    [editId]="menu.id"
-    (deleteClick)="openDialogEliminar()"
   />
 </mat-card>

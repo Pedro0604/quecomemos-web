@@ -32,6 +32,7 @@ export class HomeComponent implements OnInit {
 
   error = false;
   loading = true;
+  protected readonly traduccionDiasSemana = traduccionDiasSemana;
 
   constructor(private menuDiarioService: MenuDiarioService, protected authService: AuthService) {
   }
@@ -50,6 +51,4 @@ export class HomeComponent implements OnInit {
       }
     });
   }
-
-  protected readonly traduccionDiasSemana = traduccionDiasSemana;
 }

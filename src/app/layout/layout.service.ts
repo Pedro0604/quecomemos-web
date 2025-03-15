@@ -7,9 +7,8 @@ import {NavigationEnd, Router} from '@angular/router';
 })
 export class LayoutService {
   private titleSource = new BehaviorSubject<string>('');
-  private extraSource = new BehaviorSubject<TemplateRef<any> | null>(null);
-
   currentTitle$ = this.titleSource.asObservable();
+  private extraSource = new BehaviorSubject<TemplateRef<any> | null>(null);
   currentExtra$ = this.extraSource.asObservable();
 
   constructor(private router: Router) {

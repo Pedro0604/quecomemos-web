@@ -28,4 +28,8 @@ export interface LoggedUser {
 
 export type RoleName = 'cliente' | 'responsable' | 'administrador';
 export type RoleApiPath = 'clientes' | 'responsables' | 'administradores';
-export interface Credenciales { dni: string, clave: string }
+
+export interface Credenciales {
+  dni: string,
+  clave: string
+}

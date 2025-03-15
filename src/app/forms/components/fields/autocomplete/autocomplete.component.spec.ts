@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { AutocompleteComponent } from './autocomplete.component';
+import {AutocompleteComponent} from './autocomplete.component';
 
 describe('AutocompleteComponent', () => {
   // @ts-ignore
@@ -12,7 +12,7 @@ describe('AutocompleteComponent', () => {
     await TestBed.configureTestingModule({
       imports: [AutocompleteComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(AutocompleteComponent);
     component = fixture.componentInstance;

@@ -46,6 +46,25 @@ export class AutocompleteComponent<T extends {
     super(formService);
   }
 
+  override ngOnInit() {
+    super.ngOnInit();
+
+    this.setupFilteringAndValidation();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['opciones']) {
+      if (this.opciones.length === 0) {
+        this.hint = `No hay opciones disponibles`;
+        this.control.disable();
+      } else if (this.control.parent?.enabled) {
+        this.hint = '';
+        this.control.enable();
+      }
+      this.filtrarOpciones();
+    }
+  }
+
   private getStringValue(toLowerCase = true): string {
     const stringValue = this.control.value ? (typeof this.control.value === 'string' ? this.control.value : this.control.value.nombre) : '';
     return toLowerCase ? stringValue.toLowerCase() : stringValue;
@@ -92,24 +111,5 @@ export class AutocompleteComponent<T extends {
       this.seleccionarOpcionSiCoincide();
     });
     this.subscriptions.push(autocompleteSubscription);
-  }
-
-  override ngOnInit() {
-    super.ngOnInit();
-
-    this.setupFilteringAndValidation();
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['opciones']) {
-      if (this.opciones.length === 0) {
-        this.hint = `No hay opciones disponibles`;
-        this.control.disable();
-      } else if (this.control.parent?.enabled) {
-        this.hint = '';
-        this.control.enable();
-      }
-      this.filtrarOpciones();
-    }
   }
 }

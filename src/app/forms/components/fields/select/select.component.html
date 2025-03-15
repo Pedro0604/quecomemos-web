@@ -1,11 +1,11 @@
-<mat-form-field appearance="fill" class="w-full" [floatLabel]="floatLabel">
+<mat-form-field [floatLabel]="floatLabel" appearance="fill" class="w-full">
   <mat-label>{{ label }}</mat-label>
   <mat-select
+    (focus)="matSelect.open()"
+    (selectionChange)="matSelect.close()"
     [formControl]="control"
     [placeholder]="placeholder"
     [required]="required"
-    (focus)="matSelect.open()"
-    (selectionChange)="matSelect.close()"
   >
     @if (this.clearable) {
       <mat-option>Ninguno</mat-option>

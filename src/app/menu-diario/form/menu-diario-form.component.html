@@ -1,4 +1,4 @@
-<app-title showVegetariano showVolver [title]="title()"/>
+<app-title [title]="title()" showVegetariano showVolver/>
 
 <!--Template para definir la opción del autocomplete de Menú -->
 <ng-template
@@ -14,12 +14,12 @@
             </span>
 </ng-template>
 
-<app-form [formGroup]="form" (submit)="onSubmit()">
+<app-form (submit)="onSubmit()" [formGroup]="form">
   <app-select
-    label="Día del Menú Diario"
     [abstractControl]="form.get('dia')"
-    placeholder="Seleccione un día para el menú diario"
     [opciones]="diasDeSemanaOptions"
+    label="Día del Menú Diario"
+    placeholder="Seleccione un día para el menú diario"
   />
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
     @for (campo of camposDeMenus; track campo.nombre) {
@@ -33,7 +33,7 @@
       />
     }
   </div>
-  <app-form-state [loading]="loading" [error]="error">
+  <app-form-state [error]="error" [loading]="loading">
     @if (relatedData.length === 0) {
       <mat-error>No hay ningún menú</mat-error>
       @if (authService.hasPermission('crear_menu')) {
@@ -49,7 +49,7 @@
       }
     }
   </app-form-state>
-  <app-submit-button [form]="form" [pendingText]="submittingText()" [error]="error" [loading]="loading"
-                     [tooltipMessage]="tooltipMessage" [disabled]="form.disabled">{{ title() }}
+  <app-submit-button [disabled]="form.disabled" [error]="error" [form]="form" [loading]="loading"
+                     [pendingText]="submittingText()" [tooltipMessage]="tooltipMessage">{{ title() }}
   </app-submit-button>
 </app-form>

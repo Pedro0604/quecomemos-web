@@ -6,71 +6,71 @@ import {FormService} from '../../../service/form.service';
 import {TooltipPosition} from "@angular/material/tooltip";
 
 @Component({
-    selector: 'app-base-form-field',
-    imports: [],
-    templateUrl: '',
-    standalone: true,
+  selector: 'app-base-form-field',
+  imports: [],
+  templateUrl: '',
+  standalone: true,
 })
 export abstract class BaseFormFieldComponent implements OnInit, OnDestroy {
-    @Input({required: true}) label: string = '';
-    @Input({required: true}) placeholder: string = '';
-    @Input({required: true}) abstractControl!: AbstractControl | null;
-    @Input() hint: string = '';
-    @Input() textPrefix: string = '';
-    @Input({transform: booleanAttribute}) required: boolean = true;
-    @Input() floatLabel: FloatLabelType = 'auto';
-    @Input() _clearable: boolean | null = null;
-    @Input({transform: booleanAttribute}) readonly: boolean = false;
-    @Input() tooltipMessage: string = '';
-    @Input() tooltipPosition: TooltipPosition = 'above';
+  @Input({required: true}) label: string = '';
+  @Input({required: true}) placeholder: string = '';
+  @Input({required: true}) abstractControl!: AbstractControl | null;
+  @Input() hint: string = '';
+  @Input() textPrefix: string = '';
+  @Input({transform: booleanAttribute}) required: boolean = true;
+  @Input() floatLabel: FloatLabelType = 'auto';
+  @Input({transform: booleanAttribute}) readonly: boolean = false;
+  @Input() tooltipMessage: string = '';
+  @Input() tooltipPosition: TooltipPosition = 'above';
+  control: FormControl = new FormControl();
+  errorMessage = '';
+  protected subscriptions: Subscription[] = [];
 
-    control: FormControl = new FormControl();
-    errorMessage = '';
-    protected subscriptions: Subscription[] = [];
+  protected constructor(protected formService: FormService) {
+  }
 
-    protected constructor(protected formService: FormService) {
+  @Input() _clearable: boolean | null = null;
+
+  get clearable(): boolean {
+    return this.isClearable() && this.control.enabled && !this.readonly;
+  }
+
+  ngOnInit() {
+    if (this.abstractControl instanceof FormControl) {
+      this.control = this.abstractControl;
+    } else {
+      throw new Error('El control no es un FormControl válido');
     }
+    this.subscribeToFieldChanges();
 
-    protected isClearable() {
-        // Se hace esto para que si no se define, por defecto sea clearable, pero se pueda seguir sobreescribiendo en los hijos
-        return this._clearable == null ? true : this._clearable;
+    if (this.readonly) {
+      this.control.disable({onlySelf: true});
     }
+  }
 
-    get clearable(): boolean {
-        return this.isClearable() && this.control.enabled && !this.readonly;
-    }
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
+  }
 
-    ngOnInit() {
-        if (this.abstractControl instanceof FormControl) {
-            this.control = this.abstractControl;
-        } else {
-            throw new Error('El control no es un FormControl válido');
-        }
-        this.subscribeToFieldChanges();
+  protected isClearable() {
+    // Se hace esto para que si no se define, por defecto sea clearable, pero se pueda seguir sobreescribiendo en los hijos
+    return this._clearable == null ? true : this._clearable;
+  }
 
-        if (this.readonly) {
-            this.control.disable({onlySelf: true});
-        }
-    }
+  protected showErrorMessage() {
+    this.errorMessage = this.formService.updateErrorMessage(this.control);
+  }
 
-    ngOnDestroy(): void {
-        this.subscriptions.forEach((sub) => sub.unsubscribe());
-    }
+  private subscribeToFieldChanges(): void {
+    const eventsSub = this.control.events.subscribe(() => {
+      if (this.readonly && !this.control.disabled) {
+        this.control.disable({onlySelf: true});
+      }
+      if (this.control.touched || this.control.dirty) {
+        this.showErrorMessage();
+      }
+    })
 
-    protected showErrorMessage() {
-        this.errorMessage = this.formService.updateErrorMessage(this.control);
-    }
-
-    private subscribeToFieldChanges(): void {
-        const eventsSub = this.control.events.subscribe(() => {
-            if (this.readonly && !this.control.disabled) {
-                this.control.disable({onlySelf: true});
-            }
-            if (this.control.touched || this.control.dirty) {
-                this.showErrorMessage();
-            }
-        })
-
-        this.subscriptions.push(eventsSub);
-    }
+    this.subscriptions.push(eventsSub);
+  }
 }

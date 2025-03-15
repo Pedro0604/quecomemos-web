@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { DialogEliminarComponent } from './dialog-eliminar.component';
+import {DialogEliminarComponent} from './dialog-eliminar.component';
 
 describe('DialogEliminarComponent', () => {
   // @ts-ignore
@@ -12,7 +12,7 @@ describe('DialogEliminarComponent', () => {
     await TestBed.configureTestingModule({
       imports: [DialogEliminarComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(DialogEliminarComponent);
     component = fixture.componentInstance;

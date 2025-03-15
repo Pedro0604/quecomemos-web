@@ -1,20 +1,20 @@
-<mat-form-field appearance="fill" class="w-full" [floatLabel]="floatLabel">
+<mat-form-field [floatLabel]="floatLabel" appearance="fill" class="w-full">
   <mat-label>{{ label }}</mat-label>
   <input
-    type="text"
-    matInput
-    [placeholder]="placeholder"
+    (change)="onChange.emit()"
     [formControl]="control"
     [matAutocomplete]="auto"
+    [placeholder]="placeholder"
     [required]="required"
-    (change)="onChange.emit()"
+    matInput
+    type="text"
   >
   <mat-autocomplete
+    #auto="matAutocomplete"
+    (optionSelected)="onChange.emit()"
+    [displayWith]="displayWithFn"
     autoActiveFirstOption
     autoSelectActiveOption
-    #auto="matAutocomplete"
-    [displayWith]="displayWithFn"
-    (optionSelected)="onChange.emit()"
   >
     @for (opcion of opcionesFiltradas; track opcion.id) {
       <mat-option [value]="opcion">

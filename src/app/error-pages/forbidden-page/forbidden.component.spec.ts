@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { ForbiddenComponent } from './forbidden.component';
+import {ForbiddenComponent} from './forbidden.component';
 
 describe('ForbiddenPageComponent', () => {
   let component: ForbiddenComponent;
@@ -10,7 +10,7 @@ describe('ForbiddenPageComponent', () => {
     await TestBed.configureTestingModule({
       imports: [ForbiddenComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(ForbiddenComponent);
     component = fixture.componentInstance;

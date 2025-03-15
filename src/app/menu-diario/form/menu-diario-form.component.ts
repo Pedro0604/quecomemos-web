@@ -47,16 +47,10 @@ type CampoMenu = {
 })
 
 export class MenuDiarioFormComponent extends BaseEntityForm<MenuDiario, MenuDiarioDTO, Menu> implements OnInit {
-  protected override form: FormGroup
-  protected override redirectUrlOnCreation: string = '/menu-diario';
-
-  protected tooltipMessage: string | undefined;
-
   diasDeSemanaOptions = diasSemanaArray.map(diaSemana => ({
     value: diaSemana,
     name: traduccionDiasSemana(diaSemana)
   }));
-
   camposDeMenus: CampoMenu[] = [
     {
       nombre: 'menuVegetariano',
@@ -71,6 +65,9 @@ export class MenuDiarioFormComponent extends BaseEntityForm<MenuDiario, MenuDiar
       vegetariano: false
     },
   ];
+  protected override form: FormGroup
+  protected override redirectUrlOnCreation: string = '/menu-diario';
+  protected tooltipMessage: string | undefined;
 
   constructor(
     router: Router,
@@ -91,6 +88,18 @@ export class MenuDiarioFormComponent extends BaseEntityForm<MenuDiario, MenuDiar
     });
   }
 
+  override mapToDTO(formValue: any): MenuDiarioDTO {
+    return {
+      dia: formValue.dia,
+      menuVegetarianoId: formValue.menuVegetariano.id,
+      menuNoVegetarianoId: formValue.menuNoVegetariano.id,
+    }
+  }
+
+  displayFn(menu: Menu): string {
+    return menu && menu.nombre ? menu.nombre : '';
+  }
+
   protected override loadRelatedData(): Promise<Menu[]> {
     return firstValueFrom(this.menuService.getAll());
   }
@@ -103,17 +112,5 @@ export class MenuDiarioFormComponent extends BaseEntityForm<MenuDiario, MenuDiar
       this.form.disable();
       this.tooltipMessage = 'Debe haber al menos un menú de cada tipo para poder crear un menú diario';
     }
-  }
-
-  override mapToDTO(formValue: any): MenuDiarioDTO {
-    return {
-      dia: formValue.dia,
-      menuVegetarianoId: formValue.menuVegetariano.id,
-      menuNoVegetarianoId: formValue.menuNoVegetariano.id,
-    }
-  }
-
-  displayFn(menu: Menu): string {
-    return menu && menu.nombre ? menu.nombre : '';
   }
 }

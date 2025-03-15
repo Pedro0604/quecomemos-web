@@ -58,15 +58,15 @@ export class UserFormComponent extends BaseEntityForm<User, ClientDTO, void> imp
     });
   }
 
+  mapToDTO(formValue: any): ClientDTO {
+    formValue.dni = this.form.get('dni')?.value;
+    return formValue as ClientDTO;
+  }
+
   protected override extraOnInit(): void {
     if (!this.entity) {
       this.error = true;
     }
-  }
-
-  mapToDTO(formValue: any): ClientDTO {
-    formValue.dni = this.form.get('dni')?.value;
-    return formValue as ClientDTO;
   }
 
   protected override async beforeSavingEntity(): Promise<boolean> {
