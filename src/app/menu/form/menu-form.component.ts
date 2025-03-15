@@ -64,6 +64,8 @@ export class MenuFormComponent extends BaseEntityForm<Menu, MenuDTO, Comida> imp
 
   protected puedeCrearComida;
 
+  protected tooltipMessage: string|undefined;
+
   camposSinComidas: CampoComida[] = [];
 
   camposDeComida: CampoComida[] = [
@@ -170,8 +172,16 @@ export class MenuFormComponent extends BaseEntityForm<Menu, MenuDTO, Comida> imp
       return comida.tipoComida == tipoComida && (menuVegetariano ? comida.vegetariana : true);
     }
 
-    const calculateCamposSinComidas = () => {
+    const calculateCamposSinComidas = (firstLoad = false) => {
       this.camposSinComidas = this.camposDeComida.filter(campo => campo.comidas.length === 0);
+      if (this.camposSinComidas.length === 4) {
+        if (firstLoad) {
+          this.form.disable();
+        }
+        this.tooltipMessage = this.getTextoSinComidasMultiple(this.camposSinComidas);
+      } else {
+        this.tooltipMessage = undefined;
+      }
     }
 
     this.camposDeComida.forEach(campo => {
@@ -185,7 +195,7 @@ export class MenuFormComponent extends BaseEntityForm<Menu, MenuDTO, Comida> imp
       calculateCamposSinComidas();
     });
 
-    calculateCamposSinComidas();
+    calculateCamposSinComidas(true);
   }
 
   override mapToDTO(formValue: any): MenuDTO {

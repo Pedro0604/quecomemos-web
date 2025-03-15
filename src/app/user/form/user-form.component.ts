@@ -30,8 +30,7 @@ import {MatError} from '@angular/material/input';
     RouterLink,
   ],
   templateUrl: './user-form.component.html',
-  standalone: true,
-  styleUrl: './user-form.component.css'
+  standalone: true
 })
 export class UserFormComponent extends BaseEntityForm<User, UserDTO, void> implements OnInit {
   user: User | null = null;

@@ -18,6 +18,8 @@ export class SubmitButtonComponent {
   @Input() pendingText = 'Enviando';
   @Input() error: boolean = false;
   @Input() loading: boolean = false;
+  @Input() disabled: boolean = false;
+  @Input() tooltipMessage: string | undefined;
 
   constructor(protected formService: FormService) {
   }

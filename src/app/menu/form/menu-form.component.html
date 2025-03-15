@@ -97,6 +97,7 @@
       }
     }
   </app-form-state>
-  <app-submit-button [form]="form" [pendingText]="submittingText()" [error]="error" [loading]="loading">{{ title() }}
+  <app-submit-button [form]="form" [pendingText]="submittingText()" [error]="error" [loading]="loading"
+                     [tooltipMessage]="tooltipMessage" [disabled]="form.disabled">{{ title() }}
   </app-submit-button>
 </app-form>

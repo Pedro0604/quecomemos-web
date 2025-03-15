@@ -46,6 +46,6 @@
     maxLength="255"
   />
   <app-form-state [loading]="loading" [error]="error"/>
-  <app-submit-button [form]="form" [pendingText]="'Modificando Usuario'" [error]="error">Modificar Usuario
+  <app-submit-button [form]="form" [pendingText]="'Modificando Usuario'" [error]="error" [disabled]="form.disabled">Modificar Usuario
   </app-submit-button>
 </app-form>

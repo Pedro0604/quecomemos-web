@@ -36,7 +36,7 @@
   <app-form-state [loading]="loading" [error]="error">
     @if (relatedData.length === 0) {
       <mat-error>No hay ningún menú</mat-error>
-      @if(authService.hasPermission('crear_menu')) {
+      @if (authService.hasPermission('crear_menu')) {
         <a routerLink="/menu/create" mat-button class="-ms-3">Creá alguno para poder continuar</a>
       }
     } @else {
@@ -49,5 +49,7 @@
       }
     }
   </app-form-state>
-  <app-submit-button [form]="form" [pendingText]="submittingText()" [error]="error" [loading]="loading">{{ title() }}</app-submit-button>
+  <app-submit-button [form]="form" [pendingText]="submittingText()" [error]="error" [loading]="loading"
+                     [tooltipMessage]="tooltipMessage" [disabled]="form.disabled">{{ title() }}
+  </app-submit-button>
 </app-form>

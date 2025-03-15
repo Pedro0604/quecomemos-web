@@ -28,8 +28,7 @@ import {MatError} from '@angular/material/form-field';
     NgIf,
     MatError,
     MatLabel
-  ],
-  styleUrl: './confirm-dialog.component.css'
+  ]
 })
 export class ConfirmDialogComponent {
   form: FormGroup;

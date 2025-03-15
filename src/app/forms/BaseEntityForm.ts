@@ -49,7 +49,7 @@ export abstract class BaseEntityForm<T extends { id: number }, DTO, R> extends F
                 : Promise.resolve(null);
             const relatedDataPromise: Promise<R[]> = this.loadRelatedData();
             const [entityData, relatedData] = await Promise.all([entityPromise, relatedDataPromise]);
-            this.relatedData = relatedData;
+            this.relatedData = relatedData ?? [];
 
             if (entityData) {
                 this.entity = entityData;

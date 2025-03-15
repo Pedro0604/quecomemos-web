@@ -57,7 +57,10 @@ export class FormService {
     group.updateValueAndValidity();
   }
 
-  getTooltipMessage(group: FormGroup, error: boolean = false, loading: boolean = false): string {
+  getTooltipMessage(group: FormGroup, error: boolean = false, loading: boolean = false, message: string | undefined): string {
+    if (message) {
+      return message;
+    }
     if (error) {
       return 'Ha ocurrido un error. Inténtelo nuevamente más tarde'
     }

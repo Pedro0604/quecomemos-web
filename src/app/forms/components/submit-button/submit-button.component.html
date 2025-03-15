@@ -2,8 +2,8 @@
   mat-raised-button
   class="w-full"
   type="submit"
-  [disabled]="form.invalid || !form.dirty || error || loading"
-  [matTooltip]="formService.getTooltipMessage(this.form, error, loading)"
+  [disabled]="form.invalid || !form.dirty || error || loading || disabled"
+  [matTooltip]="formService.getTooltipMessage(this.form, error, loading, tooltipMessage)"
   disabledInteractive
 >
   @if (form.pending) {

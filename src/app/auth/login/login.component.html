@@ -23,5 +23,5 @@
     <mat-error>Credenciales incorrectas</mat-error>
   }
 
-  <app-submit-button [form]="loginForm" pendingText="Ingresando">Ingresar</app-submit-button>
+  <app-submit-button [form]="loginForm" pendingText="Ingresando" [disabled]="loginForm.disabled">Ingresar</app-submit-button>
 </app-form>

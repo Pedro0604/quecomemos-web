@@ -62,7 +62,7 @@
       maxLength="30"
     />
     <div class="col-span-2">
-      <app-submit-button [form]="registerForm" pendingText="Registrando usuario">Registrar usuario</app-submit-button>
+      <app-submit-button [form]="registerForm" pendingText="Registrando usuario" [disabled]="registerForm.disabled">Registrar usuario</app-submit-button>
     </div>
   </div>
 </app-form>

@@ -50,6 +50,8 @@ export class MenuDiarioFormComponent extends BaseEntityForm<MenuDiario, MenuDiar
   protected override form: FormGroup
   protected override redirectUrlOnCreation: string = '/menu-diario';
 
+  protected tooltipMessage: string|undefined;
+
   diasDeSemanaOptions = diasSemanaArray.map(diaSemana => ({
     value: diaSemana,
     name: traduccionDiasSemana(diaSemana)
@@ -97,6 +99,10 @@ export class MenuDiarioFormComponent extends BaseEntityForm<MenuDiario, MenuDiar
     this.camposDeMenus.forEach(campo => {
       campo.menus = this.relatedData.filter(menu => menu.vegetariano == campo.vegetariano);
     });
+    if (this.camposDeMenus.some(campo => campo.menus.length === 0)) {
+      this.form.disable();
+      this.tooltipMessage = 'Debe haber al menos un menú de cada tipo para poder crear un menú diario';
+    }
   }
 
   override mapToDTO(formValue: any): MenuDiarioDTO {
