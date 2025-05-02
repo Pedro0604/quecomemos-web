@@ -46,7 +46,7 @@ export const appRoutes: Routes = [
     title: 'Menús Diarios',
     canActivate: [AuthGuard],
     data: {
-      permiso: 'ver_menu_diario',
+      permiso: 'ver:menu_diario',
       includeInLayout: true
     }
   },
@@ -56,7 +56,7 @@ export const appRoutes: Routes = [
     title: 'Crear un Menú Diario',
     canActivate: [AuthGuard],
     data: {
-      permiso: 'crear_menu_diario',
+      permiso: 'crear:menu_diario',
       includeInLayout: true
     }
   },
@@ -66,7 +66,7 @@ export const appRoutes: Routes = [
     title: 'Editar un Menú Diario',
     canActivate: [AuthGuard],
     data: {
-      permiso: 'editar_menu_diario'
+      permiso: 'editar:menu_diario'
     }
   },
   {
@@ -75,7 +75,7 @@ export const appRoutes: Routes = [
     title: 'Menús',
     canActivate: [AuthGuard],
     data: {
-      permiso: 'ver_menu',
+      permiso: 'ver:menu',
       includeInLayout: true
     }
   },
@@ -85,7 +85,7 @@ export const appRoutes: Routes = [
     title: 'Crear un Menú',
     canActivate: [AuthGuard],
     data: {
-      permiso: 'crear_menu',
+      permiso: 'crear:menu',
       includeInLayout: true
     }
   },
@@ -95,7 +95,7 @@ export const appRoutes: Routes = [
     title: 'Editar un Menú',
     canActivate: [AuthGuard],
     data: {
-      permiso: 'editar_menu'
+      permiso: 'editar:menu'
     }
   },
   {
@@ -104,7 +104,7 @@ export const appRoutes: Routes = [
     title: 'Comidas',
     canActivate: [AuthGuard],
     data: {
-      permiso: 'ver_comida',
+      permiso: 'ver:comida',
       includeInLayout: true
     }
   },
@@ -114,7 +114,7 @@ export const appRoutes: Routes = [
     title: 'Crear una Comida',
     canActivate: [AuthGuard],
     data: {
-      permiso: 'crear_comida',
+      permiso: 'crear:comida',
       includeInLayout: true
     }
   },
@@ -124,7 +124,7 @@ export const appRoutes: Routes = [
     title: 'Editar una Comida',
     canActivate: [AuthGuard],
     data: {
-      permiso: 'editar_comida'
+      permiso: 'editar:comida'
     }
   },
   {
@@ -133,7 +133,7 @@ export const appRoutes: Routes = [
     title: 'Mi Perfil',
     canActivate: [AuthGuard],
     data: {
-      permiso: 'editar_cliente'
+      permiso: 'editar:cliente'
     }
   },
   {

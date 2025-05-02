@@ -35,8 +35,8 @@ export class ComidaComponent {
   protected puedeEliminar;
 
   constructor(private comidaService: ComidaService, protected authService: AuthService) {
-    this.puedeEditar = this.authService.hasPermission('editar_comida');
-    this.puedeEliminar = this.authService.hasPermission('eliminar_comida');
+    this.puedeEditar = this.authService.hasPermission('editar:comida');
+    this.puedeEliminar = this.authService.hasPermission('eliminar:comida');
   }
 
   openDialogEliminar(): void {

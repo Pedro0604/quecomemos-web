@@ -104,7 +104,7 @@ export class MenuFormComponent extends BaseEntityForm<Menu, MenuDTO, Comida> imp
   ) {
     super(router, notificationService, formService, service, route, 'menú', false);
 
-    this.puedeCrearComida = authService.hasPermission('crear_comida');
+    this.puedeCrearComida = authService.hasPermission('crear:comida');
 
     this.form = this.fb.group({
       nombre: [''],

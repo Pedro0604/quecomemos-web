@@ -51,7 +51,7 @@ export class ListComponent<T, D> implements OnInit {
     });
 
     this.creationUrl = `/${kebabCase(this.entityName)}/create`;
-    this.creationPermission = `crear_${snakeCase(this.entityName)}`;
+    this.creationPermission = `crear:${snakeCase(this.entityName)}`;
   }
 
   handleDelete(id: number) {

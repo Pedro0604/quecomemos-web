@@ -35,7 +35,7 @@ export class EntityCardActionsComponent implements OnInit {
   ngOnInit(): void {
     this.editUrl = `/${kebabCase(this.entityName)}/edit`;
     this.entityPermissionName = snakeCase(this.entityName);
-    this.puedeEditar = this.authService.hasPermission(`editar_${this.entityPermissionName}`);
-    this.puedeEliminar = this.authService.hasPermission(`eliminar_${this.entityPermissionName}`);
+    this.puedeEditar = this.authService.hasPermission(`editar:${this.entityPermissionName}`);
+    this.puedeEliminar = this.authService.hasPermission(`eliminar:${this.entityPermissionName}`);
   }
 }

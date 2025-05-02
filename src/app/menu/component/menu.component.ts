@@ -33,8 +33,8 @@ export class MenuComponent {
   protected puedeEliminar;
 
   constructor(private menuService: MenuService, protected authService: AuthService) {
-    this.puedeEditar = this.authService.hasPermission('editar_menu');
-    this.puedeEliminar = this.authService.hasPermission('eliminar_menu');
+    this.puedeEditar = this.authService.hasPermission('editar:menu');
+    this.puedeEliminar = this.authService.hasPermission('eliminar:menu');
   }
 
   openDialogEliminar(): void {
