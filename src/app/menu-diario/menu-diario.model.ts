@@ -1,6 +1,6 @@
 import {Menu} from '../menu/menu.model';
 
-export type DiasSemana = 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY';
+export type DiasSemana = 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY' | 'SATURDAY';
 
 export function traduccionDiasSemana(dia: DiasSemana): string {
   switch (dia) {
@@ -14,10 +14,12 @@ export function traduccionDiasSemana(dia: DiasSemana): string {
       return 'Jueves';
     case 'FRIDAY':
       return 'Viernes';
+    case 'SATURDAY':
+      return 'Sábado';
   }
 }
 
-export const diasSemanaArray: DiasSemana[] = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY'];
+export const diasSemanaArray: DiasSemana[] = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
 
 export type MenuDiario = {
   id: number;
