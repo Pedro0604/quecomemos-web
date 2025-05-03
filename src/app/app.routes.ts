@@ -13,6 +13,7 @@ import {MenuDiarioFormComponent} from './menu-diario/form/menu-diario-form.compo
 import {UserFormComponent} from './user/form/user-form.component';
 import {GuestGuard} from './auth/guards/guest.guards';
 import {ForbiddenComponent} from './error-pages/forbidden-page/forbidden.component';
+import {SugerenciaListComponent} from './sugerencia/list/sugerencia-list.component';
 
 export const appRoutes: Routes = [
   {
@@ -46,7 +47,7 @@ export const appRoutes: Routes = [
     title: 'Menús Diarios',
     canActivate: [AuthGuard],
     data: {
-      permiso: 'ver:menu_diario',
+      permiso: 'ver_todos:menu_diario',
       includeInLayout: true
     }
   },
@@ -75,7 +76,7 @@ export const appRoutes: Routes = [
     title: 'Menús',
     canActivate: [AuthGuard],
     data: {
-      permiso: 'ver:menu',
+      permiso: 'ver_todos:menu',
       includeInLayout: true
     }
   },
@@ -104,7 +105,7 @@ export const appRoutes: Routes = [
     title: 'Comidas',
     canActivate: [AuthGuard],
     data: {
-      permiso: 'ver:comida',
+      permiso: 'ver_todos:comida',
       includeInLayout: true
     }
   },
@@ -122,6 +123,36 @@ export const appRoutes: Routes = [
     path: 'comida/edit/:id',
     component: ComidaFormComponent,
     title: 'Editar una Comida',
+    canActivate: [AuthGuard],
+    data: {
+      permiso: 'editar:comida'
+    }
+  },
+  {
+    path: 'sugerencia',
+    component: SugerenciaListComponent,
+    title: 'Sugerencias',
+    canActivate: [AuthGuard],
+    data: {
+      permiso: 'ver_todos:sugerencia',
+      includeInLayout: true
+    }
+  },
+  // TODO - CONTINUAR CON FORMS
+  {
+    path: 'sugerencia/create',
+    component: ComidaFormComponent,
+    title: 'Crear una Sugerencia',
+    canActivate: [AuthGuard],
+    data: {
+      permiso: 'crear:sugerencia',
+      includeInLayout: true
+    }
+  },
+  {
+    path: 'sugerencia/edit/:id',
+    component: ComidaFormComponent,
+    title: 'Editar una Sugerencia',
     canActivate: [AuthGuard],
     data: {
       permiso: 'editar:comida'
