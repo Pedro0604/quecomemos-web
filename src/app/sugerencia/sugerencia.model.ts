@@ -16,6 +16,7 @@ export interface Sugerencia {
   descripcion: string;
   tipo: TipoSugerencia;
   fecha: Date;
+  updatedAt: Date;
   cliente: ClientResponseDTO;
 }
 

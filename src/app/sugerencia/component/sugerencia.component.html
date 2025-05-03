@@ -1,7 +1,7 @@
 <mat-card appearance="outlined" class="w-full h-full">
   <mat-card-header class="flex justify-between">
     <mat-card-title>{{ sugerencia.cliente.nombre }}</mat-card-title>
-    <mat-card-subtitle>{{ sugerencia.fecha }}</mat-card-subtitle>
+    <mat-card-subtitle>{{ sugerencia.updatedAt }}{{ (sugerencia.fecha !== sugerencia.updatedAt) ? " (editada)" : "" }}</mat-card-subtitle>
   </mat-card-header>
   <mat-card-content class="my-4">
     <div class="flex flex-col gap-4">
