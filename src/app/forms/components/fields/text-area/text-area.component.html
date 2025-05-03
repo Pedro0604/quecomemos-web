@@ -1,0 +1,29 @@
+<mat-form-field [floatLabel]="floatLabel" appearance="fill" class="w-full">
+  <mat-label>{{ label }}</mat-label>
+  <textarea
+    [disabledInteractive]="readonly"
+    [formControl]="control"
+    [matTooltipPosition]="tooltipPosition"
+    [matTooltip]="tooltipMessage || (readonly ? 'El campo no puede ser modificado' : '')"
+    [maxlength]="maxLength"
+    [minlength]="minLength"
+    [placeholder]="placeholder"
+    [readonly]="readonly"
+    [required]="required"
+    matInput
+  ></textarea>
+  @if (clearable && control.value) {
+    <button matSuffix mat-icon-button aria-label="Clear" type="button" tabindex="-1" (click)="control.setValue('')">
+      <mat-icon>close</mat-icon>
+    </button>
+  }
+  @if (textPrefix) {
+    <span matTextPrefix>{{ textPrefix }}</span>
+  }
+  @if (!readonly) {
+    <mat-hint align="end" [class]="getHintClass()">{{ hint || getHintText() }}</mat-hint>
+  }
+  @if (errorMessage) {
+    <mat-error>{{ errorMessage }}</mat-error>
+  }
+</mat-form-field>
