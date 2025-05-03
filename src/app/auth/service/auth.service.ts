@@ -2,11 +2,12 @@ import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {jwtDecode} from 'jwt-decode';
 import {HttpClient} from '@angular/common/http';
-import {ClientDTO, Credenciales, LoggedUser, RoleApiPath, RoleName} from '../../user/user.model';
+import {ClientDTO, Credenciales, LoggedUser} from '../../user/user.model';
 import {environment} from '../../../environments/environment';
 import {ActivatedRouteSnapshot, Router} from '@angular/router';
 import {NotificationService} from '../../notification/notification.service';
 import {capitalize} from '../../utils/utils';
+import {RoleApiPath, RoleName} from "../../rol/rol.model";
 
 interface CustomJwtPayload {
   sub: string,
