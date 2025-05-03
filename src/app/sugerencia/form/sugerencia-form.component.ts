@@ -33,8 +33,7 @@ export class SugerenciaFormComponent extends BaseEntityForm<Sugerencia, Sugerenc
     value: tipoSugerencia,
     name: tipoSugerenciaToString(tipoSugerencia)
   }));
-  // TODO - REDIRIGIR A BUZÓN
-  protected override redirectUrlOnCreation: string = '/sugerencia';
+  protected override redirectUrlOnCreation: string = '/buzon';
   protected override form: FormGroup;
 
   constructor(
