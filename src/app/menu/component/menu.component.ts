@@ -29,12 +29,7 @@ export class MenuComponent {
 
   @Output() onDelete = new EventEmitter<number>();
 
-  protected puedeEditar;
-  protected puedeEliminar;
-
   constructor(private menuService: MenuService, protected authService: AuthService) {
-    this.puedeEditar = this.authService.hasPermission('editar:menu');
-    this.puedeEliminar = this.authService.hasPermission('eliminar:menu');
   }
 
   openDialogEliminar(): void {
