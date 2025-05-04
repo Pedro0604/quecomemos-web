@@ -16,4 +16,6 @@ import {ListComponent} from '../../components/list/list.component';
 export class MenuListComponent {
   constructor(protected menuService: MenuService) {
   }
+
+  protected fetchItems = () => this.menuService.getAll();
 }

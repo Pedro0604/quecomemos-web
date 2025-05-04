@@ -16,4 +16,6 @@ import {ListComponent} from '../../components/list/list.component';
 export class ComidaListComponent {
   constructor(protected comidaService: ComidaService) {
   }
+
+  protected fetchItems = () => this.comidaService.getAll();
 }
