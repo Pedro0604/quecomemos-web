@@ -14,6 +14,8 @@ import {UserFormComponent} from './user/form/user-form.component';
 import {GuestGuard} from './auth/guards/guest.guards';
 import {ForbiddenComponent} from './error-pages/forbidden-page/forbidden.component';
 import {SugerenciaListComponent} from './sugerencia/list/sugerencia-list.component';
+import {SugerenciaFormComponent} from './sugerencia/form/sugerencia-form.component';
+import {BuzonComponent} from './sugerencia/buzon/buzon.component';
 
 export const appRoutes: Routes = [
   {
@@ -138,10 +140,9 @@ export const appRoutes: Routes = [
       includeInLayout: true
     }
   },
-  // TODO - CONTINUAR CON FORMS
   {
     path: 'sugerencia/create',
-    component: ComidaFormComponent,
+    component: SugerenciaFormComponent,
     title: 'Crear una Sugerencia',
     canActivate: [AuthGuard],
     data: {
@@ -151,11 +152,20 @@ export const appRoutes: Routes = [
   },
   {
     path: 'sugerencia/edit/:id',
-    component: ComidaFormComponent,
+    component: SugerenciaFormComponent,
     title: 'Editar una Sugerencia',
     canActivate: [AuthGuard],
     data: {
-      permiso: 'editar:comida'
+      permiso: 'editar:sugerencia'
+    }
+  },
+  {
+    path: 'buzon',
+    component: BuzonComponent,
+    title: 'Buzón de sugerencias',
+    canActivate: [AuthGuard],
+    data: {
+      permiso: 'ver_buzon:cliente'
     }
   },
   {
