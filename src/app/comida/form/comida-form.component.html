@@ -34,7 +34,12 @@
       type="text"
     />
   </div>
-  <mat-checkbox formControlName="vegetariana">¿Es vegetariana?</mat-checkbox>
+  <mat-checkbox
+    [disabled]="true"
+    formControlName="vegetariana"
+  >
+    ¿Es vegetariana?
+  </mat-checkbox>
   <app-form-state [error]="error" [loading]="loading"/>
   <app-submit-button [disabled]="form.disabled" [error]="error" [form]="form" [loading]="loading"
                      [pendingText]="submittingText()">{{ title() }}
