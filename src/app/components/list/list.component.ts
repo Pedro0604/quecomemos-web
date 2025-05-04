@@ -1,5 +1,4 @@
 import {booleanAttribute, Component, Input, OnInit, TemplateRef} from '@angular/core';
-import {CrudService} from '../../crud-service/crud.service';
 import {TitleComponent} from '../title/title.component';
 import {MatIcon} from '@angular/material/icon';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
@@ -8,6 +7,7 @@ import {RouterLink} from '@angular/router';
 import {NgTemplateOutlet} from '@angular/common';
 import {AuthService} from '../../auth/service/auth.service';
 import {kebabCase, snakeCase} from '../../utils/utils';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'app-list',
@@ -22,9 +22,9 @@ import {kebabCase, snakeCase} from '../../utils/utils';
   templateUrl: './list.component.html',
   standalone: true
 })
-export class ListComponent<T, D> implements OnInit {
+export class ListComponent<T> implements OnInit {
   @Input({required: true}) title!: string;
-  @Input({required: true}) service!: CrudService<T, D>;
+  @Input({required: true}) fetchItems!: () => Observable<T[]>;
   @Input() itemTemplate!: TemplateRef<{ $implicit: T, onDelete: (id: number) => void }>;
   @Input({required: true}) entityName!: string;
   @Input({transform: booleanAttribute}) femenino: boolean = false;
@@ -41,10 +41,10 @@ export class ListComponent<T, D> implements OnInit {
   }
 
   ngOnInit(): void {
-    this.service.getAll().subscribe({
+    this.fetchItems().subscribe({
       next: (data) => (this.items = data ?? []),
       error: (error) => {
-        console.error(`Error al obtener ${(this.femenino ? 'las' : 'los') + this.title}`, error);
+        console.error(`Error al obtener ${(this.femenino ? 'las ' : 'los ') + this.title}`, error);
         this.error = true;
       },
       complete: () => (this.loading = false),

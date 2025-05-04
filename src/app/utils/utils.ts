@@ -9,3 +9,10 @@ export const kebabCase = (str: string): string => {
 export const snakeCase = (str: string): string => {
   return str.replace(/[-\s]/, '_').toLowerCase();
 }
+
+export const limitString = (str: string, limit: number): string => {
+  if (str.length > limit) {
+    return str.substring(0, limit) + '...';
+  }
+  return str;
+}

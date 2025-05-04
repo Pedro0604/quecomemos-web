@@ -1,3 +1,5 @@
+import {RoleApiPath, RoleName, RolResponseDTO} from '../rol/rol.model';
+
 export interface User {
   id: number;
   nombre: string;
@@ -16,6 +18,15 @@ export interface ClientDTO {
   clave: string
 }
 
+export interface ClientResponseDTO {
+  id: number;
+  dni: number;
+  nombre: string;
+  apellido: string;
+  urlImagen: string;
+  rol: RolResponseDTO;
+}
+
 export interface LoggedUser {
   id: string;
   nombre: string;
@@ -24,9 +35,6 @@ export interface LoggedUser {
   rolApiPath: RoleApiPath;
   permisos: string[];
 }
-
-export type RoleName = 'cliente' | 'responsable' | 'administrador';
-export type RoleApiPath = 'clientes' | 'responsables' | 'administradores';
 
 export interface Credenciales {
   dni: string,

@@ -6,51 +6,45 @@ import {MatIcon} from '@angular/material/icon';
 import {DialogEliminarComponent} from '../../components/dialog-eliminar/dialog-eliminar.component';
 import {ComidaService} from '../service/comida.service';
 import {DefaultImageDirective} from '../../directives/default-image-directive/default-image.directive';
-import {AuthService} from '../../auth/service/auth.service';
 import {EntityCardActionsComponent} from '../../components/entity-card-actions/entity-card-actions.component';
 
 @Component({
-  selector: 'app-comida',
-  templateUrl: './comida.component.html',
-  standalone: true,
-  imports: [
-    MatCard,
-    MatCardHeader,
-    MatIcon,
-    MatCardContent,
-    MatCardTitle,
-    MatCardSubtitle,
-    DefaultImageDirective,
-    EntityCardActionsComponent,
-  ],
+    selector: 'app-comida',
+    templateUrl: './comida.component.html',
+    standalone: true,
+    imports: [
+        MatCard,
+        MatCardHeader,
+        MatIcon,
+        MatCardContent,
+        MatCardTitle,
+        MatCardSubtitle,
+        DefaultImageDirective,
+        EntityCardActionsComponent,
+    ],
 })
 
 export class ComidaComponent {
-  dialog = inject(MatDialog);
-  @Input({required: true}) comida!: Comida;
-  @Input({transform: booleanAttribute}) showButtons: boolean = true;
-  @Output() onDelete = new EventEmitter<number>();
+    dialog = inject(MatDialog);
+    @Input({required: true}) comida!: Comida;
+    @Input({transform: booleanAttribute}) showButtons: boolean = true;
+    @Output() onDelete = new EventEmitter<number>();
 
-  protected puedeEditar;
-  protected puedeEliminar;
+    constructor(private comidaService: ComidaService) {
+    }
 
-  constructor(private comidaService: ComidaService, protected authService: AuthService) {
-    this.puedeEditar = this.authService.hasPermission('editar:comida');
-    this.puedeEliminar = this.authService.hasPermission('eliminar:comida');
-  }
-
-  openDialogEliminar(): void {
-    this.dialog.open(DialogEliminarComponent<Comida, ComidaService>, {
-      data: {
-        entity: this.comida,
-        service: this.comidaService,
-        baseEntityName: 'la comida',
-        deletingEntityName: this.comida.nombre,
-      }
-    }).afterClosed().subscribe((deleted) => {
-      if (deleted) {
-        this.onDelete.emit(this.comida.id);
-      }
-    });
-  }
+    openDialogEliminar(): void {
+        this.dialog.open(DialogEliminarComponent<Comida, ComidaService>, {
+            data: {
+                entity: this.comida,
+                service: this.comidaService,
+                baseEntityName: 'la comida',
+                deletingEntityName: this.comida.nombre,
+            }
+        }).afterClosed().subscribe((deleted) => {
+            if (deleted) {
+                this.onDelete.emit(this.comida.id);
+            }
+        });
+    }
 }

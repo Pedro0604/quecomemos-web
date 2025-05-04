@@ -15,4 +15,6 @@ import {ListComponent} from '../../components/list/list.component';
 export class MenuDiarioListComponent {
   constructor(protected menuDiarioService: MenuDiarioService) {
   }
+
+  protected fetchItems = () => this.menuDiarioService.getAll();
 }

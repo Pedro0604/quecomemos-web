@@ -1,0 +1,11 @@
+<app-list
+  [itemTemplate]="sugerenciaTemplate"
+  [fetchItems]="fetchItems"
+  entityName="sugerencia"
+  [femenino]="true"
+  title="sugerencias"
+/>
+
+<ng-template #sugerenciaTemplate let-sugerencia let-onDelete="onDelete">
+  <app-sugerencia (onDelete)="onDelete(sugerencia.id)" [sugerencia]="sugerencia"></app-sugerencia>
+</ng-template>
