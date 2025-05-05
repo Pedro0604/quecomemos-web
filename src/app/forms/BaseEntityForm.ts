@@ -6,6 +6,7 @@ import {FormService} from './service/form.service';
 import {Injectable, OnInit, signal} from '@angular/core';
 import {firstValueFrom} from 'rxjs';
 import {HttpHeaders} from '@angular/common/http';
+import {Entidad, entidadIsFemenina, getEntidadNombre} from '../permiso/entidad';
 
 @Injectable()
 export abstract class BaseEntityForm<T extends { id: number }, DTO, R> extends FormStateHandler implements OnInit {
@@ -23,17 +24,16 @@ export abstract class BaseEntityForm<T extends { id: number }, DTO, R> extends F
     protected formService: FormService,
     protected service: CrudService<T, DTO>,
     protected route: ActivatedRoute,
-    private entityName: string,
-    femenino: boolean,
+    private entidad: Entidad,
     protected readonly submitHeaders: HttpHeaders = new HttpHeaders(),
   ) {
     super();
     this.service = service;
-    this.articulo = femenino ? 'la' : 'el';
-    this.entidadConArticulo = `${this.articulo} ${entityName}`;
+    this.articulo = entidadIsFemenina(this.entidad) ? 'la' : 'el';
+    this.entidadConArticulo = `${this.articulo} ${getEntidadNombre(this.entidad)}`;
 
-    this.title.set(`Crear ${this.entityName}`);
-    this.submittingText.set(`Creando ${this.entityName}`);
+    this.title.set(`Crear ${getEntidadNombre(this.entidad)}`);
+    this.submittingText.set(`Creando ${getEntidadNombre(this.entidad)}`);
   }
 
   public async ngOnInit(): Promise<void> {
@@ -131,8 +131,8 @@ export abstract class BaseEntityForm<T extends { id: number }, DTO, R> extends F
       if (entityData) {
         this.entity = entityData;
         this.form.patchValue(this.entity);
-        this.title.set(`Modificar ${this.entityName}`);
-        this.submittingText.set(`Modificando ${this.entityName}`);
+        this.title.set(`Modificar ${getEntidadNombre(this.entidad)}`);
+        this.submittingText.set(`Modificando ${getEntidadNombre(this.entidad)}`);
       }
     } catch (error: any) {
       this.error = true;

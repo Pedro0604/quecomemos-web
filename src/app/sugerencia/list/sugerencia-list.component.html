@@ -1,9 +1,7 @@
 <app-list
   [itemTemplate]="sugerenciaTemplate"
   [fetchItems]="fetchItems"
-  entityName="sugerencia"
-  [femenino]="true"
-  title="sugerencias"
+  [entity]="Entidad.SUGERENCIA"
 />
 
 <ng-template #sugerenciaTemplate let-sugerencia let-onDelete="onDelete">

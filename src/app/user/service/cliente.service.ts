@@ -5,6 +5,7 @@ import {CrudService} from '../../crud-service/crud.service';
 import {Observable} from 'rxjs';
 import {AuthService} from '../../auth/service/auth.service';
 import {Sugerencia} from '../../sugerencia/sugerencia.model';
+import {Entidad} from '../../permiso/entidad';
 
 
 @Injectable({
@@ -12,7 +13,7 @@ import {Sugerencia} from '../../sugerencia/sugerencia.model';
 })
 export class ClienteService extends CrudService<User, ClientDTO> {
   constructor(http: HttpClient, private authService: AuthService) {
-    super(http, 'clientes');
+    super(http, Entidad.CLIENTE);
   }
 
   getSugerencias(): Observable<Sugerencia[]> {

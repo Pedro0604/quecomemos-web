@@ -1,10 +1,10 @@
 <app-list
-        [itemTemplate]="menuTemplate"
-        [fetchItems]="fetchItems"
-        entityName="menu"
-        title="menús"/>
+  [itemTemplate]="menuTemplate"
+  [fetchItems]="fetchItems"
+  [entity]="Entidad.MENU"
+/>
 
 <ng-template #menuTemplate let-menu let-onDelete="onDelete">
-    <app-menu (onDelete)="onDelete(menu.id)" [menu]="menu"></app-menu>
+  <app-menu (onDelete)="onDelete(menu.id)" [menu]="menu"></app-menu>
 </ng-template>
 

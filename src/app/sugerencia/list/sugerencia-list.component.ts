@@ -4,6 +4,8 @@ import {ListComponent} from '../../components/list/list.component';
 import {SugerenciaComponent} from '../component/sugerencia.component';
 import {ClienteService} from '../../user/service/cliente.service';
 
+import {Entidad} from '../../permiso/entidad';
+
 @Component({
   selector: 'app-sugerencia-list',
   imports: [
@@ -20,4 +22,5 @@ export class SugerenciaListComponent {
 
   // Si isForBuzon es true, se obtienen las sugerencias del cliente, de lo contrario se obtienen todas las sugerencias
   protected fetchItems = () => this.isForBuzon ? this.clienteService.getSugerencias() : this.sugerenciaService.getAll();
+  protected readonly Entidad = Entidad;
 }

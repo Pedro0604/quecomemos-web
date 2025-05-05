@@ -9,6 +9,8 @@ import {MenuDiarioService} from '../menu-diario/service/menu-diario.service';
 import {MatAccordion, MatExpansionModule} from '@angular/material/expansion';
 import {TitleComponent} from "../components/title/title.component";
 import {AuthService} from '../auth/service/auth.service';
+import {Entidad} from '../permiso/entidad';
+import {Accion} from '../permiso/accion';
 
 @Component({
   selector: 'app-home',
@@ -51,4 +53,7 @@ export class HomeComponent implements OnInit {
       }
     });
   }
+
+  protected readonly Accion = Accion;
+  protected readonly Entidad = Entidad;
 }

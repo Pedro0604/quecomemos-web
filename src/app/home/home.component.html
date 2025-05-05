@@ -12,7 +12,7 @@
       <span class="ml-2">No hay menús diarios</span>
     }
   </div>
-  @if (!error && !loading && menusDiarios.length === 0 && authService.isLoggedIn && authService.hasPermission('crear:menu_diario')) {
+  @if (!error && !loading && menusDiarios.length === 0 && authService.isLoggedIn && authService.hasPermission(Accion.CREAR, Entidad.MENU_DIARIO)) {
     <span class="flex justify-center mt-4">
       <a mat-button routerLink="/menu-diario/create">Creá un menú diario ahora</a>
     </span>

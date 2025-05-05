@@ -1,9 +1,9 @@
-<app-title [femenino]="femenino" [title]="this.title" showVegetariano/>
+<app-title [femenino]="esFemenino" [title]="this.title" showVegetariano/>
 
 @if (error) {
   <div class="flex justify-center items-center mt-20 text-2xl">
     <mat-icon class="error">error</mat-icon>
-    <span class="ml-2">Error al cargar {{ (femenino ? 'las' : 'los') + ' ' + title }}</span>
+    <span class="ml-2">Error al cargar {{ (esFemenino ? 'las' : 'los') + ' ' + title }}</span>
   </div>
 } @else if (loading) {
   <div class="flex justify-center items-center mt-20 text-2xl">
@@ -14,9 +14,9 @@
     <mat-icon class="error">warning</mat-icon>
     <span class="ml-2">No hay {{ title }} disponibles</span>
   </div>
-  @if (authService.hasPermission(creationPermission)) {
+  @if (canCreate) {
     <span class="flex justify-center mt-4">
-      <a mat-button [routerLink]="creationUrl">Creá un{{ femenino ? 'a' : 'o' }} ahora</a>
+      <a mat-button [routerLink]="creationUrl">Creá un{{ esFemenino ? 'a' : 'o' }} ahora</a>
     </span>
   }
 } @else {

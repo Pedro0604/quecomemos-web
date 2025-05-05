@@ -14,6 +14,8 @@ import {LayoutService} from './layout.service';
 import {AuthGuard} from '../auth/guards/auth.guards';
 import {AuthService} from '../auth/service/auth.service';
 import {DefaultImageDirective} from '../directives/default-image-directive/default-image.directive';
+import {Entidad, getEntidadLink} from '../permiso/entidad';
+import {Accion} from '../permiso/accion';
 
 
 @Component({
@@ -112,4 +114,8 @@ export class LayoutComponent implements OnInit {
       this.filtrarRutas();
     });
   }
+
+  protected readonly Accion = Accion;
+  protected readonly Entidad = Entidad;
+  protected readonly getEntidadLink = getEntidadLink;
 }

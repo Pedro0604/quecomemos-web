@@ -1,4 +1,5 @@
-import {RoleApiPath, RoleName, RolResponseDTO} from '../rol/rol.model';
+import {RoleName, RolResponseDTO} from '../rol/rol.model';
+import {Permiso} from '../permiso/permiso.model';
 
 export interface User {
   id: number;
@@ -32,8 +33,7 @@ export interface LoggedUser {
   nombre: string;
   imagen: string;
   rolName: RoleName,
-  rolApiPath: RoleApiPath;
-  permisos: string[];
+  permisos: Permiso[];
 }
 
 export interface Credenciales {

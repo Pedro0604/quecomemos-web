@@ -7,15 +7,17 @@ import {environment} from '../../../environments/environment';
 import {ActivatedRouteSnapshot, Router} from '@angular/router';
 import {NotificationService} from '../../notification/notification.service';
 import {capitalize} from '../../utils/utils';
-import {RoleApiPath, RoleName} from "../../rol/rol.model";
+import {RoleName} from "../../rol/rol.model";
+import {Permiso} from '../../permiso/permiso.model';
+import {Entidad} from '../../permiso/entidad';
+import {Accion} from '../../permiso/accion';
 
 interface CustomJwtPayload {
   sub: string,
   nombre: string,
   imagen: string,
   rolName: RoleName,
-  rolApiPath: RoleApiPath,
-  permisos: string[],
+  permisos: Permiso[],
   exp: number
 }
 
@@ -55,13 +57,13 @@ export class AuthService {
     this.router.navigate(['/login']);
   }
 
-  hasPermission(permiso: string): boolean {
-    return this.usuario?.permisos.includes(permiso) ?? false;
+  hasPermission(accion: Accion, entidad: Entidad): boolean {
+    return this.usuario?.permisos.some(p => p.accion === accion && p.entidad === entidad) ?? false;
   }
 
   canAccessRoute(route: ActivatedRouteSnapshot): boolean {
     if (route.data?.['permiso']) {
-      return this.hasPermission(route.data['permiso']);
+      return this.hasPermission(route.data['permiso'].accion as Accion, route.data['permiso'].entidad as Entidad);
     }
     return true;
   }
@@ -114,8 +116,7 @@ export class AuthService {
         id: decoded.sub,
         nombre: decoded.nombre ?? 'Usuario',
         imagen: decoded.imagen ?? 'Sample_User_Icon.png',
-        rolName: decoded.rolName ? decoded.rolName as RoleName : 'cliente',
-        rolApiPath: decoded.rolApiPath ? decoded.rolApiPath as RoleApiPath : 'clientes',
+        rolName: decoded.rolName ? decoded.rolName as RoleName : Entidad.CLIENTE,
         permisos: decoded.permisos ?? [],
       };
 

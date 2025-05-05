@@ -7,6 +7,8 @@ import {DialogEliminarComponent} from '../../components/dialog-eliminar/dialog-e
 import {MenuDiarioService} from '../service/menu-diario.service';
 import {EntityCardActionsComponent} from '../../components/entity-card-actions/entity-card-actions.component';
 
+import {Entidad} from '../../permiso/entidad';
+
 @Component({
   selector: 'app-menu-diario',
   imports: [
@@ -45,4 +47,6 @@ export class MenuDiarioComponent {
       }
     });
   }
+
+  protected readonly Entidad = Entidad;
 }

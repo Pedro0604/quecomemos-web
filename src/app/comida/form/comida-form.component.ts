@@ -13,6 +13,7 @@ import {TitleComponent} from '../../components/title/title.component';
 import {BaseEntityForm} from '../../forms/BaseEntityForm';
 import {FormComponent} from '../../forms/components/form/form.component';
 import {FormStateComponent} from '../../forms/components/form-state/form-state.component';
+import {Entidad, getEntidadLink} from '../../permiso/entidad';
 
 @Component({
   selector: 'app-comida-form',
@@ -37,7 +38,7 @@ export class ComidaFormComponent extends BaseEntityForm<Comida, ComidaDTO, void>
     value: tipoComida,
     name: tipoComidaToString(tipoComida)
   }));
-  protected override redirectUrlOnCreation: string = '/comidas';
+  protected override redirectUrlOnCreation: string = getEntidadLink(Entidad.COMIDA);
   protected override form: FormGroup
 
   constructor(
@@ -48,7 +49,7 @@ export class ComidaFormComponent extends BaseEntityForm<Comida, ComidaDTO, void>
     route: ActivatedRoute,
     private fb: FormBuilder
   ) {
-    super(router, notificationService, formService, service, route, 'comida', true);
+    super(router, notificationService, formService, service, route, Entidad.COMIDA);
 
     this.form = this.fb.group({
       nombre: [''],

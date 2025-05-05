@@ -19,6 +19,8 @@ import {MatError} from '@angular/material/input';
 import {FormStateComponent} from '../../forms/components/form-state/form-state.component';
 import {FormComponent} from '../../forms/components/form/form.component';
 import {AuthService} from '../../auth/service/auth.service';
+import {Entidad} from '../../permiso/entidad';
+import {Accion} from '../../permiso/accion';
 
 type CampoMenu = {
   nombre: string,
@@ -79,7 +81,7 @@ export class MenuDiarioFormComponent extends BaseEntityForm<MenuDiario, MenuDiar
     private menuService: MenuService,
     protected authService: AuthService
   ) {
-    super(router, notificationService, formService, service, route, 'menú diario', false);
+    super(router, notificationService, formService, service, route, Entidad.MENU_DIARIO);
 
     this.form = this.fb.group({
       dia: ['', [inArrayValidator(diasSemanaArray)]],
@@ -113,4 +115,7 @@ export class MenuDiarioFormComponent extends BaseEntityForm<MenuDiario, MenuDiar
       this.tooltipMessage = 'Debe haber al menos un menú de cada tipo para poder crear un menú diario';
     }
   }
+
+  protected readonly Accion = Accion;
+  protected readonly Entidad = Entidad;
 }

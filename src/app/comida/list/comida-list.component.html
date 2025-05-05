@@ -1,9 +1,7 @@
 <app-list
   [itemTemplate]="comidaTemplate"
   [fetchItems]="fetchItems"
-  entityName="comida"
-  [femenino]="true"
-  title="comidas"
+  [entity]="Entidad.COMIDA"
 />
 
 <ng-template #comidaTemplate let-comida let-onDelete="onDelete">

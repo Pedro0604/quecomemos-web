@@ -36,7 +36,7 @@
   <app-form-state [error]="error" [loading]="loading">
     @if (relatedData.length === 0) {
       <mat-error>No hay ningún menú</mat-error>
-      @if (authService.hasPermission('crear:menu')) {
+      @if (authService.hasPermission(Accion.CREAR, Entidad.MENU)) {
         <a routerLink="/menu/create" mat-button class="-ms-3">Creá alguno para poder continuar</a>
       }
     } @else {

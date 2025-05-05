@@ -7,6 +7,8 @@ import {limitString} from '../../utils/utils';
 import {EntityCardActionsComponent} from '../../components/entity-card-actions/entity-card-actions.component';
 import {MatCard, MatCardContent, MatCardHeader, MatCardSubtitle, MatCardTitle} from '@angular/material/card';
 
+import {Entidad} from '../../permiso/entidad';
+
 @Component({
   selector: 'app-sugerencia',
   imports: [
@@ -45,4 +47,5 @@ export class SugerenciaComponent {
   }
 
   protected readonly tipoSugerenciaToString = tipoSugerenciaToString;
+  protected readonly Entidad = Entidad;
 }

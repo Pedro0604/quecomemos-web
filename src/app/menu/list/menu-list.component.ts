@@ -3,6 +3,8 @@ import {MenuComponent} from '../component/menu.component';
 import {MenuService} from '../service/menu.service';
 import {ListComponent} from '../../components/list/list.component';
 
+import {Entidad} from '../../permiso/entidad';
+
 @Component({
   selector: 'app-menu-list',
   imports: [
@@ -18,4 +20,5 @@ export class MenuListComponent {
   }
 
   protected fetchItems = () => this.menuService.getAll();
+  protected readonly Entidad = Entidad;
 }

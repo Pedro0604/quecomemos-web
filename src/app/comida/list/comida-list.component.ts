@@ -3,6 +3,8 @@ import {ComidaService} from '../service/comida.service';
 import {ComidaComponent} from '../component/comida.component';
 import {ListComponent} from '../../components/list/list.component';
 
+import {Entidad} from '../../permiso/entidad';
+
 @Component({
   selector: 'app-comida-list',
   imports: [
@@ -18,4 +20,5 @@ export class ComidaListComponent {
   }
 
   protected fetchItems = () => this.comidaService.getAll();
+  protected readonly Entidad = Entidad;
 }

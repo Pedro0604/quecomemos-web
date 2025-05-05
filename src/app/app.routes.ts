@@ -16,6 +16,8 @@ import {ForbiddenComponent} from './error-pages/forbidden-page/forbidden.compone
 import {SugerenciaListComponent} from './sugerencia/list/sugerencia-list.component';
 import {SugerenciaFormComponent} from './sugerencia/form/sugerencia-form.component';
 import {BuzonComponent} from './sugerencia/buzon/buzon.component';
+import {Entidad, getEntidadLink} from './permiso/entidad';
+import {Accion} from './permiso/accion';
 
 export const appRoutes: Routes = [
   {
@@ -44,119 +46,155 @@ export const appRoutes: Routes = [
     canActivate: [GuestGuard]
   },
   {
-    path: 'menu-diario',
+    path: getEntidadLink(Entidad.MENU_DIARIO),
     component: MenuDiarioListComponent,
     title: 'Menús Diarios',
     canActivate: [AuthGuard],
     data: {
-      permiso: 'ver_todos:menu_diario',
+      permiso: {
+        accion: Accion.VER_TODOS,
+        entidad: Entidad.MENU_DIARIO
+      },
       includeInLayout: true
     }
   },
   {
-    path: 'menu-diario/create',
+    path: `${getEntidadLink(Entidad.MENU_DIARIO)}/create`,
     component: MenuDiarioFormComponent,
     title: 'Crear un Menú Diario',
     canActivate: [AuthGuard],
     data: {
-      permiso: 'crear:menu_diario',
+      permiso: {
+        accion: Accion.CREAR,
+        entidad: Entidad.MENU_DIARIO
+      },
       includeInLayout: true
     }
   },
   {
-    path: 'menu-diario/edit/:id',
+    path: `${getEntidadLink(Entidad.MENU_DIARIO)}/edit/:id`,
     component: MenuDiarioFormComponent,
     title: 'Editar un Menú Diario',
     canActivate: [AuthGuard],
     data: {
-      permiso: 'editar:menu_diario'
+      permiso: {
+        accion: Accion.EDITAR,
+        entidad: Entidad.MENU_DIARIO
+      }
     }
   },
   {
-    path: 'menu',
+    path: `${getEntidadLink((Entidad.MENU))}`,
     component: MenuListComponent,
     title: 'Menús',
     canActivate: [AuthGuard],
     data: {
-      permiso: 'ver_todos:menu',
+      permiso: {
+        accion: Accion.VER_TODOS,
+        entidad: Entidad.MENU
+      },
       includeInLayout: true
     }
   },
   {
-    path: 'menu/create',
+    path: `${getEntidadLink((Entidad.MENU))}/create`,
     component: MenuFormComponent,
     title: 'Crear un Menú',
     canActivate: [AuthGuard],
     data: {
-      permiso: 'crear:menu',
+      permiso: {
+        accion: Accion.CREAR,
+        entidad: Entidad.MENU
+      },
       includeInLayout: true
     }
   },
   {
-    path: 'menu/edit/:id',
+    path: `${getEntidadLink(Entidad.MENU)}/edit/:id`,
     component: MenuFormComponent,
     title: 'Editar un Menú',
     canActivate: [AuthGuard],
     data: {
-      permiso: 'editar:menu'
+      permiso: {
+        accion: Accion.EDITAR,
+        entidad: Entidad.MENU
+      }
     }
   },
   {
-    path: 'comidas',
+    path: getEntidadLink(Entidad.COMIDA),
     component: ComidaListComponent,
     title: 'Comidas',
     canActivate: [AuthGuard],
     data: {
-      permiso: 'ver_todos:comida',
+      permiso: {
+        accion: Accion.VER_TODOS,
+        entidad: Entidad.COMIDA
+      },
       includeInLayout: true
     }
   },
   {
-    path: 'comida/create',
+    path: `${getEntidadLink(Entidad.COMIDA)}/create`,
     component: ComidaFormComponent,
     title: 'Crear una Comida',
     canActivate: [AuthGuard],
     data: {
-      permiso: 'crear:comida',
+      permiso: {
+        accion: Accion.CREAR,
+        entidad: Entidad.COMIDA
+      },
       includeInLayout: true
     }
   },
   {
-    path: 'comida/edit/:id',
+    path: `${getEntidadLink(Entidad.COMIDA)}/edit/:id`,
     component: ComidaFormComponent,
     title: 'Editar una Comida',
     canActivate: [AuthGuard],
     data: {
-      permiso: 'editar:comida'
+      permiso: {
+        accion: Accion.EDITAR,
+        entidad: Entidad.COMIDA
+      }
     }
   },
   {
-    path: 'sugerencia',
+    path: `${getEntidadLink(Entidad.SUGERENCIA)}`,
     component: SugerenciaListComponent,
     title: 'Sugerencias',
     canActivate: [AuthGuard],
     data: {
-      permiso: 'ver_todos:sugerencia',
+      permiso: {
+        accion: Accion.VER_TODOS,
+        entidad: Entidad.SUGERENCIA
+      },
       includeInLayout: true
     }
   },
   {
-    path: 'sugerencia/create',
+    path: `${getEntidadLink(Entidad.SUGERENCIA)}/create`,
     component: SugerenciaFormComponent,
     title: 'Crear una Sugerencia',
     canActivate: [AuthGuard],
     data: {
-      permiso: 'crear:sugerencia',
+      permiso: {
+        accion: Accion.CREAR,
+        entidad: Entidad.SUGERENCIA
+      },
       includeInLayout: true
     }
   },
   {
-    path: 'sugerencia/edit/:id',
+    path: `${getEntidadLink(Entidad.SUGERENCIA)}/edit/:id`,
     component: SugerenciaFormComponent,
     title: 'Editar una Sugerencia',
     canActivate: [AuthGuard],
     data: {
-      permiso: 'editar:sugerencia'
+      permiso: {
+        accion: Accion.EDITAR,
+        entidad: Entidad.SUGERENCIA
+      }
     }
   },
   {
@@ -165,16 +203,22 @@ export const appRoutes: Routes = [
     title: 'Buzón de sugerencias',
     canActivate: [AuthGuard],
     data: {
-      permiso: 'ver_buzon:cliente'
+      permiso: {
+        accion: Accion.VER_BUZON,
+        entidad: Entidad.CLIENTE
+      }
     }
   },
   {
-    path: 'clientes/:id',
+    path: `${getEntidadLink(Entidad.CLIENTE)}/:id`,
     component: UserFormComponent,
     title: 'Mi Perfil',
     canActivate: [AuthGuard],
     data: {
-      permiso: 'editar:cliente'
+      permiso: {
+        accion: Accion.EDITAR,
+        entidad: Entidad.CLIENTE
+      }
     }
   },
   {

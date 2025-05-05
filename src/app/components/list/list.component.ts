@@ -1,4 +1,4 @@
-import {booleanAttribute, Component, Input, OnInit, TemplateRef} from '@angular/core';
+import {Component, Input, OnInit, TemplateRef} from '@angular/core';
 import {TitleComponent} from '../title/title.component';
 import {MatIcon} from '@angular/material/icon';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
@@ -6,8 +6,9 @@ import {MatAnchor} from '@angular/material/button';
 import {RouterLink} from '@angular/router';
 import {NgTemplateOutlet} from '@angular/common';
 import {AuthService} from '../../auth/service/auth.service';
-import {kebabCase, snakeCase} from '../../utils/utils';
 import {Observable} from 'rxjs';
+import {Entidad, entidadIsFemenina, getEntidadLink, getEntidadNombrePlural} from '../../permiso/entidad';
+import {Accion} from '../../permiso/accion';
 
 @Component({
   selector: 'app-list',
@@ -23,11 +24,9 @@ import {Observable} from 'rxjs';
   standalone: true
 })
 export class ListComponent<T> implements OnInit {
-  @Input({required: true}) title!: string;
   @Input({required: true}) fetchItems!: () => Observable<T[]>;
   @Input() itemTemplate!: TemplateRef<{ $implicit: T, onDelete: (id: number) => void }>;
-  @Input({required: true}) entityName!: string;
-  @Input({transform: booleanAttribute}) femenino: boolean = false;
+  @Input({required: true}) entity!: Entidad;
   @Input() gridCols: string = "grid-cols-1 md:grid-cols-2 xl:grid-cols-3";
 
   items: T[] = [];
@@ -35,23 +34,28 @@ export class ListComponent<T> implements OnInit {
   loading = true;
 
   protected creationUrl = '';
-  protected creationPermission = '';
+  protected canCreate: boolean = false;
+  protected title: string = "";
+  protected esFemenino: boolean = false;
 
   constructor(protected authService: AuthService) {
   }
 
   ngOnInit(): void {
+    this.title = getEntidadNombrePlural(this.entity);
+    this.esFemenino = entidadIsFemenina(this.entity);
+
     this.fetchItems().subscribe({
       next: (data) => (this.items = data ?? []),
       error: (error) => {
-        console.error(`Error al obtener ${(this.femenino ? 'las ' : 'los ') + this.title}`, error);
+        console.error(`Error al obtener ${(this.esFemenino ? 'las ' : 'los ') + this.title}`, error);
         this.error = true;
       },
       complete: () => (this.loading = false),
     });
 
-    this.creationUrl = `/${kebabCase(this.entityName)}/create`;
-    this.creationPermission = `crear:${snakeCase(this.entityName)}`;
+    this.creationUrl = `/${getEntidadLink(this.entity)}/create`;
+    this.canCreate = this.authService.hasPermission(Accion.CREAR, this.entity);
   }
 
   handleDelete(id: number) {

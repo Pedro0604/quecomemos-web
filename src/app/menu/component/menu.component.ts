@@ -10,6 +10,8 @@ import {MenuService} from '../service/menu.service';
 import {DefaultImageDirective} from '../../directives/default-image-directive/default-image.directive';
 import {AuthService} from '../../auth/service/auth.service';
 import {EntityCardActionsComponent} from '../../components/entity-card-actions/entity-card-actions.component';
+import {Entidad} from '../../permiso/entidad';
+import {Accion} from '../../permiso/accion';
 
 @Component({
   selector: 'app-menu',
@@ -46,4 +48,7 @@ export class MenuComponent {
       }
     });
   }
+
+  protected readonly Accion = Accion;
+  protected readonly Entidad = Entidad;
 }

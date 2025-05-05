@@ -3,6 +3,8 @@ import {MenuDiarioService} from '../service/menu-diario.service';
 import {MenuDiarioComponent} from '../component/menu-diario.component';
 import {ListComponent} from '../../components/list/list.component';
 
+import {Entidad} from '../../permiso/entidad';
+
 @Component({
   selector: 'app-menu-diario-list',
   imports: [
@@ -17,4 +19,5 @@ export class MenuDiarioListComponent {
   }
 
   protected fetchItems = () => this.menuDiarioService.getAll();
+  protected readonly Entidad = Entidad;
 }

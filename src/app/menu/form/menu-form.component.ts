@@ -29,6 +29,8 @@ import {FormStateComponent} from '../../forms/components/form-state/form-state.c
 import {FormComponent} from '../../forms/components/form/form.component';
 import {DefaultImageDirective} from '../../directives/default-image-directive/default-image.directive';
 import {AuthService} from '../../auth/service/auth.service';
+import {Entidad} from '../../permiso/entidad';
+import {Accion} from '../../permiso/accion';
 
 type CampoComida = {
   nombre: string,
@@ -102,9 +104,9 @@ export class MenuFormComponent extends BaseEntityForm<Menu, MenuDTO, Comida> imp
     private comidaService: ComidaService,
     protected authService: AuthService,
   ) {
-    super(router, notificationService, formService, service, route, 'menú', false);
+    super(router, notificationService, formService, service, route, Entidad.MENU);
 
-    this.puedeCrearComida = authService.hasPermission('crear:comida');
+    this.puedeCrearComida = authService.hasPermission(Accion.CREAR, Entidad.COMIDA);
 
     this.form = this.fb.group({
       nombre: [''],

@@ -3,6 +3,7 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {environment} from '../../environments/environment';
 import {Deletable} from './Deletable';
+import {Entidad, getEntidadLink} from '../permiso/entidad';
 
 @Injectable({
   providedIn: 'root'
@@ -10,8 +11,8 @@ import {Deletable} from './Deletable';
 export abstract class CrudService<T, D> implements Deletable {
   protected apiUrl: string;
 
-  protected constructor(protected http: HttpClient, endpoint: string) {
-    this.apiUrl = `${environment.apiBaseUrl}/${endpoint}`;
+  protected constructor(protected http: HttpClient, entidad: Entidad) {
+    this.apiUrl = `${environment.apiBaseUrl}/${getEntidadLink(entidad)}`;
   }
 
   getAll(): Observable<T[]> {

@@ -16,6 +16,7 @@ import {DialogConfirmWithPassword} from '../../components/dialog-confirmar/dialo
 import {firstValueFrom} from 'rxjs';
 import {AuthService} from '../../auth/service/auth.service';
 import {HttpHeaders} from '@angular/common/http';
+import {Entidad} from '../../permiso/entidad';
 
 @Component({
   selector: 'app-user-form',
@@ -47,7 +48,7 @@ export class UserFormComponent extends BaseEntityForm<User, ClientDTO, void> imp
     service: ClienteService,
     route: ActivatedRoute,
   ) {
-    super(router, notificationService, formService, service, route, 'cliente', false, new HttpHeaders({'X-Skip-Auth-Redirect': 'true'}));
+    super(router, notificationService, formService, service, route, Entidad.CLIENTE, new HttpHeaders({'X-Skip-Auth-Redirect': 'true'}));
     this.form = this.fb.group({
       nombre: ['', [onlyLettersValidator]],
       apellido: ['', [onlyLettersValidator]],

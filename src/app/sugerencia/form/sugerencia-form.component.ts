@@ -12,6 +12,7 @@ import {SelectComponent} from '../../forms/components/fields/select/select.compo
 import {SubmitButtonComponent} from '../../forms/components/submit-button/submit-button.component';
 import {TitleComponent} from '../../components/title/title.component';
 import {TextAreaComponent} from '../../forms/components/fields/text-area/text-area.component';
+import {Entidad} from '../../permiso/entidad';
 
 @Component({
   selector: 'app-sugerencia-form',
@@ -44,7 +45,7 @@ export class SugerenciaFormComponent extends BaseEntityForm<Sugerencia, Sugerenc
     route: ActivatedRoute,
     private fb: FormBuilder
   ) {
-    super(router, notificationService, formService, service, route, 'sugerencia', true);
+    super(router, notificationService, formService, service, route, Entidad.SUGERENCIA);
 
     this.form = this.fb.group({
       descripcion: [''],
