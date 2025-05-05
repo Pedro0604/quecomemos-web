@@ -71,9 +71,6 @@ export class ComidaFormComponent extends BaseEntityForm<Comida, ComidaDTO, void>
 
       const vegetarianaInicial = this.route.snapshot.queryParams['vegetariana'] as boolean;
       this.form.get('vegetariana')?.setValue(vegetarianaInicial);
-    } else {
-      // EDICIÓN: deshabilitar el checkbox
-      this.form.get('vegetariana')?.disable();
     }
   }
 }

@@ -9,6 +9,7 @@ import {AuthService} from '../../auth/service/auth.service';
 import {Observable} from 'rxjs';
 import {Entidad, entidadIsFemenina, getEntidadLink, getEntidadNombrePlural} from '../../permiso/entidad';
 import {Accion} from '../../permiso/accion';
+import {PermissionAware, PermissionResult} from '../../permiso/permissionAware';
 
 @Component({
   selector: 'app-list',
@@ -24,12 +25,16 @@ import {Accion} from '../../permiso/accion';
   standalone: true
 })
 export class ListComponent<T> implements OnInit {
-  @Input({required: true}) fetchItems!: () => Observable<T[]>;
-  @Input() itemTemplate!: TemplateRef<{ $implicit: T, onDelete: (id: number) => void }>;
+  @Input({required: true}) fetchItems!: () => Observable<PermissionAware<T>[]>;
+  @Input() itemTemplate!: TemplateRef<{
+    $implicit: T,
+    onDelete: (id: number) => void,
+    permisos: Partial<Record<Accion, PermissionResult>>
+  }>;
   @Input({required: true}) entity!: Entidad;
   @Input() gridCols: string = "grid-cols-1 md:grid-cols-2 xl:grid-cols-3";
 
-  items: T[] = [];
+  items: PermissionAware<T>[] = [];
   error = false;
   loading = true;
 

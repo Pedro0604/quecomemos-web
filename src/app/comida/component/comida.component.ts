@@ -9,6 +9,8 @@ import {DefaultImageDirective} from '../../directives/default-image-directive/de
 import {EntityCardActionsComponent} from '../../components/entity-card-actions/entity-card-actions.component';
 
 import {Entidad} from '../../permiso/entidad';
+import {PermissionResult} from '../../permiso/permissionAware';
+import {Accion} from '../../permiso/accion';
 
 @Component({
   selector: 'app-comida',
@@ -30,6 +32,7 @@ export class ComidaComponent {
   dialog = inject(MatDialog);
   @Input({required: true}) comida!: Comida;
   @Input({transform: booleanAttribute}) showButtons: boolean = true;
+  @Input({required: true}) permisos!: Partial<Record<Accion, PermissionResult>>;
   @Output() onDelete = new EventEmitter<number>();
 
   constructor(private comidaService: ComidaService) {

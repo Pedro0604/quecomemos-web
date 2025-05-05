@@ -8,6 +8,8 @@ import {MenuDiarioService} from '../service/menu-diario.service';
 import {EntityCardActionsComponent} from '../../components/entity-card-actions/entity-card-actions.component';
 
 import {Entidad} from '../../permiso/entidad';
+import {Accion} from '../../permiso/accion';
+import {PermissionResult} from '../../permiso/permissionAware';
 
 @Component({
   selector: 'app-menu-diario',
@@ -27,6 +29,8 @@ export class MenuDiarioComponent {
   @Input({required: true}) menuDiario!: MenuDiario;
   @Input({transform: booleanAttribute}) showButtons: boolean = true;
   @Input({transform: booleanAttribute}) showDia: boolean = true;
+  @Input({required: true}) permisos!: Partial<Record<Accion, PermissionResult>>;
+
   @Output() onDelete = new EventEmitter<number>();
   protected readonly traduccionDiasSemana = traduccionDiasSemana;
 

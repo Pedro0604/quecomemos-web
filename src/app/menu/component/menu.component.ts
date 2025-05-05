@@ -12,6 +12,7 @@ import {AuthService} from '../../auth/service/auth.service';
 import {EntityCardActionsComponent} from '../../components/entity-card-actions/entity-card-actions.component';
 import {Entidad} from '../../permiso/entidad';
 import {Accion} from '../../permiso/accion';
+import {PermissionResult} from '../../permiso/permissionAware';
 
 @Component({
   selector: 'app-menu',
@@ -28,6 +29,7 @@ export class MenuComponent {
   @Input({transform: booleanAttribute}) straightLeftBorder: boolean = false;
   @Input({transform: booleanAttribute}) straightRightBorder: boolean = false;
   @Input({transform: booleanAttribute}) hasLink: boolean = false;
+  @Input({required: true}) permisos!: Partial<Record<Accion, PermissionResult>>;
 
   @Output() onDelete = new EventEmitter<number>();
 

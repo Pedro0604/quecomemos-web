@@ -10,6 +10,7 @@ import {Entidad} from '../../permiso/entidad';
   imports: [
     MenuDiarioComponent,
     ListComponent,
+
   ],
   templateUrl: './menu-diario-list.component.html',
   standalone: true,

@@ -5,7 +5,8 @@
   gridCols="grid-cols-1 xl:grid-cols-2"
 />
 
-<ng-template #menuDiarioTemplate let-menuDiario let-onDelete="onDelete">
-  <app-menu-diario (onDelete)="onDelete(menuDiario.id)" [menuDiario]="menuDiario"></app-menu-diario>
+<ng-template #menuDiarioTemplate let-menuDiario let-onDelete="onDelete" let-permisos="permisos">
+  <app-menu-diario (onDelete)="onDelete(menuDiario.id)" [menuDiario]="menuDiario"
+                   [permisos]="permisos"></app-menu-diario>
 </ng-template>
 

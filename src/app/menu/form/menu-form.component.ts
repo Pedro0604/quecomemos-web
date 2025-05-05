@@ -31,6 +31,7 @@ import {DefaultImageDirective} from '../../directives/default-image-directive/de
 import {AuthService} from '../../auth/service/auth.service';
 import {Entidad} from '../../permiso/entidad';
 import {Accion} from '../../permiso/accion';
+import {PermissionAware} from '../../permiso/permissionAware';
 
 type CampoComida = {
   nombre: string,
@@ -141,7 +142,10 @@ export class MenuFormComponent extends BaseEntityForm<Menu, MenuDTO, Comida> imp
       }
 
       this.camposDeComida.forEach(campo => {
-        group.get(campo.nombre)?.setErrors({...group.get(campo.nombre)?.errors, ningunaComidaSeleccionada: true});
+        group.get(campo.nombre)?.setErrors({
+          ...group.get(campo.nombre)?.errors,
+          ningunaComidaSeleccionada: true
+        });
       })
 
       return {ningunaComidaSeleccionada: true};
@@ -193,7 +197,7 @@ export class MenuFormComponent extends BaseEntityForm<Menu, MenuDTO, Comida> imp
     return comida && comida.nombre ? comida.nombre : '';
   }
 
-  protected override loadRelatedData(): Promise<Comida[]> {
+  protected override loadRelatedData(): Promise<PermissionAware<Comida>[]> {
     return firstValueFrom(this.comidaService.getAll());
   }
 

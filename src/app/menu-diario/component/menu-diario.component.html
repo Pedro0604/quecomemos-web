@@ -6,10 +6,11 @@
   }
   <mat-card-content class="my-4">
     <div class="grid grid-cols-2">
+      <!--      TODO - MODIFICAR PERMISOS = {}-->
       <app-menu [menu]="menuDiario.menuVegetariano" [showButtons]="false" appearance="raised"
-                hasLink straightRightBorder/>
+                hasLink straightRightBorder [permisos]="{}"/>
       <app-menu [menu]="menuDiario.menuNoVegetariano" [showButtons]="false" appearance="raised"
-                hasLink straightLeftBorder/>
+                hasLink straightLeftBorder [permisos]="{}"/>
     </div>
   </mat-card-content>
   <app-entity-card-actions
@@ -17,5 +18,6 @@
     [editId]="menuDiario.id"
     [showButtons]="showButtons"
     [entity]="Entidad.MENU_DIARIO"
+    [permisos]="permisos"
   />
 </mat-card>

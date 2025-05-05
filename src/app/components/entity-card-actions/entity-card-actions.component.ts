@@ -5,6 +5,8 @@ import {MatAnchor, MatButton} from '@angular/material/button';
 import {RouterLink} from '@angular/router';
 import {Entidad, getEntidadLink} from '../../permiso/entidad';
 import {Accion} from '../../permiso/accion';
+import {PermissionResult} from '../../permiso/permissionAware';
+import {MatTooltip} from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-entity-card-actions',
@@ -12,7 +14,8 @@ import {Accion} from '../../permiso/accion';
     MatCardActions,
     MatAnchor,
     RouterLink,
-    MatButton
+    MatButton,
+    MatTooltip
   ],
   templateUrl: './entity-card-actions.component.html',
   standalone: true
@@ -21,6 +24,7 @@ export class EntityCardActionsComponent implements OnInit {
   @Input({required: true, transform: booleanAttribute}) showButtons!: boolean;
   @Input({required: true}) entity!: Entidad;
   @Input({required: true, transform: numberAttribute}) editId!: number;
+  @Input({required: true}) permisos!: Partial<Record<Accion, PermissionResult>>;
 
   @Output() deleteClick = new EventEmitter<void>();
 

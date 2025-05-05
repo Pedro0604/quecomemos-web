@@ -21,6 +21,7 @@ import {FormComponent} from '../../forms/components/form/form.component';
 import {AuthService} from '../../auth/service/auth.service';
 import {Entidad} from '../../permiso/entidad';
 import {Accion} from '../../permiso/accion';
+import {PermissionAware} from '../../permiso/permissionAware';
 
 type CampoMenu = {
   nombre: string,
@@ -102,7 +103,7 @@ export class MenuDiarioFormComponent extends BaseEntityForm<MenuDiario, MenuDiar
     return menu && menu.nombre ? menu.nombre : '';
   }
 
-  protected override loadRelatedData(): Promise<Menu[]> {
+  protected override loadRelatedData(): Promise<PermissionAware<Menu>[]> {
     return firstValueFrom(this.menuService.getAll());
   }
 

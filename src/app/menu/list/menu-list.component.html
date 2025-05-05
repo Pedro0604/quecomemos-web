@@ -4,7 +4,7 @@
   [entity]="Entidad.MENU"
 />
 
-<ng-template #menuTemplate let-menu let-onDelete="onDelete">
-  <app-menu (onDelete)="onDelete(menu.id)" [menu]="menu"></app-menu>
+<ng-template #menuTemplate let-menu let-onDelete="onDelete" let-permisos="permisos">
+  <app-menu (onDelete)="onDelete(menu.id)" [menu]="menu" [permisos]="permisos"></app-menu>
 </ng-template>
 

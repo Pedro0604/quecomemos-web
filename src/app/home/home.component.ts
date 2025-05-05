@@ -11,6 +11,7 @@ import {TitleComponent} from "../components/title/title.component";
 import {AuthService} from '../auth/service/auth.service';
 import {Entidad} from '../permiso/entidad';
 import {Accion} from '../permiso/accion';
+import {PermissionAware} from '../permiso/permissionAware';
 
 @Component({
   selector: 'app-home',
@@ -25,12 +26,11 @@ import {Accion} from '../permiso/accion';
     TitleComponent
   ],
   templateUrl: './home.component.html',
-  standalone: true,
-  styleUrl: './home.component.css'
+  standalone: true
 })
 export class HomeComponent implements OnInit {
   accordion = viewChild.required(MatAccordion);
-  menusDiarios: MenuDiario[] = [];
+  menusDiarios: PermissionAware<MenuDiario>[] = [];
 
   error = false;
   loading = true;

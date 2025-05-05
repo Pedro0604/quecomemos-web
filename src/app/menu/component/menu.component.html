@@ -3,7 +3,7 @@
   class="w-full h-full {{straightLeftBorder ? '!rounded-l-none' : ''}} {{straightRightBorder ? '!rounded-r-none' : ''}}">
   <mat-card-header class="flex justify-between">
     <mat-card-title>
-      @if (hasLink && authService.hasPermission(Accion.EDITAR, Entidad.MENU)) {
+      @if (hasLink && authService.hasPermission(Accion.EDITAR, Entidad.MENU) && permisos.editar?.allowed) {
         <!--        TODO - EL LINK Y EL PERMISO DEBERÍAN SER A UNA VISTA DEL MENÚ Y NO A LA EDICIÓN(?-->
         <a [routerLink]="['/menu/edit/', menu.id]" class="hover:underline hover:text-blue-600">
           {{ menu.nombre }}
@@ -51,5 +51,6 @@
     [editId]="menu.id"
     [showButtons]="showButtons"
     [entity]="Entidad.MENU"
+    [permisos]="permisos"
   />
 </mat-card>

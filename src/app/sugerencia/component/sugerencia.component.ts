@@ -8,6 +8,8 @@ import {EntityCardActionsComponent} from '../../components/entity-card-actions/e
 import {MatCard, MatCardContent, MatCardHeader, MatCardSubtitle, MatCardTitle} from '@angular/material/card';
 
 import {Entidad} from '../../permiso/entidad';
+import {Accion} from '../../permiso/accion';
+import {PermissionResult} from '../../permiso/permissionAware';
 
 @Component({
   selector: 'app-sugerencia',
@@ -26,6 +28,8 @@ export class SugerenciaComponent {
   dialog = inject(MatDialog);
   @Input({required: true}) sugerencia!: Sugerencia;
   @Input({transform: booleanAttribute}) showButtons: boolean = true;
+  @Input({required: true}) permisos!: Partial<Record<Accion, PermissionResult>>;
+
   @Output() onDelete = new EventEmitter<number>();
 
   constructor(private sugerenciaService: SugerenciaService) {

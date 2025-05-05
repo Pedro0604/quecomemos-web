@@ -6,6 +6,7 @@ import {Observable} from 'rxjs';
 import {AuthService} from '../../auth/service/auth.service';
 import {Sugerencia} from '../../sugerencia/sugerencia.model';
 import {Entidad} from '../../permiso/entidad';
+import {PermissionAware} from '../../permiso/permissionAware';
 
 
 @Injectable({
@@ -16,11 +17,11 @@ export class ClienteService extends CrudService<User, ClientDTO> {
     super(http, Entidad.CLIENTE);
   }
 
-  getSugerencias(): Observable<Sugerencia[]> {
+  getSugerencias(): Observable<PermissionAware<Sugerencia>[]> {
     const authId = this.authService.usuario?.id;
     if (!authId) {
       throw new Error('No se ha encontrado el ID del usuario autenticado');
     }
-    return this.http.get<Sugerencia[]>(`${this.apiUrl}/${authId}/sugerencias`);
+    return this.http.get<PermissionAware<Sugerencia>[]>(`${this.apiUrl}/${authId}/sugerencias`);
   }
 }

@@ -4,6 +4,7 @@
   [entity]="Entidad.SUGERENCIA"
 />
 
-<ng-template #sugerenciaTemplate let-sugerencia let-onDelete="onDelete">
-  <app-sugerencia (onDelete)="onDelete(sugerencia.id)" [sugerencia]="sugerencia"></app-sugerencia>
+<ng-template #sugerenciaTemplate let-sugerencia let-onDelete="onDelete" let-permisos="permisos">
+  <app-sugerencia (onDelete)="onDelete(sugerencia.id)" [sugerencia]="sugerencia"
+                  [permisos]="permisos"></app-sugerencia>
 </ng-template>

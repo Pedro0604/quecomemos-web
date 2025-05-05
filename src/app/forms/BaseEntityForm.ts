@@ -7,10 +7,14 @@ import {Injectable, OnInit, signal} from '@angular/core';
 import {firstValueFrom} from 'rxjs';
 import {HttpHeaders} from '@angular/common/http';
 import {Entidad, entidadIsFemenina, getEntidadNombre} from '../permiso/entidad';
+import {PermissionAware, PermissionResult} from '../permiso/permissionAware';
+import {Accion} from '../permiso/accion';
 
 @Injectable()
 export abstract class BaseEntityForm<T extends { id: number }, DTO, R> extends FormStateHandler implements OnInit {
+  entityPermissions: Partial<Record<Accion, PermissionResult>> = {};
   entity: T | null = null;
+  permissionAwareRelatedData: PermissionAware<R> | null = null;
   relatedData: R[] = [];
   readonly title = signal('');
   readonly submittingText = signal('');
@@ -56,7 +60,7 @@ export abstract class BaseEntityForm<T extends { id: number }, DTO, R> extends F
   }
 
   // Metodo para cargar datos relacionados como menús/comidas para autocomplete
-  protected loadRelatedData(): Promise<R[]> {
+  protected loadRelatedData(): Promise<PermissionAware<R>[]> {
     return Promise.resolve([]);
   }
 
@@ -121,15 +125,16 @@ export abstract class BaseEntityForm<T extends { id: number }, DTO, R> extends F
 
   private async loadEntityData(id: number | null): Promise<void> {
     try {
-      const entityPromise: Promise<T | null> = id
+      const entityPromise: Promise<PermissionAware<T> | null> = id
         ? firstValueFrom(this.service.getById(id))
         : Promise.resolve(null);
-      const relatedDataPromise: Promise<R[]> = this.loadRelatedData();
+      const relatedDataPromise: Promise<PermissionAware<R>[]> = this.loadRelatedData();
       const [entityData, relatedData] = await Promise.all([entityPromise, relatedDataPromise]);
-      this.relatedData = relatedData ?? [];
+      this.relatedData = relatedData.map(data => data.data) ?? [];
 
       if (entityData) {
-        this.entity = entityData;
+        this.entity = entityData.data;
+        this.entityPermissions = entityData.permisos;
         this.form.patchValue(this.entity);
         this.title.set(`Modificar ${getEntidadNombre(this.entidad)}`);
         this.submittingText.set(`Modificando ${getEntidadNombre(this.entidad)}`);

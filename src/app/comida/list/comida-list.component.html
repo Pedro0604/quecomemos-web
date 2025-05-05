@@ -4,6 +4,6 @@
   [entity]="Entidad.COMIDA"
 />
 
-<ng-template #comidaTemplate let-comida let-onDelete="onDelete">
-  <app-comida (onDelete)="onDelete(comida.id)" [comida]="comida"></app-comida>
+<ng-template #comidaTemplate let-comida let-onDelete="onDelete" let-permisos="permisos">
+  <app-comida (onDelete)="onDelete(comida.id)" [comida]="comida" [permisos]="permisos"></app-comida>
 </ng-template>

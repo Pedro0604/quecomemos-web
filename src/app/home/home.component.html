@@ -27,9 +27,11 @@
       @for (menuDiario of menusDiarios; track menuDiario) {
         <mat-expansion-panel [expanded]="$first">
           <mat-expansion-panel-header>
-            <mat-panel-title>Menú del {{ traduccionDiasSemana(menuDiario.dia) }}</mat-panel-title>
+            <mat-panel-title>Menú del {{ traduccionDiasSemana(menuDiario.data.dia) }}</mat-panel-title>
           </mat-expansion-panel-header>
-          <app-menu-diario [menuDiario]="menuDiario" [showButtons]="false" [showDia]="false"></app-menu-diario>
+          <!--          TODO - MODIFICAR PERMISOS = {}-->
+          <app-menu-diario [menuDiario]="menuDiario.data" [showButtons]="false" [showDia]="false"
+                           [permisos]="{}"></app-menu-diario>
         </mat-expansion-panel>
       }
     </mat-accordion>

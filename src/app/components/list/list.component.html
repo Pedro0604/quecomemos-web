@@ -23,7 +23,7 @@
   <div [class]="'grid gap-4 ' + gridCols">
     @for (item of items; track item) {
       <ng-container
-        *ngTemplateOutlet="itemTemplate; context: { $implicit: item, onDelete: handleDelete.bind(this) }"></ng-container>
+        *ngTemplateOutlet="itemTemplate; context: { $implicit: item.data, onDelete: handleDelete.bind(this), permisos: item.permisos }"></ng-container>
     }
   </div>
 }

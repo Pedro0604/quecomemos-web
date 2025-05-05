@@ -4,6 +4,7 @@ import {Observable} from 'rxjs';
 import {environment} from '../../environments/environment';
 import {Deletable} from './Deletable';
 import {Entidad, getEntidadLink} from '../permiso/entidad';
+import {PermissionAware} from '../permiso/permissionAware';
 
 @Injectable({
   providedIn: 'root'
@@ -15,12 +16,12 @@ export abstract class CrudService<T, D> implements Deletable {
     this.apiUrl = `${environment.apiBaseUrl}/${getEntidadLink(entidad)}`;
   }
 
-  getAll(): Observable<T[]> {
-    return this.http.get<T[]>(this.apiUrl);
+  getAll(): Observable<PermissionAware<T>[]> {
+    return this.http.get<PermissionAware<T>[]>(this.apiUrl);
   }
 
-  getById(id: number | string): Observable<T> {
-    return this.http.get<T>(`${this.apiUrl}/${id}`);
+  getById(id: number | string): Observable<PermissionAware<T>> {
+    return this.http.get<PermissionAware<T>>(`${this.apiUrl}/${id}`);
   }
 
   create(entity: D, headers: HttpHeaders = new HttpHeaders()): Observable<T> {
