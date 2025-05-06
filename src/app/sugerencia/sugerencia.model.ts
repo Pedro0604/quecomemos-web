@@ -1,5 +1,6 @@
 import {capitalize} from '../utils/utils';
 import {ClientResponseDTO} from '../user/user.model';
+import {PermissionAware} from '../permiso/permissionAware';
 
 export type TipoSugerencia = 'ALIMENTOS' | 'INFRAESTRUCTURA' | 'ATENCION' | 'OTROS';
 export const tiposSugerencias: TipoSugerencia[] = ['ALIMENTOS', 'INFRAESTRUCTURA', 'ATENCION', 'OTROS'];
@@ -17,7 +18,7 @@ export interface Sugerencia {
   tipo: TipoSugerencia;
   fecha: Date;
   updatedAt: Date;
-  cliente: ClientResponseDTO;
+  cliente: PermissionAware<ClientResponseDTO>;
 }
 
 export interface SugerenciaDTO {

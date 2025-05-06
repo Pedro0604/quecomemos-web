@@ -1,11 +1,12 @@
 import {Comida} from '../comida/comida.model';
+import {PermissionAware} from '../permiso/permissionAware';
 
 export type Menu = {
   id: number;
   nombre: string;
   precio: number;
   vegetariano: boolean;
-  comidas: Comida[];
+  comidas: PermissionAware<Comida>[];
 }
 
 export type MenuDTO = {

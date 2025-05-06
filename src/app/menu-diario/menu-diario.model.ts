@@ -1,4 +1,5 @@
 import {Menu} from '../menu/menu.model';
+import {PermissionAware} from '../permiso/permissionAware';
 
 export type DiasSemana = 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY' | 'SATURDAY';
 
@@ -24,8 +25,8 @@ export const diasSemanaArray: DiasSemana[] = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 
 export type MenuDiario = {
   id: number;
   dia: DiasSemana;
-  menuVegetariano: Menu;
-  menuNoVegetariano: Menu;
+  menuVegetariano: PermissionAware<Menu>;
+  menuNoVegetariano: PermissionAware<Menu>;
 }
 
 export type MenuDiarioDTO = {

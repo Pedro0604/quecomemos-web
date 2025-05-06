@@ -10,6 +10,8 @@ import {MatCard, MatCardContent, MatCardHeader, MatCardSubtitle, MatCardTitle} f
 import {Entidad} from '../../permiso/entidad';
 import {Accion} from '../../permiso/accion';
 import {PermissionResult} from '../../permiso/permissionAware';
+import {RouterLink} from '@angular/router';
+import {AuthService} from '../../auth/service/auth.service';
 
 @Component({
   selector: 'app-sugerencia',
@@ -19,7 +21,8 @@ import {PermissionResult} from '../../permiso/permissionAware';
     MatCardContent,
     MatCardHeader,
     MatCardSubtitle,
-    MatCardTitle
+    MatCardTitle,
+    RouterLink
   ],
   templateUrl: './sugerencia.component.html',
   standalone: true,
@@ -32,7 +35,7 @@ export class SugerenciaComponent {
 
   @Output() onDelete = new EventEmitter<number>();
 
-  constructor(private sugerenciaService: SugerenciaService) {
+  constructor(private sugerenciaService: SugerenciaService, protected authService: AuthService) {
   }
 
   openDialogEliminar(): void {
@@ -52,4 +55,5 @@ export class SugerenciaComponent {
 
   protected readonly tipoSugerenciaToString = tipoSugerenciaToString;
   protected readonly Entidad = Entidad;
+  protected readonly Accion = Accion;
 }

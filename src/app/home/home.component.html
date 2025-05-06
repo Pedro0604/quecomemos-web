@@ -29,9 +29,8 @@
           <mat-expansion-panel-header>
             <mat-panel-title>Menú del {{ traduccionDiasSemana(menuDiario.data.dia) }}</mat-panel-title>
           </mat-expansion-panel-header>
-          <!--          TODO - MODIFICAR PERMISOS = {}-->
           <app-menu-diario [menuDiario]="menuDiario.data" [showButtons]="false" [showDia]="false"
-                           [permisos]="{}"></app-menu-diario>
+                           [permisos]="menuDiario.permisos"></app-menu-diario>
         </mat-expansion-panel>
       }
     </mat-accordion>

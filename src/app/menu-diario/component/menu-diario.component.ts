@@ -43,7 +43,7 @@ export class MenuDiarioComponent {
         entity: this.menuDiario,
         service: this.menuDiarioService,
         baseEntityName: 'el menú diario',
-        deletingEntityName: `${traduccionDiasSemana(this.menuDiario.dia)}: ${this.menuDiario.menuVegetariano.nombre} - ${this.menuDiario.menuNoVegetariano.nombre}`,
+        deletingEntityName: `${traduccionDiasSemana(this.menuDiario.dia)}: ${this.menuDiario.menuVegetariano.data.nombre} - ${this.menuDiario.menuNoVegetariano.data.nombre}`,
       }
     }).afterClosed().subscribe((deleted) => {
       if (deleted) {

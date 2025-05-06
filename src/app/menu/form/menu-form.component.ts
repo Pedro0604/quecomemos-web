@@ -203,7 +203,12 @@ export class MenuFormComponent extends BaseEntityForm<Menu, MenuDTO, Comida> imp
 
   protected override extraOnInit(): void {
     if (this.entity) {
-      this.entity.comidas.forEach(comida => {
+      this.entity.comidas.forEach(comidaPerm => {
+        if (!comidaPerm.permisos.ver?.allowed) {
+          this.notificationService.show(`No tienes permiso para ver las comidas del menú`);
+          return;
+        }
+        const comida = comidaPerm.data;
         const campoComida = this.camposDeComida.find(campoComida => campoComida.tipoComida === comida.tipoComida);
         if (campoComida) {
           const comidaField = this.form.get(campoComida.nombre);
