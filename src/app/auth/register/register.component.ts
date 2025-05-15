@@ -100,6 +100,7 @@ export class RegisterComponent {
           })
         },
         error: (error) => {
+          console.log(error);
           const mensaje = error.status === 400 ? error.error || 'El usuario ya existe.' : 'Error al registrar el usuario. Por favor, intente más tarde.';
           this.notificationService.show(mensaje);
         }

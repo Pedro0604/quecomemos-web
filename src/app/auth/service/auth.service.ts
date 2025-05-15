@@ -89,7 +89,7 @@ export class AuthService {
   }
 
   registerClient(clientData: ClientDTO): Observable<any> {
-    return this.http.post(`${this.apiUrl}/clientes`, clientData, {observe: 'response'});
+    return this.http.post(`${this.apiUrl}/${Entidad.CLIENTE}`, clientData, {observe: 'response'});
   }
 
   private initFromLocalStorage() {
