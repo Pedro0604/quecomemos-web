@@ -1,0 +1,10 @@
+<app-list
+  [itemTemplate]="responsableTemplate"
+  [fetchItems]="fetchItems"
+  [entity]="Entidad.RESPONSABLE_DE_TURNO"
+/>
+
+<ng-template #responsableTemplate let-responsable let-onDelete="onDelete" let-permisos="permisos">
+  <app-responsable (onDelete)="onDelete(responsable.id)" [responsable]="responsable"
+                   [permisos]="permisos"/>
+</ng-template>
