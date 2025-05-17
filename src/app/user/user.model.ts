@@ -25,6 +25,7 @@ export interface ClientResponseDTO {
   nombre: string;
   apellido: string;
   urlImagen: string;
+  email: string;
   rol: RolResponseDTO;
 }
 
