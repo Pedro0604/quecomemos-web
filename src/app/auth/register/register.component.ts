@@ -9,7 +9,13 @@ import {Router} from '@angular/router';
 import {NotificationService} from '../../notification/notification.service';
 import {InputComponent} from '../../forms/components/fields/input/input.component';
 import {AuthService} from '../service/auth.service';
-import {FormService, onlyLettersValidator, onlyNumbersValidator, urlValidator} from '../../forms/service/form.service';
+import {
+  confirmationMatchesPasswordValidator,
+  FormService,
+  onlyLettersValidator,
+  onlyNumbersValidator,
+  urlValidator
+} from '../../forms/service/form.service';
 import {SubmitButtonComponent} from '../../forms/components/submit-button/submit-button.component';
 import {TitleComponent} from '../../components/title/title.component';
 import {FormComponent} from '../../forms/components/form/form.component';
@@ -51,20 +57,8 @@ export class RegisterComponent {
       clave: [''],
       confirmClave: [''],
     }, {
-      validators: this.confirmationMatchesPasswordValidator
+      validators: confirmationMatchesPasswordValidator
     });
-  }
-
-  confirmationMatchesPasswordValidator(group: FormGroup): { [key: string]: boolean } | null {
-    const password = group.get('clave')?.value;
-    const confirmPassword = group.get('confirmClave')?.value;
-
-    if (password && confirmPassword && password !== confirmPassword) {
-      group.get('confirmClave')?.setErrors({...group.get('confirmClave')?.errors, passwordsDoNotMatch: true});
-      group.get('clave')?.setErrors({...group.get('clave')?.errors, passwordsDoNotMatch: true});
-      return {passwordsDoNotMatch: true};
-    }
-    return null;
   }
 
   register() {

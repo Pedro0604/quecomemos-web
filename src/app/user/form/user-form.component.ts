@@ -10,13 +10,10 @@ import {FormComponent} from '../../forms/components/form/form.component';
 import {TitleComponent} from '../../components/title/title.component';
 import {InputComponent} from '../../forms/components/fields/input/input.component';
 import {FormStateComponent} from '../../forms/components/form-state/form-state.component';
-import {BaseEntityForm} from '../../forms/BaseEntityForm';
 import {ClienteService} from '../service/cliente.service';
-import {DialogConfirmWithPassword} from '../../components/dialog-confirmar/dialog-confirm-with-password.component';
-import {firstValueFrom} from 'rxjs';
 import {AuthService} from '../../auth/service/auth.service';
-import {HttpHeaders} from '@angular/common/http';
 import {Entidad} from '../../permiso/entidad';
+import {BaseEntityFormWithPasswordConfirmation} from '../../forms/BaseEntityFormWithPasswordConfirmation';
 
 @Component({
   selector: 'app-user-form',
@@ -31,7 +28,7 @@ import {Entidad} from '../../permiso/entidad';
   templateUrl: './user-form.component.html',
   standalone: true
 })
-export class UserFormComponent extends BaseEntityForm<User, ClientDTO, void> implements OnInit {
+export class UserFormComponent extends BaseEntityFormWithPasswordConfirmation<User, ClientDTO, void> implements OnInit {
   user: User | null = null;
 
   form: FormGroup
@@ -40,22 +37,21 @@ export class UserFormComponent extends BaseEntityForm<User, ClientDTO, void> imp
 
   constructor(
     private fb: FormBuilder,
-    private dialog: MatDialog,
-    private authService: AuthService,
+    dialog: MatDialog,
+    authService: AuthService,
     router: Router,
     notificationService: NotificationService,
     formService: FormService,
     service: ClienteService,
     route: ActivatedRoute,
   ) {
-    super(router, notificationService, formService, service, route, Entidad.CLIENTE, new HttpHeaders({'X-Skip-Auth-Redirect': 'true'}));
+    super(router, notificationService, formService, service, route, Entidad.CLIENTE, dialog, authService);
     this.form = this.fb.group({
       nombre: ['', [onlyLettersValidator]],
       apellido: ['', [onlyLettersValidator]],
       dni: [''],
       email: [''],
-      urlImagen: ['', [urlValidator]],
-      clave: ['']
+      urlImagen: ['', [urlValidator]]
     });
   }
 
@@ -68,29 +64,6 @@ export class UserFormComponent extends BaseEntityForm<User, ClientDTO, void> imp
     if (!this.entity) {
       this.error = true;
     }
-  }
-
-  protected override async beforeSavingEntity(): Promise<boolean> {
-    const dialogRef = this.dialog.open(DialogConfirmWithPassword, {
-      width: '400px',
-      disableClose: true
-    });
-
-    const password = await firstValueFrom(dialogRef.afterClosed());
-
-    if (password) {
-      this.form.get('clave')?.setValue(password);
-      return true;
-    }
-    return false;
-  }
-
-  protected override onSubmitError(error: any): boolean {
-    if (error.status == 403) {
-      this.notificationService.show('Contraseña incorrecta. Intentá nuevamente.')
-      return true
-    }
-    return false;
   }
 
   protected override onSubmitSuccess(usuarioCreado: User): void {

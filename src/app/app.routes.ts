@@ -18,6 +18,8 @@ import {SugerenciaFormComponent} from './sugerencia/form/sugerencia-form.compone
 import {BuzonComponent} from './sugerencia/buzon/buzon.component';
 import {Entidad, getEntidadLink} from './permiso/entidad';
 import {Accion} from './permiso/accion';
+import {ResponsableListComponent} from './responsable/list/responsable-list.component';
+import {ResponsableFormComponent} from './responsable/form/responsable-form.component';
 
 export const appRoutes: Routes = [
   {
@@ -200,12 +202,50 @@ export const appRoutes: Routes = [
   {
     path: 'buzon',
     component: BuzonComponent,
-    title: 'Buzón de sugerencias',
+    title: 'Buzón de Sugerencias',
     canActivate: [AuthGuard],
     data: {
       permiso: {
         accion: Accion.VER_BUZON,
         entidad: Entidad.CLIENTE
+      }
+    }
+  },
+  {
+    path: `${getEntidadLink(Entidad.RESPONSABLE_DE_TURNO)}`,
+    component: ResponsableListComponent,
+    title: 'Responsables de Turno',
+    canActivate: [AuthGuard],
+    data: {
+      permiso: {
+        accion: Accion.VER_TODOS,
+        entidad: Entidad.RESPONSABLE_DE_TURNO
+      },
+      includeInLayout: true
+    }
+  },
+  {
+    path: `${getEntidadLink(Entidad.RESPONSABLE_DE_TURNO)}/create`,
+    component: ResponsableFormComponent,
+    title: 'Crear un Responsable de Turno',
+    canActivate: [AuthGuard],
+    data: {
+      permiso: {
+        accion: Accion.CREAR,
+        entidad: Entidad.RESPONSABLE_DE_TURNO
+      },
+      includeInLayout: true
+    }
+  },
+  {
+    path: `${getEntidadLink(Entidad.RESPONSABLE_DE_TURNO)}/:id`,
+    component: ResponsableFormComponent,
+    title: 'Editar un Responsable de Turno',
+    canActivate: [AuthGuard],
+    data: {
+      permiso: {
+        accion: Accion.EDITAR,
+        entidad: Entidad.RESPONSABLE_DE_TURNO
       }
     }
   },

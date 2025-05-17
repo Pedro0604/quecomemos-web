@@ -122,3 +122,15 @@ export const onlyLettersValidator: ValidatorFn = withEmptyCheck((value) =>
 export const urlValidator: ValidatorFn = withEmptyCheck((value) =>
   /^(https?:\/\/[^\s$.?#].[^\s]*)$/.test(value) ? null : {url: true}
 );
+
+export const confirmationMatchesPasswordValidator = (group: FormGroup): { [key: string]: boolean } | null => {
+  const password = group.get('clave')?.value;
+  const confirmPassword = group.get('confirmClave')?.value;
+
+  if (password && confirmPassword && password !== confirmPassword) {
+    group.get('confirmClave')?.setErrors({...group.get('confirmClave')?.errors, passwordsDoNotMatch: true});
+    group.get('clave')?.setErrors({...group.get('clave')?.errors, passwordsDoNotMatch: true});
+    return {passwordsDoNotMatch: true};
+  }
+  return null;
+}

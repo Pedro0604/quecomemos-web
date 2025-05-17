@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {jwtDecode} from 'jwt-decode';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {ClientDTO, Credenciales, LoggedUser} from '../../user/user.model';
 import {environment} from '../../../environments/environment';
 import {ActivatedRouteSnapshot, Router} from '@angular/router';
@@ -84,8 +84,8 @@ export class AuthService {
     });
   }
 
-  authenticate(credenciales: Credenciales): Observable<any> {
-    return this.http.post(`${this.apiUrl}/auth`, credenciales, {observe: 'response'});
+  authenticate(credenciales: Credenciales, headers: HttpHeaders = new HttpHeaders()): Observable<any> {
+    return this.http.post(`${this.apiUrl}/auth`, credenciales, {observe: 'response', headers: headers});
   }
 
   registerClient(clientData: ClientDTO): Observable<any> {
@@ -99,7 +99,7 @@ export class AuthService {
     }
   }
 
-  private isTokenValid(token: string): boolean {
+  public isTokenValid(token: string): boolean {
     try {
       const decoded: CustomJwtPayload = jwtDecode(token);
       return decoded.exp * 1000 > Date.now();
