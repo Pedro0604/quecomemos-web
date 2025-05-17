@@ -1,6 +1,6 @@
 import {booleanAttribute, Component, EventEmitter, inject, Input, Output} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
-import {Comida} from '../comida.model';
+import {Comida, tipoComidaToString} from '../comida.model';
 import {MatCard, MatCardContent, MatCardHeader, MatCardSubtitle, MatCardTitle} from '@angular/material/card';
 import {MatIcon} from '@angular/material/icon';
 import {DialogEliminarComponent} from '../../components/dialog-eliminar/dialog-eliminar.component';
@@ -54,4 +54,5 @@ export class ComidaComponent {
   }
 
   protected readonly Entidad = Entidad;
+  protected readonly tipoComidaToString = tipoComidaToString;
 }
