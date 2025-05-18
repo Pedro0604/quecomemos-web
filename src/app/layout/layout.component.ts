@@ -19,6 +19,8 @@ import {Accion} from '../permiso/accion';
 import {MatMenu, MatMenuItem, MatMenuTrigger} from '@angular/material/menu';
 import {MatBadge} from '@angular/material/badge';
 import {Pedido} from '../pedido/pedido.model';
+import {PedidoService} from '../pedido/service/pedido.service';
+import {NotificationService} from '../notification/notification.service';
 
 
 @Component({
@@ -52,47 +54,15 @@ export class LayoutComponent implements OnInit {
 
   isHandset$: Observable<boolean>;
 
-  carrito: Pedido = {
-    id: 1,
-    clienteId: 42,
-    pagoId: null,
-    fecha: new Date(),
-    total: 1350, // 2x500 + 1x350
-    items: [
-      {
-        id: 1,
-        pedidoId: 1,
-        precioUnitario: 500,
-        cantidad: 2,
-        subtotal: 1000,
-        item: {
-          id: 10,
-          nombre: 'Menú Ejecutivo',
-          tipo: Entidad.MENU,
-          precio: 500
-        }
-      },
-      {
-        id: 2,
-        pedidoId: 1,
-        precioUnitario: 350,
-        cantidad: 1,
-        subtotal: 350,
-        item: {
-          id: 5,
-          nombre: 'Empanadas de carne',
-          tipo: Entidad.COMIDA,
-          precio: 350
-        }
-      }
-    ]
-  };
+  carrito: Pedido | null = null;
 
   constructor(
     private layoutService: LayoutService,
     private injector: Injector,
     protected authService: AuthService,
     private router: Router,
+    private pedidoService: PedidoService,
+    private notificationService: NotificationService,
   ) {
     const breakpointObserver = inject(BreakpointObserver);
     this.isHandset$ = breakpointObserver.observe(Breakpoints.Handset).pipe(
@@ -112,6 +82,16 @@ export class LayoutComponent implements OnInit {
 
     this.authService.usuario$.subscribe(() => {
       this.filtrarRutas();
+    });
+
+    this.pedidoService.getCarrito().subscribe({
+      next: (carrito) => {
+        this.carrito = carrito;
+      },
+      error: (err) => {
+        console.error('Error al obtener el carrito:', err);
+        this.notificationService.show('No se pudo cargar el carrito. Intente nuevamente.');
+      }
     });
   }
 

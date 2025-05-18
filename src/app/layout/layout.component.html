@@ -64,14 +64,14 @@
                   aria-label="Carrito de compras"
                   [matMenuTriggerFor]="carritoMenu"
                   #carritoTrigger="matMenuTrigger"
-                  matBadge="{{ carrito.items.length }}"
+                  matBadge="{{ carrito ? carrito.items.length : 0 }}"
                   matBadgeColor="accent"
                 >
                   <mat-icon>shopping_cart</mat-icon>
                 </button>
 
                 <mat-menu #carritoMenu="matMenu" yPosition="below">
-                  @if (carrito.items.length > 0) {
+                  @if (carrito && carrito.items.length > 0) {
                     @for (item of carrito.items.slice(0, 3); track item.id) {
                       <button mat-menu-item disabled>
                         {{ item.item.nombre }} ({{ item.cantidad }})
