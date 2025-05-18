@@ -58,7 +58,7 @@
                 }
               </mat-nav-list>
 
-              <mat-nav-list class="relative">
+              @if (authService.hasPermission(Accion.VER, Entidad.PEDIDO)) {
                 <button
                   mat-icon-button
                   aria-label="Carrito de compras"
@@ -83,7 +83,7 @@
                     <button mat-menu-item disabled>El carrito está vacío</button>
                   </ng-template>
                 </mat-menu>
-              </mat-nav-list>
+              }
 
               <mat-nav-list>
                 <span>
