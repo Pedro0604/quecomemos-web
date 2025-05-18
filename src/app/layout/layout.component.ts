@@ -1,6 +1,6 @@
 import {Component, inject, Injector, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
-import {AsyncPipe, NgForOf, NgIf, NgTemplateOutlet} from '@angular/common';
+import {AsyncPipe, NgTemplateOutlet} from '@angular/common';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatButtonModule} from '@angular/material/button';
 import {MatSidenavModule} from '@angular/material/sidenav';
@@ -18,6 +18,7 @@ import {Entidad, getEntidadLink} from '../permiso/entidad';
 import {Accion} from '../permiso/accion';
 import {MatMenu, MatMenuItem, MatMenuTrigger} from '@angular/material/menu';
 import {MatBadge} from '@angular/material/badge';
+import {Pedido} from '../pedido/pedido.model';
 
 
 @Component({
@@ -38,8 +39,6 @@ import {MatBadge} from '@angular/material/badge';
     DefaultImageDirective,
     MatBadge,
     MatMenu,
-    NgIf,
-    NgForOf,
     MatMenuItem,
     MatMenuTrigger,
   ]
@@ -53,10 +52,39 @@ export class LayoutComponent implements OnInit {
 
   isHandset$: Observable<boolean>;
 
-  carrito = [
-    { nombre: 'Milanesa con puré', cantidad: 1 },
-    { nombre: 'Ensalada rusa', cantidad: 2 },
-  ];
+  carrito: Pedido = {
+    id: 1,
+    clienteId: 42,
+    pagoId: null,
+    fecha: new Date(),
+    total: 1350, // 2x500 + 1x350
+    items: [
+      {
+        id: 1,
+        pedidoId: 1,
+        precioUnitario: 500,
+        cantidad: 2,
+        item: {
+          id: 10,
+          nombre: 'Menú Ejecutivo',
+          tipo: Entidad.MENU,
+          precio: 500
+        }
+      },
+      {
+        id: 2,
+        pedidoId: 1,
+        precioUnitario: 350,
+        cantidad: 1,
+        item: {
+          id: 5,
+          nombre: 'Empanadas de carne',
+          tipo: Entidad.COMIDA,
+          precio: 350
+        }
+      }
+    ]
+  };
 
   constructor(
     private layoutService: LayoutService,
