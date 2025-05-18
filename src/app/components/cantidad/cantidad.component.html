@@ -1,0 +1,21 @@
+<div class="flex items-center gap-3 h-6 p-1">
+  <button mat-icon-button color="primary"
+          (click)="disminuir()"
+          [disabled]="cantidad <= 1 || loading">
+    <mat-icon>remove</mat-icon>
+  </button>
+
+  <div class="w-6 flex items-center justify-center">
+    @if (loading) {
+      <mat-progress-spinner diameter="24" mode="indeterminate"></mat-progress-spinner>
+    } @else {
+      <span>{{ cantidad }}</span>
+    }
+  </div>
+
+  <button mat-icon-button color="primary"
+          (click)="aumentar()"
+          [disabled]="loading">
+    <mat-icon>add</mat-icon>
+  </button>
+</div>
