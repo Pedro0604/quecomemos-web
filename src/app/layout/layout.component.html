@@ -57,6 +57,39 @@
                   </a>
                 }
               </mat-nav-list>
+
+              <mat-nav-list class="relative">
+
+                <button
+                  mat-icon-button
+                  [matMenuTriggerFor]="carritoMenu"
+                  aria-label="Carrito de compras"
+                  routerLink="/carrito"
+                  matBadge="{{ carrito.length }}"
+                  matBadgeColor="accent"
+                  matBadgeHidden="{{ carrito.length === 0 }}"
+                >
+                  <mat-icon>shopping_cart</mat-icon>
+                </button>
+
+                <mat-menu #carritoMenu="matMenu" yPosition="below">
+                  <ng-container *ngIf="carrito.length > 0; else carritoVacio">
+                    <ng-container *ngFor="let item of carrito.slice(0, 2)">
+                      <button mat-menu-item disabled>
+                        {{ item.nombre }} ({{ item.cantidad }})
+                      </button>
+                    </ng-container>
+                    <button mat-menu-item [routerLink]="'/carrito'">
+                      Ver carrito completo
+                    </button>
+                  </ng-container>
+                  <ng-template #carritoVacio>
+                    <button mat-menu-item disabled>El carrito está vacío</button>
+                  </ng-template>
+                </mat-menu>
+
+              </mat-nav-list>
+
               <mat-nav-list>
                 <span>
                 @if (authService.hasPermission(Accion.EDITAR, authService.usuario.rolName)) {

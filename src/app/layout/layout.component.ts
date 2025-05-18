@@ -1,6 +1,6 @@
 import {Component, inject, Injector, OnInit, TemplateRef} from '@angular/core';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
-import {AsyncPipe, NgTemplateOutlet} from '@angular/common';
+import {AsyncPipe, NgForOf, NgIf, NgTemplateOutlet} from '@angular/common';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatButtonModule} from '@angular/material/button';
 import {MatSidenavModule} from '@angular/material/sidenav';
@@ -16,6 +16,8 @@ import {AuthService} from '../auth/service/auth.service';
 import {DefaultImageDirective} from '../directives/default-image-directive/default-image.directive';
 import {Entidad, getEntidadLink} from '../permiso/entidad';
 import {Accion} from '../permiso/accion';
+import {MatMenu, MatMenuItem, MatMenuTrigger} from '@angular/material/menu';
+import {MatBadge} from '@angular/material/badge';
 
 
 @Component({
@@ -34,6 +36,12 @@ import {Accion} from '../permiso/accion';
     RouterLinkActive,
     NgTemplateOutlet,
     DefaultImageDirective,
+    MatMenuTrigger,
+    MatBadge,
+    MatMenu,
+    NgIf,
+    NgForOf,
+    MatMenuItem,
   ]
 })
 export class LayoutComponent implements OnInit {
@@ -53,6 +61,21 @@ export class LayoutComponent implements OnInit {
     protected authService: AuthService
   ) {
   }
+
+  carrito = [
+    // Simulación para pruebas; luego lo conectás con el servicio real
+    { nombre: 'Milanesa con puré', cantidad: 1 },
+    { nombre: 'Ensalada rusa', cantidad: 2 },
+    // más ítems...
+
+    /*
+    constructor(private carritoService: CarritoService) {}
+
+    ngOnInit() {
+      this.carrito = this.carritoService.getResumen(); // o un observable si es async
+    }
+    */
+  ];
 
   filtrarRutas() {
     this.rootRoutes = appRoutes.filter(route => {
