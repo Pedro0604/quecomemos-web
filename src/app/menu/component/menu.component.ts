@@ -13,10 +13,13 @@ import {EntityCardActionsComponent} from '../../components/entity-card-actions/e
 import {Entidad} from '../../permiso/entidad';
 import {Accion} from '../../permiso/accion';
 import {PermissionResult} from '../../permiso/permissionAware';
+import {MatIconButton} from '@angular/material/button';
+import {PedidoService} from '../../pedido/service/pedido.service';
+import {tipoComidaToString} from '../../comida/comida.model';
 
 @Component({
   selector: 'app-menu',
-  imports: [MatCardModule, MatIcon, MatDivider, RouterLink, DefaultImageDirective, EntityCardActionsComponent],
+  imports: [MatCardModule, MatIcon, MatDivider, RouterLink, DefaultImageDirective, EntityCardActionsComponent, MatIconButton],
   templateUrl: './menu.component.html',
   standalone: true,
 })
@@ -33,7 +36,11 @@ export class MenuComponent {
 
   @Output() onDelete = new EventEmitter<number>();
 
-  constructor(private menuService: MenuService, protected authService: AuthService) {
+  constructor(
+    private menuService: MenuService,
+    protected authService: AuthService,
+    protected pedidoService: PedidoService
+  ) {
   }
 
   openDialogEliminar(): void {
@@ -53,4 +60,5 @@ export class MenuComponent {
 
   protected readonly Accion = Accion;
   protected readonly Entidad = Entidad;
+  protected readonly tipoComidaToString = tipoComidaToString;
 }

@@ -13,9 +13,19 @@
       }
     </mat-card-title>
     <mat-card-subtitle>${{ menu.precio }}</mat-card-subtitle>
-    @if (menu.vegetariano) {
-      <mat-icon class="text-green-600">eco</mat-icon>
-    }
+    <div>
+      @if (menu.vegetariano) {
+        <mat-icon class="text-green-600">eco</mat-icon>
+      }
+      @if (authService.hasPermission(Accion.EDITAR, Entidad.PEDIDO)) {
+        <button
+          mat-icon-button
+          aria-label="Añadir al carrito"
+          (click)="pedidoService.addItem({itemId: menu.id, cantidad: 1})">
+          <mat-icon class="text-blue-500">add</mat-icon>
+        </button>
+      }
+    </div>
   </mat-card-header>
   <mat-card-content class="my-4">
     <div class="flex flex-col gap-4">
@@ -23,7 +33,7 @@
         @let comida = comidaPermissionAware.data;
         <div class="flex justify-between gap-2">
           <div>
-            <p class="text-sm">{{ comida.tipoComida.replace("_", " ") }}</p>
+            <p class="text-sm">{{ tipoComidaToString(comida.tipoComida) }}</p>
             @if (comidaPermissionAware.permisos.editar?.allowed) {
               <!--        TODO - EL LINK Y EL PERMISO DEBERÍA SER A UNA VISTA DE LA COMIDA Y NO A LA EDICIÓN(?-->
               <a [routerLink]="['/comida/edit/', comida.id]" class="hover:underline hover:text-blue-600">

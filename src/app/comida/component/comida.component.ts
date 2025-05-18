@@ -11,6 +11,9 @@ import {EntityCardActionsComponent} from '../../components/entity-card-actions/e
 import {Entidad} from '../../permiso/entidad';
 import {PermissionResult} from '../../permiso/permissionAware';
 import {Accion} from '../../permiso/accion';
+import {PedidoService} from '../../pedido/service/pedido.service';
+import {MatIconButton} from '@angular/material/button';
+import {AuthService} from '../../auth/service/auth.service';
 
 @Component({
   selector: 'app-comida',
@@ -25,6 +28,7 @@ import {Accion} from '../../permiso/accion';
     MatCardSubtitle,
     DefaultImageDirective,
     EntityCardActionsComponent,
+    MatIconButton,
   ],
 })
 
@@ -35,7 +39,11 @@ export class ComidaComponent {
   @Input({required: true}) permisos!: Partial<Record<Accion, PermissionResult>>;
   @Output() onDelete = new EventEmitter<number>();
 
-  constructor(private comidaService: ComidaService) {
+  constructor(
+    private comidaService: ComidaService,
+    protected authService: AuthService,
+    protected pedidoService: PedidoService
+  ) {
   }
 
   openDialogEliminar(): void {
@@ -55,4 +63,5 @@ export class ComidaComponent {
 
   protected readonly Entidad = Entidad;
   protected readonly tipoComidaToString = tipoComidaToString;
+  protected readonly Accion = Accion;
 }
