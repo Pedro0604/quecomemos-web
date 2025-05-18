@@ -11,8 +11,9 @@ export interface ItemPedido {
   id: number;
   pedidoId: number;
   precioUnitario: number;
-  item: Preciable;
   cantidad: number;
+  subtotal: number;
+  item: Preciable;
 }
 
 export interface ItemPedidoDTO {

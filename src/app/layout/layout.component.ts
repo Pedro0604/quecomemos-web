@@ -64,6 +64,7 @@ export class LayoutComponent implements OnInit {
         pedidoId: 1,
         precioUnitario: 500,
         cantidad: 2,
+        subtotal: 1000,
         item: {
           id: 10,
           nombre: 'Menú Ejecutivo',
@@ -76,6 +77,7 @@ export class LayoutComponent implements OnInit {
         pedidoId: 1,
         precioUnitario: 350,
         cantidad: 1,
+        subtotal: 350,
         item: {
           id: 5,
           nombre: 'Empanadas de carne',

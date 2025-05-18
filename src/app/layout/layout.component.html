@@ -64,24 +64,23 @@
                   aria-label="Carrito de compras"
                   [matMenuTriggerFor]="carritoMenu"
                   #carritoTrigger="matMenuTrigger"
-                  matBadge="{{ carrito.length }}"
+                  matBadge="{{ carrito.items.length }}"
                   matBadgeColor="accent"
                 >
                   <mat-icon>shopping_cart</mat-icon>
                 </button>
 
                 <mat-menu #carritoMenu="matMenu" yPosition="below">
-                  <ng-container *ngIf="carrito.length > 0; else vacio">
-                    <ng-container *ngFor="let item of carrito.slice(0, 2)">
+                  @if (carrito.items.length > 0) {
+                    @for (item of carrito.items.slice(0, 3); track item.id) {
                       <button mat-menu-item disabled>
-                        {{ item.nombre }} ({{ item.cantidad }})
+                        {{ item.item.nombre }} ({{ item.cantidad }})
                       </button>
-                    </ng-container>
+                    }
                     <button mat-menu-item (click)="irACarrito()">Ver carrito completo</button>
-                  </ng-container>
-                  <ng-template #vacio>
+                  } @else {
                     <button mat-menu-item disabled>El carrito está vacío</button>
-                  </ng-template>
+                  }
                 </mat-menu>
               }
 
