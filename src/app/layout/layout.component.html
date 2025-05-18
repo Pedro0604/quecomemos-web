@@ -74,10 +74,29 @@
                   @if (carrito && carrito.items.length > 0) {
                     @for (item of carrito.items.slice(0, 3); track item.id) {
                       <button mat-menu-item disabled>
-                        {{ item.item.nombre }} ({{ item.cantidad }})
+                        <span class="flex justify-between gap-2">
+                          <span>{{ item.item.nombre }}</span>
+                          <span>{{ item.cantidad }}</span>
+                        </span>
                       </button>
                     }
-                    <button mat-menu-item (click)="irACarrito()">Ver carrito completo</button>
+                    @if (carrito.items.length > 3) {
+                      <button mat-menu-item disabled>
+                        Y {{ carrito.items.length - 3 }} productos más...
+                      </button>
+                    }
+                    <a
+                      mat-menu-item
+                      (click)="this.carritoTrigger.closeMenu()"
+                      [routerLink]="['/carrito']">
+                      Ver carrito completo
+                    </a>
+                    <a
+                      mat-menu-item
+                      (click)="this.carritoTrigger.closeMenu()"
+                      [routerLink]="['/finalizar-compra']">
+                      Finalizar la compra
+                    </a>
                   } @else {
                     <button mat-menu-item disabled>El carrito está vacío</button>
                   }

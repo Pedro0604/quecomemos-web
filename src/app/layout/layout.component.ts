@@ -8,7 +8,7 @@ import {MatListModule} from '@angular/material/list';
 import {MatIconModule} from '@angular/material/icon';
 import {Observable} from 'rxjs';
 import {map, shareReplay} from 'rxjs/operators';
-import {ActivatedRouteSnapshot, Router, RouterLink, RouterLinkActive, Routes} from '@angular/router';
+import {ActivatedRouteSnapshot, RouterLink, RouterLinkActive, Routes} from '@angular/router';
 import {appRoutes} from '../app.routes';
 import {LayoutService} from './layout.service';
 import {AuthGuard} from '../auth/guards/auth.guards';
@@ -20,7 +20,6 @@ import {MatMenu, MatMenuItem, MatMenuTrigger} from '@angular/material/menu';
 import {MatBadge} from '@angular/material/badge';
 import {Pedido} from '../pedido/pedido.model';
 import {PedidoService} from '../pedido/service/pedido.service';
-import {NotificationService} from '../notification/notification.service';
 
 
 @Component({
@@ -60,9 +59,7 @@ export class LayoutComponent implements OnInit {
     private layoutService: LayoutService,
     private injector: Injector,
     protected authService: AuthService,
-    private router: Router,
     private pedidoService: PedidoService,
-    private notificationService: NotificationService,
   ) {
     const breakpointObserver = inject(BreakpointObserver);
     this.isHandset$ = breakpointObserver.observe(Breakpoints.Handset).pipe(
@@ -85,11 +82,6 @@ export class LayoutComponent implements OnInit {
     });
 
     this.pedidoService.carrito$.subscribe(c => this.carrito = c);
-  }
-
-  irACarrito() {
-    this.carritoTrigger.closeMenu();  // opcional: asegurarse que cierre
-    this.router.navigate(['/carrito']);
   }
 
   filtrarRutas() {
