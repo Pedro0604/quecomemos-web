@@ -1,4 +1,4 @@
-import {ItemPedido} from '../item-pedido/item-pedido.model';
+import {ItemPedido} from './item-pedido.model';
 
 export interface Pedido {
   id: number;

@@ -84,15 +84,7 @@ export class LayoutComponent implements OnInit {
       this.filtrarRutas();
     });
 
-    this.pedidoService.getCarrito().subscribe({
-      next: (carrito) => {
-        this.carrito = carrito;
-      },
-      error: (err) => {
-        console.error('Error al obtener el carrito:', err);
-        this.notificationService.show('No se pudo cargar el carrito. Intente nuevamente.');
-      }
-    });
+    this.pedidoService.carrito$.subscribe(c => this.carrito = c);
   }
 
   irACarrito() {

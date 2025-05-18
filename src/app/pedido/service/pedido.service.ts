@@ -1,34 +1,63 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Entidad, getEntidadLink} from '../../permiso/entidad';
-import {Observable} from 'rxjs';
+import {BehaviorSubject, firstValueFrom, Observable} from 'rxjs';
 import {environment} from '../../../environments/environment';
 import {Pedido} from '../pedido.model';
-import {ItemPedidoDTO} from '../../item-pedido/item-pedido.model';
+import {ItemPedidoDTO} from '../item-pedido.model';
+import {NotificationService} from '../../notification/notification.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PedidoService {
   protected apiUrl: string;
+  protected apiUrlItems: string;
 
-  constructor(protected http: HttpClient) {
+  private carritoSubject = new BehaviorSubject<Pedido | null>(null);
+  carrito$ = this.carritoSubject.asObservable();
+
+  async refreshCarrito(): Promise<void> {
+    try {
+      const carrito = await firstValueFrom(this.getCarrito());
+      this.carritoSubject.next(carrito);
+    } catch {
+      this.carritoSubject.next(null);
+      this.notificationService.show('Error al cargar el carrito');
+    }
+  }
+
+  constructor(protected http: HttpClient, private notificationService: NotificationService) {
     this.apiUrl = `${environment.apiBaseUrl}/${getEntidadLink(Entidad.PEDIDO)}`;
+    this.apiUrlItems = `${environment.apiBaseUrl}/${getEntidadLink(Entidad.ITEM_PEDIDO)}`;
+    this.refreshCarrito();
   }
 
   getPedidosDeCliente(): Observable<Pedido[]> {
     return this.http.get<Pedido[]>(`${this.apiUrl}/`);
   }
 
-  getCarrito(): Observable<Pedido> {
+  private getCarrito(): Observable<Pedido> {
     return this.http.get<Pedido>(`${this.apiUrl}/carrito`);
   }
 
-  addItem(entity: ItemPedidoDTO): Observable<void> {
-    return this.http.put<void>(`${this.apiUrl}/add`, entity);
+  async addItem(entity: ItemPedidoDTO): Promise<void> {
+    await firstValueFrom(this.http.put<void>(`${this.apiUrl}/add`, entity));
+    await this.refreshCarrito();
   }
 
-  clearCarrito(): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/`);
+  async clearCarrito(): Promise<void> {
+    await firstValueFrom(this.http.delete<void>(`${this.apiUrl}/`));
+    await this.refreshCarrito();
+  }
+
+  async updateItemQuantity(id: number | string, cantidad: number): Promise<void> {
+    await firstValueFrom(this.http.put<void>(`${this.apiUrlItems}/${id}`, cantidad));
+    await this.refreshCarrito();
+  }
+
+  async removeItem(id: number | string): Promise<void> {
+    await firstValueFrom(this.http.delete<void>(`${this.apiUrlItems}/${id}`));
+    await this.refreshCarrito();
   }
 }
