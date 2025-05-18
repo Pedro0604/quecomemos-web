@@ -14,6 +14,7 @@
           routerLinkActive
           [activated]="link.isActive"
           [routerLinkActiveOptions]="{exact: true}"
+          [matTooltip]="item.title?.toString()"
         >
           {{ item.title }}
         </a>
@@ -52,6 +53,7 @@
                     #link="routerLinkActive"
                     [activated]="link.isActive"
                     [routerLinkActiveOptions]="{exact: true}"
+                    matTooltip="Tus sugerencias"
                   >
                     <mat-icon class="!m-0">mail</mat-icon>
                   </a>
@@ -66,6 +68,7 @@
                   #carritoTrigger="matMenuTrigger"
                   matBadge="{{ carrito ? carrito.items.length : 0 }}"
                   matBadgeColor="accent"
+                  matTooltip="Tu carrito"
                 >
                   <mat-icon>shopping_cart</mat-icon>
                 </button>
@@ -113,6 +116,7 @@
                       routerLinkActive
                       #link="routerLinkActive"
                       [activated]="link.isActive"
+                      matTooltip="Tu perfil"
                     >
                       <img
                         class="w-10 h-10 p-1 m-1 rounded-full ring-2 ring-gray-300 dark:ring-gray-500"
@@ -151,6 +155,7 @@
                 <button
                   mat-icon-button
                   (click)="authService.logout()"
+                  matTooltip="Cerrar sesión"
                 >
                   <mat-icon aria-label="Logout icon">logout</mat-icon>
                 </button>
@@ -172,6 +177,7 @@
                   mat-icon-button
                   routerLink="login"
                   routerLinkActive
+                  matTooltip="Iniciar sesión"
                 >
                   <mat-icon aria-label="Login icon">login</mat-icon>
                 </a>

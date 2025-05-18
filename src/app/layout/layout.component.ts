@@ -20,6 +20,7 @@ import {MatMenu, MatMenuItem, MatMenuTrigger} from '@angular/material/menu';
 import {MatBadge} from '@angular/material/badge';
 import {Pedido} from '../pedido/pedido.model';
 import {PedidoService} from '../pedido/service/pedido.service';
+import {MatTooltip} from '@angular/material/tooltip';
 
 
 @Component({
@@ -42,6 +43,7 @@ import {PedidoService} from '../pedido/service/pedido.service';
     MatMenu,
     MatMenuItem,
     MatMenuTrigger,
+    MatTooltip,
   ]
 })
 export class LayoutComponent implements OnInit {
