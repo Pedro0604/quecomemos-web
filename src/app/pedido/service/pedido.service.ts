@@ -6,6 +6,8 @@ import {environment} from '../../../environments/environment';
 import {Pedido} from '../pedido.model';
 import {ItemPedidoDTO} from '../item-pedido.model';
 import {NotificationService} from '../../notification/notification.service';
+import {AuthService} from '../../auth/service/auth.service';
+import {Accion} from '../../permiso/accion';
 
 @Injectable({
   providedIn: 'root'
@@ -27,10 +29,15 @@ export class PedidoService {
     }
   }
 
-  constructor(protected http: HttpClient, private notificationService: NotificationService) {
+  constructor(protected http: HttpClient, private notificationService: NotificationService, authService: AuthService) {
     this.apiUrl = `${environment.apiBaseUrl}/${getEntidadLink(Entidad.PEDIDO)}`;
     this.apiUrlItems = `${environment.apiBaseUrl}/${getEntidadLink(Entidad.ITEM_PEDIDO)}`;
-    this.refreshCarrito();
+
+    authService.usuario$.subscribe(() => {
+      if (authService.isLoggedIn && authService.hasPermission(Accion.VER, Entidad.PEDIDO)) {
+        this.refreshCarrito();
+      }
+    });
   }
 
   getPedidosDeCliente(): Observable<Pedido[]> {
