@@ -110,15 +110,14 @@
               <mat-nav-list>
                 <span>
                 @if (authService.hasPermission(Accion.EDITAR, authService.usuario.rolName)) {
-                  @if (authService.usuario.rolName !== Entidad.ADMINISTRADOR) {
-                    <a
-                      mat-list-item
-                      routerLink="{{getEntidadLink(authService.usuario.rolName)}}/{{ authService.usuario.id }}"
-                      routerLinkActive
-                      #link="routerLinkActive"
-                      [activated]="link.isActive"
-                      matTooltip="Tu perfil"
-                    >
+                  <a
+                    mat-list-item
+                    routerLink="{{getEntidadLink(authService.usuario.rolName)}}/{{ authService.usuario.id }}"
+                    routerLinkActive
+                    #link="routerLinkActive"
+                    [activated]="link.isActive"
+                    matTooltip="Tu perfil"
+                  >
                       <img
                         class="w-10 h-10 p-1 m-1 rounded-full ring-2 ring-gray-300 dark:ring-gray-500"
                         [src]="authService.usuario.imagen"
@@ -126,17 +125,9 @@
                         defaultImage
                       >
                     </a>
-                  } @else {
-                    <img
-                      class="w-10 h-10 p-1 m-1 rounded-full ring-2 ring-gray-300 dark:ring-gray-500"
-                      [src]="authService.usuario.imagen"
-                      alt="Avatar"
-                      defaultImage
-                    >
-                  }
                 } @else {
                   <img
-                    class="w-10 h-10 p-1 rounded-full ring-2 ring-gray-300 dark:ring-gray-500"
+                    class="w-10 h-10 p-1 m-1 rounded-full ring-2 ring-gray-300 dark:ring-gray-500"
                     [src]="authService.usuario.imagen"
                     alt="Avatar"
                     defaultImage

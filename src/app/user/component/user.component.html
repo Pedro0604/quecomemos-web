@@ -11,7 +11,7 @@
         </div>
         <div class="flex justify-center items-center w-20 h-20 border image-container">
           @if (user.urlImagen) {
-            <img class="object-cover aspect-square" [src]="user.urlImagen" [alt]="user.dni">
+            <img class="object-cover aspect-square" [src]="user.urlImagen" [alt]="user.dni" defaultImage matTooltip>
           } @else {
             <mat-icon class="text-5xl !w-fit !h-fit">no_photography</mat-icon>
           }

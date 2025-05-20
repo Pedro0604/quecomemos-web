@@ -32,6 +32,7 @@ import {AuthService} from '../../auth/service/auth.service';
 import {Entidad} from '../../permiso/entidad';
 import {Accion} from '../../permiso/accion';
 import {PermissionAware} from '../../permiso/permissionAware';
+import {MatTooltip} from '@angular/material/tooltip';
 
 type CampoComida = {
   nombre: string,
@@ -55,7 +56,8 @@ type CampoComida = {
     TitleComponent,
     FormStateComponent,
     FormComponent,
-    DefaultImageDirective
+    DefaultImageDirective,
+    MatTooltip
   ],
   templateUrl: './menu-form.component.html',
   standalone: true,
