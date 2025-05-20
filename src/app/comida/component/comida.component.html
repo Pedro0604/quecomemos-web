@@ -3,16 +3,24 @@
     <mat-card-title>{{ comida.nombre }}</mat-card-title>
     <mat-card-subtitle>${{ comida.precio }}</mat-card-subtitle>
     <div>
-      @if (comida.vegetariana) {
-        <mat-icon class="text-green-600">eco</mat-icon>
-      }
       @if (authService.hasPermission(Accion.EDITAR, Entidad.PEDIDO)) {
         <button
           mat-icon-button
           aria-label="Añadir al carrito"
+          matTooltip="Añadir al carrito"
+          matTooltipShowDelay="500"
           (click)="pedidoService.addItem({itemId: comida.id, cantidad: 1})">
-          <mat-icon class="text-blue-500">add</mat-icon>
+          <mat-icon class="text-blue-500">shopping_cart</mat-icon>
         </button>
+      }
+      @if (comida.vegetariana) {
+        <mat-icon
+          class="text-green-600 ml-2"
+          matTooltip="Es vegetariana"
+          matTooltipShowDelay="500"
+        >
+          eco
+        </mat-icon>
       }
     </div>
   </mat-card-header>
@@ -24,11 +32,12 @@
           <p class="text-lg">{{ comida.nombre }}</p>
         </div>
         <div class="flex justify-center items-center w-20 h-20 border image-container">
-          <img [alt]="comida.nombre"
-               [src]="comida.urlImagen"
-               class="object-cover aspect-square w-full h-full"
-               defaultImage
-          >
+          <img
+            [alt]="comida.nombre"
+            [src]="comida.urlImagen"
+            class="object-cover aspect-square w-full h-full"
+            defaultImage
+          />
         </div>
       </div>
     </div>

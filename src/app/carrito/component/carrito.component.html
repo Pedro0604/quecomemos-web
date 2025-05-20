@@ -50,7 +50,14 @@
         <th mat-header-cell *matHeaderCellDef></th>
         <td mat-cell *matCellDef="let item">
           @if (authService.hasPermission(Accion.EDITAR, Entidad.ITEM_PEDIDO)) {
-            <button mat-icon-button color="warn" (click)="eliminarItem(item)" [disabled]="item.loading">
+            <button
+              mat-icon-button
+              color="warn"
+              (click)="eliminarItem(item)"
+              [disabled]="item.loading"
+              matTooltip="Eliminar del carrito"
+              matTooltipShowDelay="500"
+            >
               <mat-icon>delete</mat-icon>
             </button>
           }

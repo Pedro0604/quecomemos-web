@@ -25,6 +25,7 @@ import {AuthService} from '../../auth/service/auth.service';
 import {Accion} from '../../permiso/accion';
 import {CantidadComponent} from '../../components/cantidad/cantidad.component';
 import {capitalize} from '../../utils/utils';
+import {MatTooltip} from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-carrito',
@@ -45,7 +46,8 @@ import {capitalize} from '../../utils/utils';
     MatHeaderRowDef,
     MatRowDef,
     FormsModule,
-    CantidadComponent
+    CantidadComponent,
+    MatTooltip
   ],
   templateUrl: './carrito.component.html',
   standalone: true,

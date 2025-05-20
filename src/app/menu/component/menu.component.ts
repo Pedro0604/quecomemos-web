@@ -7,7 +7,6 @@ import {RouterLink} from '@angular/router';
 import {MatDialog} from '@angular/material/dialog';
 import {DialogEliminarComponent} from '../../components/dialog-eliminar/dialog-eliminar.component';
 import {MenuService} from '../service/menu.service';
-import {DefaultImageDirective} from '../../directives/default-image-directive/default-image.directive';
 import {AuthService} from '../../auth/service/auth.service';
 import {EntityCardActionsComponent} from '../../components/entity-card-actions/entity-card-actions.component';
 import {Entidad} from '../../permiso/entidad';
@@ -16,10 +15,12 @@ import {PermissionResult} from '../../permiso/permissionAware';
 import {MatIconButton} from '@angular/material/button';
 import {PedidoService} from '../../pedido/service/pedido.service';
 import {tipoComidaToString} from '../../comida/comida.model';
+import {MatTooltip} from "@angular/material/tooltip";
+import {DefaultImageDirective} from '../../directives/default-image-directive/default-image.directive';
 
 @Component({
   selector: 'app-menu',
-  imports: [MatCardModule, MatIcon, MatDivider, RouterLink, DefaultImageDirective, EntityCardActionsComponent, MatIconButton],
+  imports: [MatCardModule, MatIcon, MatDivider, RouterLink, EntityCardActionsComponent, MatIconButton, MatTooltip, DefaultImageDirective],
   templateUrl: './menu.component.html',
   standalone: true,
 })

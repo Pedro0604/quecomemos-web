@@ -5,7 +5,6 @@ import {MatCard, MatCardContent, MatCardHeader, MatCardSubtitle, MatCardTitle} f
 import {MatIcon} from '@angular/material/icon';
 import {DialogEliminarComponent} from '../../components/dialog-eliminar/dialog-eliminar.component';
 import {ComidaService} from '../service/comida.service';
-import {DefaultImageDirective} from '../../directives/default-image-directive/default-image.directive';
 import {EntityCardActionsComponent} from '../../components/entity-card-actions/entity-card-actions.component';
 
 import {Entidad} from '../../permiso/entidad';
@@ -14,6 +13,8 @@ import {Accion} from '../../permiso/accion';
 import {PedidoService} from '../../pedido/service/pedido.service';
 import {MatIconButton} from '@angular/material/button';
 import {AuthService} from '../../auth/service/auth.service';
+import {MatTooltip} from '@angular/material/tooltip';
+import {DefaultImageDirective} from '../../directives/default-image-directive/default-image.directive';
 
 @Component({
   selector: 'app-comida',
@@ -26,9 +27,10 @@ import {AuthService} from '../../auth/service/auth.service';
     MatCardContent,
     MatCardTitle,
     MatCardSubtitle,
-    DefaultImageDirective,
     EntityCardActionsComponent,
     MatIconButton,
+    MatTooltip,
+    DefaultImageDirective,
   ],
 })
 

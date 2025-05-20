@@ -15,6 +15,7 @@
           [activated]="link.isActive"
           [routerLinkActiveOptions]="{exact: true}"
           [matTooltip]="item.title?.toString()"
+          [matTooltipShowDelay]="500"
         >
           {{ item.title }}
         </a>

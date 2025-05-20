@@ -1,7 +1,10 @@
 <div class="flex items-center gap-3 h-6 p-1">
   <button mat-icon-button color="primary"
           (click)="disminuir()"
-          [disabled]="cantidad <= 1 || loading">
+          [disabled]="cantidad <= 1 || loading"
+          matTooltip="Sacar una unidad"
+          matTooltipShowDelay="500"
+  >
     <mat-icon>remove</mat-icon>
   </button>
 
@@ -15,7 +18,10 @@
 
   <button mat-icon-button color="primary"
           (click)="aumentar()"
-          [disabled]="loading">
+          [disabled]="loading"
+          matTooltip="Añadir una unidad"
+          matTooltipShowDelay="500"
+  >
     <mat-icon>add</mat-icon>
   </button>
 </div>
