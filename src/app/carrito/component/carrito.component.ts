@@ -26,6 +26,7 @@ import {Accion} from '../../permiso/accion';
 import {CantidadComponent} from '../../components/cantidad/cantidad.component';
 import {capitalize} from '../../utils/utils';
 import {MatTooltip} from '@angular/material/tooltip';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-carrito',
@@ -59,7 +60,8 @@ export class CarritoComponent implements OnInit {
   constructor(
     private pedidoService: PedidoService,
     private notificationService: NotificationService,
-    protected authService: AuthService
+    protected authService: AuthService,
+    private router: Router
   ) {
   }
 
@@ -102,6 +104,10 @@ export class CarritoComponent implements OnInit {
     } catch {
       this.notificationService.show('Error al vaciar el carrito.');
     }
+  }
+
+  finalizarCompra() {
+    this.router.navigate(['/pagar']);
   }
 
   protected readonly Entidad = Entidad;

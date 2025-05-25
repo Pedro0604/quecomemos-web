@@ -75,6 +75,12 @@
     </span>
     </div>
   </div>
+
+  <div style="display: flex; justify-content: flex-end; margin-top: 1rem;">
+    <button mat-raised-button color="primary" (click)="finalizarCompra()">
+      Finalizar compra
+    </button>
+  </div>
 } @else {
   <p>No hay items en el carrito.</p>
 }

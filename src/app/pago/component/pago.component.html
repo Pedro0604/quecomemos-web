@@ -1,0 +1,33 @@
+<div style="max-width: 500px; margin: 0 auto; padding: 24px;">
+  <h2 style="text-align: center;">Resumen de pago</h2>
+
+  <div style="margin-bottom: 16px;">
+    <label style="font-weight: bold;">Total de la compra:</label>
+    <div style="font-size: 1.2rem; margin-top: 4px;">
+      {{ carrito?.total | currency:'$':'symbol':'1.0-0' }}
+    </div>
+  </div>
+
+  <div style="margin-bottom: 16px;">
+    <label for="metodoPago" style="font-weight: bold;">Método de pago:</label>
+    <mat-form-field appearance="fill" style="width: 100%; margin-top: 4px;">
+      <mat-label>Seleccione un método</mat-label>
+      <mat-select id="metodoPago" [(value)]="metodoSeleccionado">
+        <mat-option *ngFor="let metodo of metodosDePago" [value]="metodo">
+          {{ metodo }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <button
+    mat-raised-button
+    color="primary"
+    style="width: 100%; margin-top: 24px;"
+    (click)="pagar()"
+    [disabled]="!metodoSeleccionado"
+  >
+    Pagar
+  </button>
+</div>
+

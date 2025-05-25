@@ -21,6 +21,7 @@ import {Accion} from './permiso/accion';
 import {ResponsableListComponent} from './responsable/list/responsable-list.component';
 import {ResponsableFormComponent} from './responsable/form/responsable-form.component';
 import {CarritoComponent} from './carrito/component/carrito.component';
+import {PagoComponent} from './pago/component/pago.component';
 
 export const appRoutes: Routes = [
   {
@@ -271,6 +272,18 @@ export const appRoutes: Routes = [
       permiso: {
         accion: Accion.VER,
         entidad: Entidad.PEDIDO
+      }
+    }
+  },
+  {
+    path: 'pagar',
+    component: PagoComponent,
+    title: 'Finalizar Compra',
+    canActivate: [AuthGuard],
+    data: {
+      permiso: {
+        accion: Accion.CREAR,
+        entidad: Entidad.PAGO
       }
     }
   },
