@@ -4,5 +4,7 @@ export enum Accion {
   CREAR = "crear",
   EDITAR = "editar",
   ELIMINAR = "eliminar",
-  VER_BUZON = "ver_buzon"
+  VER_BUZON = "ver_buzon",
+  ANIADIR_AL_CARRITO = "aniadir_al_carrito",
+  ENTREGAR = "entregar",
 }

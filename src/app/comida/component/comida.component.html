@@ -3,7 +3,7 @@
     <mat-card-title>{{ comida.nombre }}</mat-card-title>
     <mat-card-subtitle>${{ comida.precio }}</mat-card-subtitle>
     <div>
-      @if (authService.hasPermission(Accion.EDITAR, Entidad.PEDIDO)) {
+      @if (permisos.aniadir_al_carrito?.allowed) {
         <button
           mat-icon-button
           aria-label="Añadir al carrito"

@@ -20,7 +20,7 @@ export class PagoComponent implements OnInit {
   carrito: Pedido | null = null;
   metodoSeleccionado: MetodoDePago | null = null;
 
-  metodosDePago: MetodoDePago[] = ['CREDITO', 'EFECTIVO', 'DEBITO', 'MERCADO_PAGO', 'CUENTA_DNI'];
+  metodosDePago: MetodoDePago[] = ['CREDITO', 'DEBITO', 'MERCADO_PAGO', 'CUENTA_DNI'];
 
   constructor(
     private pedidoService: PedidoService,
