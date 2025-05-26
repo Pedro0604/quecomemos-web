@@ -17,7 +17,7 @@ import {
 } from '@angular/material/table';
 import {MatChip} from '@angular/material/chips';
 import {Entidad, getEntidadNombre} from '../../permiso/entidad';
-import {MatButton, MatIconButton} from '@angular/material/button';
+import {MatAnchor, MatButton, MatIconButton} from '@angular/material/button';
 import {ItemPedido} from '../../pedido/item-pedido.model';
 import {CurrencyPipe} from '@angular/common';
 import {FormsModule} from '@angular/forms';
@@ -26,7 +26,7 @@ import {Accion} from '../../permiso/accion';
 import {CantidadComponent} from '../../components/cantidad/cantidad.component';
 import {capitalize} from '../../utils/utils';
 import {MatTooltip} from '@angular/material/tooltip';
-import { Router } from '@angular/router';
+import {RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-carrito',
@@ -48,7 +48,9 @@ import { Router } from '@angular/router';
     MatRowDef,
     FormsModule,
     CantidadComponent,
-    MatTooltip
+    MatTooltip,
+    MatAnchor,
+    RouterLink
   ],
   templateUrl: './carrito.component.html',
   standalone: true,
@@ -60,8 +62,7 @@ export class CarritoComponent implements OnInit {
   constructor(
     private pedidoService: PedidoService,
     private notificationService: NotificationService,
-    protected authService: AuthService,
-    private router: Router
+    protected authService: AuthService
   ) {
   }
 
@@ -104,10 +105,6 @@ export class CarritoComponent implements OnInit {
     } catch {
       this.notificationService.show('Error al vaciar el carrito.');
     }
-  }
-
-  finalizarCompra() {
-    this.router.navigate(['/pagar']);
   }
 
   protected readonly Entidad = Entidad;
