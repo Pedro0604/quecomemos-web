@@ -1,0 +1,20 @@
+<div class="estadisticas-container">
+  <h2 class="titulo">Estadísticas del Buffet</h2>
+
+  <!-- Mostrar mensaje de carga si es necesario -->
+  <div *ngIf="graficos.length === 0" class="cargando">
+    Cargando estadísticas...
+  </div>
+
+  <!-- Renderizar los gráficos -->
+  <div class="graficos-grid">
+    <app-grafico-estadistico
+      *ngFor="let grafico of graficos"
+      [titulo]="grafico.titulo"
+      [tipo]="grafico.tipo"
+      [labels]="grafico.labels"
+      [datos]="grafico.data"
+      [color]="grafico.color">
+    </app-grafico-estadistico>
+  </div>
+</div>

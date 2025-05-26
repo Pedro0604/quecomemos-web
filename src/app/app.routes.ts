@@ -20,6 +20,7 @@ import {Entidad, getEntidadLink} from './permiso/entidad';
 import {Accion} from './permiso/accion';
 import {ResponsableListComponent} from './responsable/list/responsable-list.component';
 import {ResponsableFormComponent} from './responsable/form/responsable-form.component';
+import {EstadisticasComponent} from './estadisticas/estadisticas.component';
 
 export const appRoutes: Routes = [
   {
@@ -94,6 +95,19 @@ export const appRoutes: Routes = [
       permiso: {
         accion: Accion.VER_TODOS,
         entidad: Entidad.MENU
+      },
+      includeInLayout: true
+    }
+  },
+  {
+    path: 'estadisticas',
+    component: EstadisticasComponent,
+    title: 'Estadisticas',
+    canActivate: [AuthGuard],
+    data: {
+      permiso: {
+        accion: Accion.VER_TODOS,
+        entidad: Entidad.ESTADISTICAS
       },
       includeInLayout: true
     }
