@@ -6,7 +6,7 @@ export enum Entidad {
   ADMINISTRADOR = "admin",
   COMIDA = "comida",
   MENU = "menu",
-  ESTADISTICAS = "estadisticas",
+  ESTADISTICA = "estadistica",
   MENU_DIARIO = "menu_diario",
   SUGERENCIA = "sugerencia",
   PEDIDO = "pedido",

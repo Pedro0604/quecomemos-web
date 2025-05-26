@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { EstadisticasService } from './grafico-estadistico/estadisticas.service';
-import { GraficoEstadisticoComponent } from './grafico-estadistico/grafico-estadistico.component';
+import {Component, OnInit} from '@angular/core';
+import {EstadisticaService} from './grafico-estadistico/estadistica.service';
+import {GraficoEstadisticoComponent} from './grafico-estadistico/grafico-estadistico.component';
 import {CommonModule} from '@angular/common';
 
 @Component({
@@ -18,7 +18,8 @@ export class EstadisticasComponent implements OnInit {
     color: string;
   }[] = [];
 
-  constructor(private estadisticasService: EstadisticasService) {}
+  constructor(private estadisticasService: EstadisticaService) {
+  }
 
   ngOnInit() {
     this.estadisticasService.getEstadisticas().subscribe(resp => {

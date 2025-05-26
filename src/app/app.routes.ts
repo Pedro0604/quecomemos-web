@@ -29,6 +29,19 @@ export const appRoutes: Routes = [
     pathMatch: 'full'
   },
   {
+    path: 'estadisticas',
+    component: EstadisticasComponent,
+    title: 'Estadisticas',
+    canActivate: [AuthGuard],
+    data: {
+      permiso: {
+        accion: Accion.VER,
+        entidad: Entidad.ESTADISTICA
+      },
+      includeInLayout: true
+    }
+  },
+  {
     path: 'carta',
     component: HomeComponent,
     title: 'Carta Semanal',
@@ -95,19 +108,6 @@ export const appRoutes: Routes = [
       permiso: {
         accion: Accion.VER_TODOS,
         entidad: Entidad.MENU
-      },
-      includeInLayout: true
-    }
-  },
-  {
-    path: 'estadisticas',
-    component: EstadisticasComponent,
-    title: 'Estadisticas',
-    canActivate: [AuthGuard],
-    data: {
-      permiso: {
-        accion: Accion.VER_TODOS,
-        entidad: Entidad.ESTADISTICAS
       },
       includeInLayout: true
     }
