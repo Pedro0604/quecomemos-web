@@ -30,6 +30,7 @@ export class MenuDiarioComponent {
   @Input({transform: booleanAttribute}) showButtons: boolean = true;
   @Input({transform: booleanAttribute}) showDia: boolean = true;
   @Input({required: true}) permisos!: Partial<Record<Accion, PermissionResult>>;
+  @Input({required: true, transform: booleanAttribute}) showAniadirAlCarrito: boolean = false;
 
   @Output() onDelete = new EventEmitter<number>();
   protected readonly traduccionDiasSemana = traduccionDiasSemana;
