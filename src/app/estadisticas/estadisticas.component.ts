@@ -2,13 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { EstadisticaService } from './grafico-estadistico/estadistica.service';
 import { GraficoEstadisticoComponent } from './grafico-estadistico/grafico-estadistico.component';
 import { CommonModule } from '@angular/common';
-
+import { FormsModule } from '@angular/forms';
 type TipoGrafico = 'bar' | 'line' | 'pie' | 'doughnut';
 
 @Component({
   selector: 'app-estadisticas',
   standalone: true,
-  imports: [GraficoEstadisticoComponent, CommonModule],
+  imports: [GraficoEstadisticoComponent, CommonModule, FormsModule],
   templateUrl: './estadisticas.component.html'
 })
 
@@ -26,13 +26,16 @@ export class EstadisticasComponent implements OnInit {
     { id: 'ingresos-mensuales', titulo: 'Ingresos mensuales', tipo: 'bar' }
   ];
 
+  filtros: Record<string, { desde: string; hasta: string }> = {};
+
+
   graficos: {
     id: string;
     titulo: string;
     tipo: TipoGrafico;
     labels: string[];
     data: number[];
-    color: string[];
+    color: string | string[];
   }[] = [];
 
   cargando: Set<string> = new Set();
@@ -40,6 +43,9 @@ export class EstadisticasComponent implements OnInit {
   constructor(private estadisticasService: EstadisticaService) {}
 
   ngOnInit(): void {
+    this.reportesDisponibles.forEach(r => {
+      this.filtros[r.id] = { desde: '', hasta: '' };
+    });
   }
 
   getGrafico(id: string) {
@@ -60,43 +66,43 @@ export class EstadisticasComponent implements OnInit {
     return this.desplegados.has(id);
   }
 
-  generarGrafico(reporte: { id: string; titulo: string; tipo: TipoGrafico }) {
+  generarGraficoConFiltro(reporte: { id: string; titulo: string; tipo: TipoGrafico }) {
     if (this.cargando.has(reporte.id)) return;
-
     this.cargando.add(reporte.id);
 
-    this.estadisticasService.getEstadisticaPorId(reporte.id).subscribe(resp => {
+    const { desde, hasta } = this.filtros[reporte.id];
+    const fechaDesde = desde || undefined;
+    const fechaHasta = hasta || undefined;
 
-      function generarColoresAleatorios(cantidad: number): string[] {
-        const colores: string[] = [];
+    this.estadisticasService
+      .getEstadisticaPorIdConFiltro(reporte.id, fechaDesde, fechaHasta)
+      .subscribe(resp => {
+        // Generar colores si es pie
+        const color =
+          reporte.tipo === 'pie'
+            ? this.generarColoresAleatorios(resp.labels.length)
+            : `rgba(54,162,235,0.6)`;
 
-        for (let i = 0; i < cantidad; i++) {
-          const r = Math.floor(Math.random() * 156) + 100; // colores más suaves
-          const g = Math.floor(Math.random() * 156) + 100;
-          const b = Math.floor(Math.random() * 156) + 100;
-          colores.push(`rgba(${r}, ${g}, ${b}, 0.6)`);
-        }
+        const nuevo = {
+          id: reporte.id,
+          titulo: reporte.titulo,
+          tipo: reporte.tipo,
+          labels: resp.labels,
+          data: resp.data,
+          color
+        };
+        const i = this.graficos.findIndex(g => g.id === reporte.id);
+        i >= 0 ? (this.graficos[i] = nuevo) : this.graficos.push(nuevo);
+        this.cargando.delete(reporte.id);
+      }, () => this.cargando.delete(reporte.id));
+  }
 
-        return colores;
-      }
-
-      const nuevoGrafico = {
-        id: reporte.id,
-        titulo: reporte.titulo,
-        tipo: reporte.tipo,
-        labels: resp.labels || [],
-        data: resp.data || [],
-        color: generarColoresAleatorios(resp.labels.length)
-      };
-
-      const index = this.graficos.findIndex(g => g.id === reporte.id);
-      if (index !== -1) {
-        this.graficos[index] = nuevoGrafico;
-      } else {
-        this.graficos.push(nuevoGrafico);
-      }
-
-      this.cargando.delete(reporte.id);
+  private generarColoresAleatorios(cantidad: number): string[] {
+    return Array.from({ length: cantidad }, () => {
+      const r = Math.floor(Math.random() * 156) + 100;
+      const g = Math.floor(Math.random() * 156) + 100;
+      const b = Math.floor(Math.random() * 156) + 100;
+      return `rgba(${r}, ${g}, ${b}, 0.6)`;
     });
   }
 

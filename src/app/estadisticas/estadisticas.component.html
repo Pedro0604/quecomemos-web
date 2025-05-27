@@ -13,13 +13,22 @@
     </div>
 
     <div *ngIf="estaDesplegado(reporte.id)" class="p-4">
-      <button
-        (click)="generarGrafico(reporte)"
-        [disabled]="cargando.has(reporte.id)"
-        class="mb-4 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
-      >
-        Cargar gráfico
-      </button>
+      <div class="flex gap-4 items-end">
+        <div>
+          <label class="block text-sm">Desde:</label>
+          <input type="date" [(ngModel)]="filtros[reporte.id].desde" class="border rounded px-2 py-1"/>
+        </div>
+        <div>
+          <label class="block text-sm">Hasta:</label>
+          <input type="date" [(ngModel)]="filtros[reporte.id].hasta" class="border rounded px-2 py-1"/>
+        </div>
+        <button (click)="generarGraficoConFiltro(reporte)"
+                [disabled]="cargando.has(reporte.id)"
+                class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50">
+          Cargar gráfico
+        </button>
+      </div>
+
 
       <ng-container *ngIf="getGrafico(reporte.id) as grafico">
         <app-grafico-estadistico

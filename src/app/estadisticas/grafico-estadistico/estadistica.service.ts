@@ -14,8 +14,15 @@ export class EstadisticaService {
     this.apiUrl = `${environment.apiBaseUrl}/${getEntidadLink(Entidad.ESTADISTICA)}`;
   }
 
-  getEstadisticaPorId(id: string): Observable<{ labels: string[], data: number[] }> {
-    return this.http.get<{ labels: string[], data: number[] }>(`${this.apiUrl}/${id}`);
+  getEstadisticaPorIdConFiltro(
+    id: string,
+    fechaDesde?: string,
+    fechaHasta?: string
+  ): Observable<{ labels: string[]; data: number[] }> {
+    const params: any = {};
+    if (fechaDesde) params.fechaDesde = fechaDesde;
+    if (fechaHasta) params.fechaHasta = fechaHasta;
+    return this.http.get<{ labels: string[]; data: number[] }>(`${this.apiUrl}/${id}`, { params });
   }
 
 
