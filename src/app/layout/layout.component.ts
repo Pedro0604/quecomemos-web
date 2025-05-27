@@ -1,4 +1,4 @@
-import {Component, inject, Injector, OnInit, TemplateRef} from '@angular/core';
+import {Component, inject, Injector, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 import {AsyncPipe, NgTemplateOutlet} from '@angular/common';
 import {MatToolbarModule} from '@angular/material/toolbar';
@@ -16,6 +16,11 @@ import {AuthService} from '../auth/service/auth.service';
 import {DefaultImageDirective} from '../directives/default-image-directive/default-image.directive';
 import {Entidad, getEntidadLink} from '../permiso/entidad';
 import {Accion} from '../permiso/accion';
+import {MatMenu, MatMenuItem, MatMenuTrigger} from '@angular/material/menu';
+import {MatBadge} from '@angular/material/badge';
+import {Pedido} from '../pedido/pedido.model';
+import {PedidoService} from '../pedido/service/pedido.service';
+import {MatTooltip} from '@angular/material/tooltip';
 
 
 @Component({
@@ -34,71 +39,35 @@ import {Accion} from '../permiso/accion';
     RouterLinkActive,
     NgTemplateOutlet,
     DefaultImageDirective,
+    MatBadge,
+    MatMenu,
+    MatMenuItem,
+    MatMenuTrigger,
+    MatTooltip,
   ]
 })
 export class LayoutComponent implements OnInit {
   rootRoutes: Routes = [];
   title: string = '';
   extra: TemplateRef<any> | null = null;
-  private breakpointObserver = inject(BreakpointObserver);
-  isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
-    .pipe(
-      map(result => result.matches),
-      shareReplay()
-    );
+
+  @ViewChild(MatMenuTrigger) carritoTrigger!: MatMenuTrigger;
+
+  isHandset$: Observable<boolean>;
+
+  carrito: Pedido | null = null;
 
   constructor(
     private layoutService: LayoutService,
     private injector: Injector,
-    protected authService: AuthService
+    protected authService: AuthService,
+    private pedidoService: PedidoService,
   ) {
-  }
-
-  filtrarRutas() {
-    this.rootRoutes = appRoutes.filter(route => {
-      if (!route.path) {
-        return false;
-      }
-      if (route.path.includes(':')) {
-        return false;
-      }
-      if (!route.data?.['includeInLayout']) {
-        return false;
-      }
-
-      if (Array.isArray(route.canActivate)) {
-        return route.canActivate?.every(guardClass => {
-          const guardInstance: AuthGuard = this.injector.get(guardClass, null);
-
-          if (!guardInstance) {
-            console.error('No se pudo obtener el guardia:', guardClass);
-            return false;
-          }
-
-          if (typeof guardInstance.canActivate === 'function') {
-            const mockActivatedRouteSnapshot = new ActivatedRouteSnapshot();
-
-            mockActivatedRouteSnapshot.params = {};
-            mockActivatedRouteSnapshot.queryParams = {};
-            mockActivatedRouteSnapshot.url = [];
-            if (route.data) {
-              mockActivatedRouteSnapshot.data = route.data;
-            }
-
-            guardInstance.allowAccessWithoutRedirect();
-            const canActivateReturnValue = guardInstance.canActivate(mockActivatedRouteSnapshot);
-            guardInstance.resetRedirect();
-
-            return canActivateReturnValue;
-          }
-
-          console.warn('Guard no tiene un método canActivate válido:', guardClass);
-          return false;
-        });
-      }
-
-      return true;
-    });
+    const breakpointObserver = inject(BreakpointObserver);
+    this.isHandset$ = breakpointObserver.observe(Breakpoints.Handset).pipe(
+      map(result => result.matches),
+      shareReplay()
+    );
   }
 
   ngOnInit(): void {
@@ -112,6 +81,42 @@ export class LayoutComponent implements OnInit {
 
     this.authService.usuario$.subscribe(() => {
       this.filtrarRutas();
+    });
+
+    this.pedidoService.carrito$.subscribe(c => this.carrito = c);
+  }
+
+  filtrarRutas() {
+    this.rootRoutes = appRoutes.filter(route => {
+      if (!route.path || route.path.includes(':') || !route.data?.['includeInLayout']) {
+        return false;
+      }
+
+      if (Array.isArray(route.canActivate)) {
+        return route.canActivate.every(guardClass => {
+          const guardInstance: AuthGuard = this.injector.get(guardClass, null);
+          if (!guardInstance) {
+            console.error('No se pudo obtener el guardia:', guardClass);
+            return false;
+          }
+
+          guardInstance.allowAccessWithoutRedirect();
+
+          const mockActivatedRouteSnapshot = new ActivatedRouteSnapshot();
+          mockActivatedRouteSnapshot.params = {};
+          mockActivatedRouteSnapshot.queryParams = {};
+          mockActivatedRouteSnapshot.url = [];
+          if (route.data) {
+            mockActivatedRouteSnapshot.data = route.data;
+          }
+
+          const canActivate = guardInstance.canActivate(mockActivatedRouteSnapshot);
+          guardInstance.resetRedirect();
+          return canActivate;
+        });
+      }
+
+      return true;
     });
   }
 

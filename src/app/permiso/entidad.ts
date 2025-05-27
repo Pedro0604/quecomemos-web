@@ -19,7 +19,7 @@ export function getEntidadLink(entidad: Entidad): string {
 }
 
 export function getEntidadNombre(entidad: Entidad): string {
-  return entidad.replace(/_/g, ' ').replace('menu', 'menú');
+  return entidad.replace(/_/g, ' ').replace('MENU', 'MENÚ');
 }
 
 export function getEntidadNombrePlural(entidad: Entidad): string {

@@ -8,8 +8,9 @@ import {Accion} from '../../permiso/accion';
 import {ResponsableService} from '../service/responsable.service';
 import {EntityCardActionsComponent} from '../../components/entity-card-actions/entity-card-actions.component';
 import {MatCard, MatCardContent, MatCardHeader, MatCardSubtitle, MatCardTitle} from '@angular/material/card';
-import {DefaultImageDirective} from '../../directives/default-image-directive/default-image.directive';
 import {Entidad} from '../../permiso/entidad';
+import {MatTooltip} from '@angular/material/tooltip';
+import {DefaultImageDirective} from '../../directives/default-image-directive/default-image.directive';
 
 @Component({
   selector: 'app-responsable',
@@ -20,6 +21,7 @@ import {Entidad} from '../../permiso/entidad';
     MatCardHeader,
     MatCardTitle,
     MatCardSubtitle,
+    MatTooltip,
     DefaultImageDirective
   ],
   templateUrl: './responsable.component.html',

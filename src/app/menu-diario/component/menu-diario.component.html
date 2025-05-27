@@ -7,9 +7,11 @@
   <mat-card-content class="my-4">
     <div class="grid grid-cols-2">
       <app-menu [menu]="menuDiario.menuVegetariano.data" [showButtons]="false" appearance="raised"
-                hasLink straightRightBorder [permisos]="menuDiario.menuVegetariano.permisos"/>
+                hasLink straightRightBorder [permisos]="menuDiario.menuVegetariano.permisos"
+                [showAniadirAlCarrito]="showAniadirAlCarrito"/>
       <app-menu [menu]="menuDiario.menuNoVegetariano.data" [showButtons]="false" appearance="raised"
-                hasLink straightLeftBorder [permisos]="menuDiario.menuNoVegetariano.permisos"/>
+                hasLink straightLeftBorder [permisos]="menuDiario.menuNoVegetariano.permisos"
+                [showAniadirAlCarrito]="showAniadirAlCarrito"/>
     </div>
   </mat-card-content>
   <app-entity-card-actions

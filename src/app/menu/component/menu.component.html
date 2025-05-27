@@ -13,9 +13,27 @@
       }
     </mat-card-title>
     <mat-card-subtitle>${{ menu.precio }}</mat-card-subtitle>
-    @if (menu.vegetariano) {
-      <mat-icon class="text-green-600">eco</mat-icon>
-    }
+    <div>
+      @if (authService.hasPermission(Accion.ANIADIR_AL_CARRITO, Entidad.MENU) && (showAniadirAlCarrito || permisos.aniadir_al_carrito?.allowed)) {
+        <button
+          mat-icon-button
+          aria-label="Añadir al carrito"
+          matTooltip="Añadir al carrito"
+          matTooltipShowDelay="500"
+          (click)="pedidoService.addItem({itemId: menu.id, cantidad: 1})">
+          <mat-icon class="text-blue-500">shopping_cart</mat-icon>
+        </button>
+      }
+      @if (menu.vegetariano) {
+        <mat-icon
+          class="text-green-600 ml-2"
+          matTooltip="Es vegetariano"
+          matTooltipShowDelay="500"
+        >
+          eco
+        </mat-icon>
+      }
+    </div>
   </mat-card-header>
   <mat-card-content class="my-4">
     <div class="flex flex-col gap-4">
@@ -23,7 +41,7 @@
         @let comida = comidaPermissionAware.data;
         <div class="flex justify-between gap-2">
           <div>
-            <p class="text-sm">{{ comida.tipoComida.replace("_", " ") }}</p>
+            <p class="text-sm">{{ tipoComidaToString(comida.tipoComida) }}</p>
             @if (comidaPermissionAware.permisos.editar?.allowed) {
               <!--        TODO - EL LINK Y EL PERMISO DEBERÍA SER A UNA VISTA DE LA COMIDA Y NO A LA EDICIÓN(?-->
               <a [routerLink]="['/comida/edit/', comida.id]" class="hover:underline hover:text-blue-600">
@@ -34,11 +52,13 @@
             }
           </div>
           <div class="flex justify-center items-center w-20 h-20 border image-container">
-            <img class="object-cover aspect-square w-full h-full"
-                 [src]="comida.urlImagen"
-                 [alt]="comida.nombre"
-                 defaultImage
-            >
+            <img
+              class="object-cover aspect-square w-full h-full"
+              [src]="comida.urlImagen"
+              [alt]="comida.nombre"
+              defaultImage
+              matTooltip
+            />
           </div>
         </div>
         @if (!$last) {

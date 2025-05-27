@@ -1,23 +1,45 @@
 import {isPlatformServer} from '@angular/common';
-import {Directive, ElementRef, Inject, Input, OnChanges, PLATFORM_ID, Renderer2, SimpleChanges,} from '@angular/core';
+import {
+  Directive,
+  ElementRef,
+  HostBinding,
+  Inject,
+  Input,
+  OnChanges,
+  Optional,
+  PLATFORM_ID,
+  SimpleChanges,
+} from '@angular/core';
+import {MatTooltip} from '@angular/material/tooltip';
 
 type ImageSrc = string | null | undefined;
 
 @Directive({
   selector: 'img[defaultImage]',
-  standalone: true
+  standalone: true,
 })
 export class DefaultImageDirective implements OnChanges {
   @Input({required: true}) src: ImageSrc = null;
 
-  // url link to some default image
-  private defaultLocalImage = "https://static-00.iconduck.com/assets.00/no-image-icon-2048x2048-2t5cx953.png";
+  private defaultLocalImage = "https://static-00.iconduck.com/assets.00/no-image-icon-2048x2048-2t5cx953.png"
+
+  @HostBinding('class.g-skeleton') private _skeleton = true;
+
+  handleTooltip = true;
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
     private imageRef: ElementRef,
-    private renderer: Renderer2
+    @Optional() private tooltip: MatTooltip
   ) {
+    if (this.tooltip) {
+      if (this.tooltip.message) {
+        this.handleTooltip = false;
+      } else {
+        this.tooltip.message = "Imagen no disponible";
+        this.tooltip.showDelay = 500;
+      }
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -30,43 +52,33 @@ export class DefaultImageDirective implements OnChanges {
       return;
     }
 
-    // show skeleton before image is loaded
-    this.renderer.addClass(this.imageRef.nativeElement, 'g-skeleton');
-
     const img = new Image();
+    this._skeleton = true;
 
-    // return on no src
     if (!this.src) {
-      this.setImage(this.defaultLocalImage);
-      this.renderer.removeClass(this.imageRef.nativeElement, 'g-skeleton');
+      this.updateImage(this.defaultLocalImage, true);
       return;
     }
 
-    // if possible to load image, set it to img
-    img.onload = () => {
-      this.setImage(this.resolveImage(this.src));
-      this.renderer.removeClass(this.imageRef.nativeElement, 'g-skeleton');
-    };
+    img.onload = () => this.updateImage(this.src!, false);
+    img.onerror = () => this.updateImage(this.defaultLocalImage, true);
 
-    img.onerror = () => {
-      // Set a placeholder image
-      this.setImage(this.defaultLocalImage);
-      this.renderer.removeClass(this.imageRef.nativeElement, 'g-skeleton');
-    };
-
-    // triggers http request to load image
-    img.src = this.resolveImage(this.src);
+    this.updateImage(this.src!, false);
+    img.src = this.src;
   }
 
-  private setImage(src: ImageSrc) {
-    this.imageRef.nativeElement.setAttribute('src', src);
-  }
+  /**
+   * Aplica la imagen, quita el skeleton y controla el tooltip
+   *
+   * @param src URL a aplicar
+   * @param isDefault si es la imagen por defecto
+   */
+  private updateImage(src: string, isDefault: boolean = false) {
+    this.imageRef.nativeElement.src = src;
+    this._skeleton = false;
 
-  private resolveImage(src: ImageSrc): string {
-    if (!src) {
-      return this.defaultLocalImage;
+    if (this.handleTooltip && this.tooltip) {
+      this.tooltip.disabled = !isDefault;
     }
-
-    return src;
   }
 }
