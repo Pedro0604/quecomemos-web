@@ -14,7 +14,9 @@ export class EstadisticaService {
     this.apiUrl = `${environment.apiBaseUrl}/${getEntidadLink(Entidad.ESTADISTICA)}`;
   }
 
-  getEstadisticas(): Observable<{ [key: string]: { labels: string[], data: number[] } }> {
-    return this.http.get<{ [key: string]: { labels: string[], data: number[] } }>(`${this.apiUrl}`);
+  getEstadisticaPorId(id: string): Observable<{ labels: string[], data: number[] }> {
+    return this.http.get<{ labels: string[], data: number[] }>(`${this.apiUrl}/${id}`);
   }
+
+
 }

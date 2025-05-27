@@ -15,8 +15,8 @@ export class GraficoEstadisticoComponent implements OnChanges {
   @Input() titulo = '';
   @Input() tipo: ChartType = 'bar';
   @Input() labels: string[] = [];
-  @Input() datos: number[] = [];
-  @Input() color = 'rgba(54, 162, 235, 0.5)';
+  @Input() data: number[] = [];
+  @Input() color!: string | string[];
 
   datosGrafico: ChartConfiguration['data'] = { labels: [], datasets: [] };
 
@@ -27,13 +27,36 @@ export class GraficoEstadisticoComponent implements OnChanges {
   };
 
   ngOnChanges() {
+    // Determinar backgroundColor y borderColor según tipo de color
+    let backgroundColors: string[];
+    let borderColors: string[];
+
+    if (Array.isArray(this.color)) {
+      backgroundColors = this.color;
+      borderColors = this.color.map(c => {
+        // convertir opacidad a 1 si contiene valor alpha
+        const parts = c.replace(/\s/g, '').match(/rgba?\((\d+),(\d+),(\d+)(?:,(\d*\.?\d+))?\)/);
+        if (parts && parts.length === 5) {
+          const r = parts[1], g = parts[2], b = parts[3];
+          return `rgba(${r}, ${g}, ${b}, 1)`;
+        }
+        return c;
+      });
+    } else {
+      backgroundColors = [this.color];
+      // único border color
+      const single = this.color;
+      const border = single.replace(/0?\.\d+\)$/, '1)');
+      borderColors = [border];
+    }
+
     this.datosGrafico = {
       labels: this.labels,
       datasets: [{
         label: this.titulo,
-        data: this.datos,
-        backgroundColor: this.color,
-        borderColor: this.color.replace('0.5', '1'),
+        data: this.data,
+        backgroundColor: backgroundColors,
+        borderColor: borderColors,
         borderWidth: 1
       }]
     };
