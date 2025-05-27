@@ -14,11 +14,13 @@
           <p class="text-sm">{{ responsable.turno }}</p>
         </div>
         <div class="flex justify-center items-center w-20 h-20 border image-container">
-          <img [alt]="'Imagen de' + responsable.nombre"
-               [src]="responsable.urlImagen"
-               class="object-cover aspect-square w-full h-full"
-               defaultImage
-          >
+          <img
+            [alt]="'Imagen de ' + responsable.nombre"
+            [src]="responsable.urlImagen"
+            class="object-cover aspect-square w-full h-full"
+            defaultImage
+            matTooltip
+          />
         </div>
       </div>
     </div>

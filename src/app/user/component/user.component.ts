@@ -1,17 +1,12 @@
 import {Component, EventEmitter, inject, Input, Output} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {User} from '../user.model';
-import {
-  MatCard,
-  MatCardActions,
-  MatCardContent,
-  MatCardHeader,
-  MatCardSubtitle,
-  MatCardTitle
-} from '@angular/material/card';
+import {MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardTitle} from '@angular/material/card';
 import {MatIcon} from '@angular/material/icon';
-import {MatAnchor, MatButton} from '@angular/material/button';
+import {MatAnchor} from '@angular/material/button';
 import {RouterLink} from '@angular/router';
+import {DefaultImageDirective} from '../../directives/default-image-directive/default-image.directive';
+import {MatTooltip} from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-user',
@@ -24,10 +19,10 @@ import {RouterLink} from '@angular/router';
     MatCardContent,
     MatCardActions,
     MatCardTitle,
-    MatCardSubtitle,
     MatAnchor,
-    MatButton,
-    RouterLink
+    RouterLink,
+    DefaultImageDirective,
+    MatTooltip
   ],
   styleUrl: './user.component.html'
 })

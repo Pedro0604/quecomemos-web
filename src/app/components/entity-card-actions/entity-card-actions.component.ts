@@ -18,7 +18,10 @@ import {MatTooltip} from '@angular/material/tooltip';
     MatTooltip
   ],
   templateUrl: './entity-card-actions.component.html',
-  standalone: true
+  standalone: true,
+  host: {
+    class: 'mt-auto',
+  }
 })
 export class EntityCardActionsComponent implements OnInit {
   @Input({required: true, transform: booleanAttribute}) showButtons!: boolean;
