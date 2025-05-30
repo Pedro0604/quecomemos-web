@@ -30,7 +30,7 @@
             <mat-panel-title>Menú del {{ traduccionDiasSemana(menuDiario.data.dia) }}</mat-panel-title>
           </mat-expansion-panel-header>
           <app-menu-diario [menuDiario]="menuDiario.data" [showButtons]="false" [showDia]="false"
-                           [permisos]="menuDiario.permisos"></app-menu-diario>
+                           [permisos]="menuDiario.permisos" [showAniadirAlCarrito]="true"></app-menu-diario>
         </mat-expansion-panel>
       }
     </mat-accordion>

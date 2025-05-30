@@ -34,6 +34,7 @@ export class MenuComponent {
   @Input({transform: booleanAttribute}) straightRightBorder: boolean = false;
   @Input({transform: booleanAttribute}) hasLink: boolean = false;
   @Input({required: true}) permisos!: Partial<Record<Accion, PermissionResult>>;
+  @Input({required: true, transform: booleanAttribute}) showAniadirAlCarrito: boolean = false;
 
   @Output() onDelete = new EventEmitter<number>();
 
