@@ -22,6 +22,7 @@ import {ResponsableListComponent} from './responsable/list/responsable-list.comp
 import {ResponsableFormComponent} from './responsable/form/responsable-form.component';
 import {CarritoComponent} from './carrito/component/carrito.component';
 import {PagoComponent} from './pago/component/pago.component';
+import {ConfirmacionPagoComponent} from './confirmacion-pago/component/confirmacion-pago.component';
 
 export const appRoutes: Routes = [
   {
@@ -286,6 +287,12 @@ export const appRoutes: Routes = [
         entidad: Entidad.PAGO
       }
     }
+  },
+  {
+    path: 'confirmacion',
+    component: ConfirmacionPagoComponent,
+    title: 'Confirmación de Pago',
+    canActivate: [AuthGuard],
   },
   {
     path: 'forbidden',
