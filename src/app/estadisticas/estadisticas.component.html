@@ -23,12 +23,13 @@
           <input type="date" [(ngModel)]="filtros[reporte.id].hasta" class="border rounded px-2 py-1"/>
         </div>
         <button (click)="generarGraficoConFiltro(reporte)"
-                [disabled]="cargando.has(reporte.id)"
                 class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50">
           Cargar gráfico
         </button>
       </div>
-
+      <div *ngIf="error[reporte.id]" class="text-red-600 mt-2">
+        {{ error[reporte.id] }}
+      </div>
 
       <ng-container *ngIf="getGrafico(reporte.id) as grafico">
         <app-grafico-estadistico
