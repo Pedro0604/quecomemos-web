@@ -1,17 +1,17 @@
-<div style="max-width: 500px; margin: 0 auto; padding: 24px;">
-  <h2 style="text-align: center;">Resumen de pago</h2>
+<div style="max-width: 500px; margin: 0 auto; padding: 32px; background-color: #fafafa; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+  <h2 style="text-align: center; margin-bottom: 24px;">Resumen de pago</h2>
 
   <!-- Total -->
-  <div style="margin-bottom: 16px;">
-    <label style="font-weight: bold;">Total de la compra:</label>
-    <div style="font-size: 1.2rem; margin-top: 4px;">
+  <div style="margin-bottom: 24px; text-align: center;">
+    <label style="font-weight: bold; font-size: 1.1rem;">Total de la compra</label>
+    <div style="font-size: 1.5rem; font-weight: bold; margin-top: 4px; color: #2e7d32;">
       {{ carrito?.total | currency:'$':'symbol':'1.0-0' }}
     </div>
   </div>
 
-  <!-- Método de pago -->
-  <div style="margin-bottom: 16px;">
-    <label for="metodoPago" style="font-weight: bold;">Método de pago:</label>
+  <!-- Metodo de pago -->
+  <div style="margin-bottom: 24px;">
+    <label for="metodoPago" style="font-weight: bold;">Método de pago</label>
     <mat-form-field appearance="fill" style="width: 100%; margin-top: 4px;">
       <mat-label>Seleccione un método</mat-label>
       <mat-select id="metodoPago" [(value)]="metodoSeleccionado" required>
@@ -26,13 +26,16 @@
   <form #pagoForm="ngForm" style="margin-bottom: 24px;">
     <!-- CREDITO o DEBITO -->
     <div *ngIf="metodoSeleccionado === 'CREDITO' || metodoSeleccionado === 'DEBITO'">
-      <mat-form-field appearance="fill" style="width: 100%; margin-bottom: 12px;">
+      <mat-form-field appearance="fill" style="width: 100%; margin-bottom: 16px;">
         <mat-label>Titular de la tarjeta</mat-label>
         <input matInput required [(ngModel)]="datosPago.titular" name="titular" #titular="ngModel" />
       </mat-form-field>
 
       <!-- Número de tarjeta -->
-      <mat-form-field appearance="fill" style="width: 100%; margin-bottom: 4px;">
+      <div *ngIf="datosPago.numeroTarjeta?.length < 16" style="font-size: 12px; color: gray; margin-bottom: 0;">
+        Faltan {{ 16 - (datosPago.numeroTarjeta?.length || 0) }} caracteres
+      </div>
+      <mat-form-field appearance="fill" style="width: 100%; margin-bottom: 0;">
         <mat-label>Número de tarjeta</mat-label>
         <input
           matInput
@@ -44,12 +47,15 @@
           #numeroTarjeta="ngModel"
         />
       </mat-form-field>
-      <div *ngIf="datosPago.numeroTarjeta?.length < 16" style="font-size: 12px; color: gray; margin-bottom: 12px;">
-        Faltan {{ 16 - (datosPago.numeroTarjeta?.length || 0) }} caracteres
-      </div>
 
       <!-- Código de seguridad -->
-      <mat-form-field appearance="fill" style="width: 100%; margin-bottom: 4px;">
+      <div *ngIf="datosPago.codigo?.length < 3" style="font-size: 12px; color: gray; margin-bottom: 0;">
+        Faltan {{ 3 - (datosPago.codigo?.length || 0) }} caracteres
+      </div>
+      <div *ngIf="datosPago.codigo?.length >= 3" style="font-size: 12px; color: green; margin-bottom: 0;">
+        Código válido
+      </div>
+      <mat-form-field appearance="fill" style="width: 100%; margin-bottom: 1px;">
         <mat-label>Código de seguridad</mat-label>
         <input
           matInput
@@ -61,23 +67,16 @@
           #codigo="ngModel"
         />
       </mat-form-field>
-      <div *ngIf="datosPago.codigo?.length < 3" style="font-size: 12px; color: gray; margin-bottom: 12px;">
-        Faltan {{ 3 - (datosPago.codigo?.length || 0) }} caracteres
-      </div>
-      <div *ngIf="datosPago.codigo?.length === 3 || datosPago.codigo?.length === 4" style="font-size: 12px; color: gray; margin-bottom: 12px;">
-        Código válido
-      </div>
-
     </div>
 
     <!-- MERCADO PAGO o CUENTA DNI -->
     <div *ngIf="metodoSeleccionado === 'MERCADO_PAGO' || metodoSeleccionado === 'CUENTA_DNI'">
-      <mat-form-field appearance="fill" style="width: 100%; margin-bottom: 12px;">
+      <mat-form-field appearance="fill" style="width: 100%; margin-bottom: 16px;">
         <mat-label>Titular de la cuenta</mat-label>
         <input matInput required [(ngModel)]="datosPago.titular" name="titularCuenta" #titularCuenta="ngModel" />
       </mat-form-field>
 
-      <p style="font-style: italic; margin-top: 8px;">
+      <p style="font-style: italic; color: #555; text-align: center; margin-top: 8px;">
         Vas a transferir a <strong>buffet.info.unlp</strong>
       </p>
     </div>
@@ -87,10 +86,59 @@
   <button
     mat-raised-button
     color="primary"
-    style="width: 100%;"
+    style="width: 100%; padding: 12px; font-size: 1.1rem; font-weight: bold;"
     (click)="pagar()"
     [disabled]="!metodoSeleccionado || !formularioValido()"
   >
     Pagar
   </button>
 </div>
+
+<!-- Animación de éxito (burbuja verde) -->
+<div *ngIf="mostrarBurbuja"
+     [ngStyle]="{
+       position: 'fixed',
+       bottom: '0',
+       left: '50%',
+       transform: 'translateX(-50%) translateY(100%) scale(1)',
+       width: '100px',
+       height: '100px',
+       'border-radius': '50%',
+       'background-color': '#4caf50',
+       'z-index': '9999',
+       animation: 'expandirBurbuja 1s ease-out forwards'
+     }">
+</div>
+
+<!-- Ícono de éxito centrado -->
+<div *ngIf="mostrarBurbuja"
+     [ngStyle]="{
+       position: 'fixed',
+       top: '50%',
+       left: '60%',
+       transform: 'translate(-50%, -50%)',
+       color: 'white',
+       'font-size': '64px',
+       'z-index': '10000',
+       opacity: iconoVisible ? 1 : 0,
+       transition: 'opacity 0.5s ease-in'
+     }">
+  ✔
+</div>
+
+<!-- Definición de la animación inline -->
+<svg style="display: none;">
+  <style>
+    @keyframes expandirBurbuja {
+      0% {
+        transform: translateX(-50%) translateY(100%) scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: translateX(-50%) translateY(-50%) scale(35);
+        opacity: 1;
+      }
+    }
+  </style>
+</svg>
+
