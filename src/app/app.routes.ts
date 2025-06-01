@@ -23,6 +23,7 @@ import {ResponsableFormComponent} from './responsable/form/responsable-form.comp
 import {CarritoComponent} from './carrito/component/carrito.component';
 import {PagoComponent} from './pago/component/pago.component';
 import {ConfirmacionPagoComponent} from './confirmacion-pago/component/confirmacion-pago.component';
+import {PedidoComponent} from './pedido/component/pedido.component';
 
 export const appRoutes: Routes = [
   {
@@ -292,6 +293,12 @@ export const appRoutes: Routes = [
     path: 'confirmacion',
     component: ConfirmacionPagoComponent,
     title: 'Confirmación de Pago',
+    canActivate: [AuthGuard],
+  },
+  {
+    path: `${getEntidadLink(Entidad.PEDIDO)}/:id`,
+    component: PedidoComponent,
+    title: 'Detalle del Pedido',
     canActivate: [AuthGuard],
   },
   {

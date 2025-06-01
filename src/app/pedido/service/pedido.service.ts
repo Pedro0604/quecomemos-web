@@ -67,4 +67,13 @@ export class PedidoService {
     await firstValueFrom(this.http.delete<void>(`${this.apiUrlItems}/${id}`));
     await this.refreshCarrito();
   }
+
+  async getPedidoById(id: number | string): Promise<Pedido> {
+    return firstValueFrom(this.http.get<Pedido>(`${this.apiUrl}/${id}`));
+  }
+
+  async marcarComoEntregado(id: number | string): Promise<void> {
+    await firstValueFrom(this.http.put<void>(`${this.apiUrl}/${id}/entregado`, {}));
+    this.notificationService.show('Pedido marcado como entregado');
+  }
 }

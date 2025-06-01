@@ -1,0 +1,37 @@
+<div style="max-width: 600px; margin: 64px auto; padding: 32px; background-color: #fafafa; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+  <h2 style="text-align: center; margin-bottom: 24px;">Detalle del Pedido</h2>
+
+  <div *ngIf="pedido">
+    <p><strong>Cliente:</strong> {{ pedido.cliente?.nombre }}</p>
+    <p><strong>Fecha:</strong> {{ pedido.fecha | date:'dd/MM/yyyy HH:mm' }}</p>
+
+    <hr style="margin: 24px 0;">
+
+    <div *ngFor="let item of pedido.items" style="margin-bottom: 16px;">
+      <div style="font-weight: bold;">{{ item.nombre }}</div>
+      <div>Cantidad: {{ item.cantidad }}</div>
+      <div>Precio unitario: {{ item.precio | currency:'$':'symbol':'1.0-0' }}</div>
+      <div>Subtotal: {{ item.precio * item.cantidad | currency:'$':'symbol':'1.0-0' }}</div>
+    </div>
+
+    <hr style="margin: 24px 0;">
+
+    <div style="text-align: right; font-size: 1.2rem; font-weight: bold;">
+      Total: {{ pedido.total | currency:'$':'symbol':'1.0-0' }}
+    </div>
+
+    <button
+      mat-raised-button
+      color="primary"
+      style="margin-top: 32px; width: 100%; padding: 12px; font-size: 1.1rem; font-weight: bold;"
+      (click)="marcarComoEntregado()"
+      [disabled]="pedido.entregado"
+    >
+      {{ pedido.entregado ? 'Pedido entregado' : 'Marcar como entregado' }}
+    </button>
+  </div>
+
+  <div *ngIf="!pedido" style="text-align: center; margin-top: 40px;">
+    Cargando pedido...
+  </div>
+</div>
