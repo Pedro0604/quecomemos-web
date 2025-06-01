@@ -25,5 +25,15 @@ export class EstadisticaService {
     return this.http.get<{ labels: string[]; data: number[] }>(`${this.apiUrl}/${id}`, { params });
   }
 
+  getResumenEstadisticas(periodo: 'diario' | 'semanal' | 'mensual') {
+    return this.http.get<{
+      menusVendidos: number;
+      comidasVendidas: number;
+      dineroRecaudado: number;
+    }>(`${this.apiUrl}/resumen`, {
+      params: { periodo }
+    });
+  }
+
 
 }

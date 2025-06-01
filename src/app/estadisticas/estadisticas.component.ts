@@ -42,17 +42,42 @@ export class EstadisticasComponent implements OnInit {
 
   error: Record<string, string> = {};
 
+  periodoResumen: 'diario' | 'semanal' | 'mensual' = 'diario';
+
+  resumen: {
+    menusVendidos: number;
+    comidasVendidas: number;
+    dineroRecaudado: number;
+  } | null = null;
+
+
   constructor(private estadisticasService: EstadisticaService) {}
 
   ngOnInit(): void {
     this.reportesDisponibles.forEach(r => {
       this.filtros[r.id] = { desde: '', hasta: '' };
     });
+
+    this.cargarResumen();
+
+  }
+
+  onPeriodoResumenChange(periodo: 'diario' | 'semanal' | 'mensual') {
+    this.periodoResumen = periodo;
+    this.cargarResumen();
   }
 
   getGrafico(id: string) {
     return this.graficos.find(g => g.id === id);
   }
+
+  cargarResumen() {
+    this.estadisticasService.getResumenEstadisticas(this.periodoResumen).subscribe({
+      next: (res) => this.resumen = res,
+      error: () => this.resumen = null
+    });
+  }
+
 
   desplegados = new Set<string>();
 
