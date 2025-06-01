@@ -285,8 +285,8 @@ export const appRoutes: Routes = [
     canActivate: [AuthGuard],
     data: {
       permiso: {
-        accion: Accion.VER,
-        entidad: Entidad.PEDIDO
+        accion: Accion.VER_CARRITO,
+        entidad: Entidad.CLIENTE
       }
     }
   },
@@ -307,6 +307,12 @@ export const appRoutes: Routes = [
     component: ConfirmacionPagoComponent,
     title: 'Confirmación de Pago',
     canActivate: [AuthGuard],
+    data: {
+      permiso: {
+        accion: Accion.CREAR,
+        entidad: Entidad.PAGO
+      }
+    }
   },
   {
     path: 'forbidden',

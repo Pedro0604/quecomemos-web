@@ -34,7 +34,7 @@ export class PedidoService {
     this.apiUrlItems = `${environment.apiBaseUrl}/${getEntidadLink(Entidad.ITEM_PEDIDO)}`;
 
     authService.usuario$.subscribe(() => {
-      if (authService.isLoggedIn && authService.hasPermission(Accion.VER, Entidad.PEDIDO)) {
+      if (authService.isLoggedIn && authService.hasPermission(Accion.VER_CARRITO, Entidad.CLIENTE)) {
         this.refreshCarrito();
       }
     });
