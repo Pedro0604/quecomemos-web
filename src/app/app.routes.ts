@@ -320,6 +320,12 @@ export const appRoutes: Routes = [
     component: PedidoComponent,
     title: 'Detalle del Pedido',
     canActivate: [AuthGuard],
+    data: {
+      permiso: {
+        accion: Accion.VER,
+        entidad: Entidad.PEDIDO
+      }
+    }
   },
   {
     path: 'forbidden',

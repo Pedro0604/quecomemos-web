@@ -7,4 +7,5 @@ export interface Pedido {
   items: ItemPedido[];
   fecha: Date;
   total: number;
+  entregado: boolean;
 }
