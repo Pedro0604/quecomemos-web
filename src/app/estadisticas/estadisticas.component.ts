@@ -78,7 +78,6 @@ export class EstadisticasComponent implements OnInit {
     });
   }
 
-
   desplegados = new Set<string>();
 
   toggleDesplegado(id: string) {
@@ -115,7 +114,6 @@ export class EstadisticasComponent implements OnInit {
     const fechaDesde = desde || undefined;
     const fechaHasta = hasta || undefined;
 
-    console.log("Validando fechas:", desde, hasta);
     this.estadisticasService
       .getEstadisticaPorIdConFiltro(reporte.id, fechaDesde, fechaHasta)
       .subscribe(resp => {
