@@ -1,0 +1,12 @@
+<div class="chart-container border rounded-xl p-4 m-4 shadow-md bg-white">
+  <h2 class="chart-title text-lg font-semibold mb-4">{{ titulo }}</h2>
+  <div class="chart-wrapper">
+    <canvas baseChart
+            [data]="datosGrafico"
+            [type]="tipo"
+            [options]="opcionesGrafico"
+            height="400"
+            width="600">
+    </canvas>
+  </div>
+</div>

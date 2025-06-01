@@ -7,4 +7,5 @@ export enum Accion {
   VER_BUZON = "ver_buzon",
   ANIADIR_AL_CARRITO = "aniadir_al_carrito",
   ENTREGAR = "entregar",
+  VER_CARRITO = 'ver_carrito'
 }

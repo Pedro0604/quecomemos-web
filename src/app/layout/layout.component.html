@@ -61,7 +61,7 @@
                 }
               </mat-nav-list>
 
-              @if (authService.hasPermission(Accion.VER, Entidad.PEDIDO)) {
+              @if (authService.hasPermission(Accion.VER_CARRITO, Entidad.CLIENTE)) {
                 <button
                   mat-icon-button
                   aria-label="Carrito de compras"

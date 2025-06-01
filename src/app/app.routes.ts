@@ -20,6 +20,7 @@ import {Entidad, getEntidadLink} from './permiso/entidad';
 import {Accion} from './permiso/accion';
 import {ResponsableListComponent} from './responsable/list/responsable-list.component';
 import {ResponsableFormComponent} from './responsable/form/responsable-form.component';
+import {EstadisticasComponent} from './estadisticas/estadisticas.component';
 import {CarritoComponent} from './carrito/component/carrito.component';
 import {PagoComponent} from './pago/component/pago.component';
 import {ConfirmacionPagoComponent} from './confirmacion-pago/component/confirmacion-pago.component';
@@ -30,6 +31,19 @@ export const appRoutes: Routes = [
     path: '',
     redirectTo: '/carta',
     pathMatch: 'full'
+  },
+  {
+    path: 'estadisticas',
+    component: EstadisticasComponent,
+    title: 'Estadisticas',
+    canActivate: [AuthGuard],
+    data: {
+      permiso: {
+        accion: Accion.VER,
+        entidad: Entidad.ESTADISTICA
+      },
+      includeInLayout: true
+    }
   },
   {
     path: 'carta',
@@ -272,8 +286,8 @@ export const appRoutes: Routes = [
     canActivate: [AuthGuard],
     data: {
       permiso: {
-        accion: Accion.VER,
-        entidad: Entidad.PEDIDO
+        accion: Accion.VER_CARRITO,
+        entidad: Entidad.CLIENTE
       }
     }
   },
@@ -294,6 +308,12 @@ export const appRoutes: Routes = [
     component: ConfirmacionPagoComponent,
     title: 'Confirmación de Pago',
     canActivate: [AuthGuard],
+    data: {
+      permiso: {
+        accion: Accion.CREAR,
+        entidad: Entidad.PAGO
+      }
+    }
   },
   {
     path: `${getEntidadLink(Entidad.PEDIDO)}/:id`,
