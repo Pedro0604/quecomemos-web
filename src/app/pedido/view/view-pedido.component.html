@@ -4,7 +4,8 @@
   <h2
     style="text-align: center; font-size: 1.8rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 32px; position: relative;">
     Detalle del Pedido
-    <span style="display: block; width: 60px; height: 4px; background-color: #e53935; margin: 12px auto 0; border-radius: 2px;"></span>
+    <span
+      style="display: block; width: 60px; height: 4px; background-color: #e53935; margin: 12px auto 0; border-radius: 2px;"></span>
   </h2>
 
   @if (pedido) {
@@ -12,15 +13,18 @@
 
     <hr style="margin: 24px 0;">
 
-    @for(item of pedido.items; track item.id){
+    @for (item of pedido.items; track item.id) {
       <div
         style="background-color: white; border: 1px solid #ddd; border-radius: 8px; padding: 16px; margin-bottom: 16px;">
         <div style="font-size: 1.1rem; font-weight: 600; margin-bottom: 4px;">
           {{ item.item.nombre }}
         </div>
         <div style="margin-bottom: 4px;">Cantidad: {{ item.cantidad }}</div>
-        <div style="margin-bottom: 4px;">Precio unitario: {{ item.precioUnitario | currency:'$':'symbol':'1.0-0' }}</div>
-        <div style="font-weight: bold;">Subtotal: {{ item.precioUnitario * item.cantidad | currency:'$':'symbol':'1.0-0' }}</div>
+        <div style="margin-bottom: 4px;">Precio unitario: {{ item.precioUnitario | currency:'$':'symbol':'1.0-0' }}
+        </div>
+        <div style="font-weight: bold;">
+          Subtotal: {{ item.precioUnitario * item.cantidad | currency:'$':'symbol':'1.0-0' }}
+        </div>
       </div>
     }
 
@@ -32,7 +36,7 @@
 
     <div class="mt-8 text-lg text-center" style="margin-top: 32px;">
       @if (!pedido.entregado) {
-        @if(authService.hasPermission(Accion.ENTREGAR, Entidad.PEDIDO)) {
+        @if (authService.hasPermission(Accion.ENTREGAR, Entidad.PEDIDO)) {
           <button
             mat-raised-button
             class="w-full"
@@ -54,8 +58,15 @@
       }
     </div>
 
-    <div style="margin-top: 32px; text-align: center;">
-      <em>Acá va el QR del pedido</em>
+    <div class="mt-8 flex justify-center">
+      @if (pedido.qrBase64) {
+        <img
+          [src]="'data:image/png;base64,' + pedido.qrBase64"
+          alt="QR del pedido"
+          style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+      } @else {
+        <p>Podés ver el QR en el mail enviado al realizar el pago.</p>
+      }
     </div>
   } @else {
     <div style="text-align: center; margin-top: 40px;">

@@ -8,4 +8,5 @@ export interface Pedido {
   fecha: String;
   total: number;
   entregado: boolean;
+  qrBase64: string | null;
 }
