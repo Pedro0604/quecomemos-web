@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import {CurrencyPipe} from '@angular/common';
+import {CurrencyPipe, DatePipe} from '@angular/common';
 import {MatButton} from '@angular/material/button';
 import {PedidoService} from '../service/pedido.service';
 import {NotificationService} from '../../notification/notification.service';
@@ -13,7 +13,8 @@ import {Accion} from '../../permiso/accion';
   selector: 'app-view-pedido',
   imports: [
     MatButton,
-    CurrencyPipe
+    CurrencyPipe,
+    DatePipe
   ],
   templateUrl: './view-pedido.component.html'
 })
@@ -22,6 +23,7 @@ export class ViewPedidoComponent implements OnInit {
   pedidoId: number = 0;
   protected readonly Entidad = Entidad;
   protected readonly Accion = Accion;
+  fecha: Date | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -38,6 +40,8 @@ export class ViewPedidoComponent implements OnInit {
     }
     this.pedidoService.getPedidoById(this.pedidoId).subscribe({
       next: pedido => {
+        // Aseguramos que sea un objeto Date
+        this.fecha = new Date(pedido.fecha as unknown as string);
         this.pedido = pedido;
       },
       error: error => {
