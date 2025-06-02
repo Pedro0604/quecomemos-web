@@ -1,0 +1,52 @@
+<div
+  style="max-width: 600px; margin: 64px auto; padding: 32px; background-color: #fafafa; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+  <h2 style="text-align: center; margin-bottom: 24px;">Detalle del Pedido</h2>
+
+  @if (pedido) {
+    <p><strong>Fecha:</strong> {{ pedido.fecha }}</p>
+
+    <hr style="margin: 24px 0;">
+
+    @for (item of pedido.items; track item.id) {
+      <div class="mb-4">
+        <div class="font-bold ">{{ item.item.nombre }}</div>
+        <div class="ms-4">
+          <div>Cantidad: {{ item.cantidad }}</div>
+          <div>Precio unitario: {{ item.precioUnitario | currency:'$':'symbol':'1.0-0' }}</div>
+          <div>Subtotal: {{ item.precioUnitario * item.cantidad | currency:'$':'symbol':'1.0-0' }}</div>
+        </div>
+      </div>
+    }
+
+    <hr style="margin: 24px 0;">
+
+    <div style="text-align: right; font-size: 1.2rem; font-weight: bold;">
+      Total: {{ pedido.total | currency:'$':'symbol':'1.0-0' }}
+    </div>
+
+    <div class="mt-8 text-lg text-center">
+      @if (!pedido.entregado) {
+        @if (authService.hasPermission(Accion.ENTREGAR, Entidad.PEDIDO)) {
+          <button
+            mat-raised-button
+            class="w-full"
+            (click)="marcarComoEntregado()"
+          >
+            Marcar como entregado
+          </button>
+        } @else {
+          <span> El pedido aún no fue entregado.<br>Acercate al buffet y mostrá el QR para que el responsable pueda entregártelo.</span>
+        }
+      } @else {
+        <span>El pedido ya fue entregado</span>
+      }
+    </div>
+    <div>
+      Acá va el QR del pedido
+    </div>
+  } @else {
+    <div style="text-align: center; margin-top: 40px;">
+      Cargando pedido...
+    </div>
+  }
+</div>

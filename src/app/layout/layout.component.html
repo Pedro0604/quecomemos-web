@@ -45,6 +45,22 @@
               </span>
               }
               <mat-nav-list>
+                @if (authService.hasPermission(Accion.VER_PROPIOS, Entidad.PEDIDO)) {
+                  <a
+                    mat-list-item
+                    routerLink="mis-pedidos"
+                    aria-label="Ícono de mis pedidos"
+                    routerLinkActive
+                    #link="routerLinkActive"
+                    [activated]="link.isActive"
+                    [routerLinkActiveOptions]="{exact: true}"
+                    matTooltip="Tus pedidos"
+                  >
+                    <mat-icon class="!m-0">shopping_bag</mat-icon>
+                  </a>
+                }
+              </mat-nav-list>
+              <mat-nav-list>
                 @if (authService.hasPermission(Accion.VER_BUZON, Entidad.CLIENTE)) {
                   <a
                     mat-list-item
