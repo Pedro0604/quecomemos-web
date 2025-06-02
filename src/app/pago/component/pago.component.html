@@ -86,12 +86,20 @@
   <button
     mat-raised-button
     color="primary"
-    style="width: 100%; padding: 12px; font-size: 1.1rem; font-weight: bold;"
+    style="width: 100%; padding: 12px; font-size: 1.1rem; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 12px;"
     (click)="pagar()"
-    [disabled]="!metodoSeleccionado || !formularioValido()"
+    [disabled]="!metodoSeleccionado || !formularioValido() || cargando"
   >
-    Pagar
+    <mat-progress-spinner
+      *ngIf="cargando"
+      diameter="20"
+      strokeWidth="3"
+      mode="indeterminate"
+      style="margin: 0; display: inline-block; vertical-align: middle;"
+    ></mat-progress-spinner>
+    <span style="line-height: 1;">{{ cargando ? 'Pagando...' : 'Pagar' }}</span>
   </button>
+
 </div>
 
 <!-- Animación de éxito (burbuja verde) -->
@@ -115,7 +123,7 @@
      [ngStyle]="{
        position: 'fixed',
        top: '50%',
-       left: '60%',
+       left: '55%',
        transform: 'translate(-50%, -50%)',
        color: 'white',
        'font-size': '64px',

@@ -11,12 +11,13 @@ import {NotificationService} from '../../notification/notification.service';
 import {Router} from '@angular/router';
 import {FormsModule} from '@angular/forms';
 import {MatInput} from '@angular/material/input';
+import {MatProgressSpinner} from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-pago',
   templateUrl: './pago.component.html',
   standalone: true,
-  imports: [MatFormFieldModule, MatSelectModule, MatButtonModule, CurrencyPipe, NgForOf, FormsModule, MatInput, NgIf, NgStyle],
+  imports: [MatFormFieldModule, MatSelectModule, MatButtonModule, CurrencyPipe, NgForOf, FormsModule, MatInput, NgIf, NgStyle, MatProgressSpinner],
 })
 export class PagoComponent implements OnInit {
   carrito: Pedido | null = null;
@@ -25,7 +26,8 @@ export class PagoComponent implements OnInit {
   datosPago: any = {};
   mostrarBurbuja = false;
   iconoVisible = false;
-
+  cargando = false;
+  pagoExitoso = false;
 
   constructor(
     private pedidoService: PedidoService,
@@ -42,29 +44,32 @@ export class PagoComponent implements OnInit {
   pagar() {
     if (!this.metodoSeleccionado) return;
 
-    this.mostrarBurbuja = true;
+    this.cargando = true; // Mostrar spinner o mensaje
+    this.iconoVisible = false;
 
-    // Mostrar el ícono de éxito 800ms después de empezar la animación
-    setTimeout(() => {
-      this.iconoVisible = true;
-    }, 800);
+    this.pagoService.create({ metodoPago: this.metodoSeleccionado! }).subscribe({
+      next: async (pago) => {
+        await this.pedidoService.refreshCarrito();
+        this.cargando = false;
+        this.mostrarBurbuja = true;
+        this.pagoExitoso = true;
 
-    // Ejecutar el pago tras 1s
-    setTimeout(() => {
-      this.pagoService.create({metodoPago: this.metodoSeleccionado!}).subscribe({
-        next: async (pago) => {
-          await this.pedidoService.refreshCarrito();
-          this.notificationService.show("Pago registrado correctamente");
-          await this.router.navigate(['/confirmacion/' + pago.pedidoId]);
-        },
-        error: error => {
-          console.error(error);
-          this.notificationService.show("Error al pagar el pedido");
-          this.mostrarBurbuja = false;
-          this.iconoVisible = false;
-        }
-      });
-    }, 1000);
+        // Mostrar ícono luego de 800ms
+        setTimeout(() => {
+          this.iconoVisible = true;
+        }, 800);
+
+        // Redirige después de 1.5s
+        setTimeout(() => {
+          this.router.navigate(['/confirmacion/' + pago.pedidoId]);
+        }, 1500);
+      },
+      error: (error) => {
+        console.error(error);
+        this.notificationService.show("Error al pagar el pedido");
+        this.cargando = false;
+      }
+    });
   }
 
   formularioValido(): boolean {
