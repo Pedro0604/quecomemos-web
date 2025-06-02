@@ -1,0 +1,9 @@
+<app-list
+  [itemTemplate]="pedidoTemplate"
+  [fetchItems]="fetchItems"
+  [entity]="Entidad.PEDIDO"
+/>
+
+<ng-template #pedidoTemplate let-pedido>
+  <app-pedido [pedido]="pedido"></app-pedido>
+</ng-template>
