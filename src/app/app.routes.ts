@@ -3,7 +3,7 @@ import {LoginComponent} from './auth/login/login.component';
 import {RegisterComponent} from './auth/register/register.component';
 import {NotFoundComponent} from './error-pages/page-not-found/not-found.component';
 import {MenuListComponent} from './menu/list/menu-list.component';
-import {HomeComponent} from './home/home.component';
+import {CartaComponent} from './carta/carta.component';
 import {AuthGuard} from './auth/guards/auth.guards';
 import {MenuFormComponent} from './menu/form/menu-form.component';
 import {ComidaFormComponent} from './comida/form/comida-form.component';
@@ -49,7 +49,7 @@ export const appRoutes: Routes = [
   },
   {
     path: 'carta',
-    component: HomeComponent,
+    component: CartaComponent,
     title: 'Carta Semanal',
     data: {
       includeInLayout: true

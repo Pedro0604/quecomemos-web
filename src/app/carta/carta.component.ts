@@ -25,10 +25,10 @@ import {PermissionAware} from '../permiso/permissionAware';
     MatExpansionModule,
     TitleComponent
   ],
-  templateUrl: './home.component.html',
+  templateUrl: './carta.component.html',
   standalone: true
 })
-export class HomeComponent implements OnInit {
+export class CartaComponent implements OnInit {
   accordion = viewChild.required(MatAccordion);
   menusDiarios: PermissionAware<MenuDiario>[] = [];
 
