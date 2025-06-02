@@ -94,7 +94,8 @@
     </table>
 
     <!-- Total -->
-    <div class="total-row" style="display: flex; justify-content: flex-end; margin-top: 24px; font-size: 1.3rem; font-weight: bold;">
+    <div class="total-row"
+         style="display: flex; justify-content: flex-end; margin-top: 24px; font-size: 1.3rem; font-weight: bold;">
       <span style="margin-right: 8px;">Total:</span>
       <span class="total-amount">{{ carrito.total | currency:'$':'symbol':'1.0-0' }}</span>
     </div>
@@ -112,6 +113,37 @@
     </a>
   </div>
 } @else {
-  <p style="text-align: center; font-style: italic;">No hay items en el carrito.</p>
+  <div class="bg-gradient-to-br flex items-center justify-center p-6">
+    <div class="max-w-md w-full bg-white/80 backdrop-blur-md rounded-2xl shadow-2xl p-8 text-center">
+
+      <!-- Ícono SVG de carrito vacío -->
+      <div class="mb-6">
+        <mat-icon class="text-blue-500">shopping_cart</mat-icon>
+      </div>
+
+      <!-- Título y mensaje -->
+      <h1 class="text-3xl font-extrabold text-red-400 mb-2">
+        Tu carrito está vacío
+      </h1>
+      <p class="text-gray-600 mb-6">
+        Parece que todavía no agregaste nada.<br>¡Animate a explorar nuestros productos!
+      </p>
+
+      <div class="flex flex-col gap-4">
+        <a
+          routerLink="/carta"
+          class="inline-block bg-red-500 hover:bg-red-600 text-white font-semibold py-3 px-8 rounded-full shadow-lg transition-transform transform hover:scale-105"
+        >
+          Ver menús de la semana
+        </a>
+        <a
+          routerLink="/comida"
+          class="inline-block bg-red-500 hover:bg-red-600 text-white font-semibold py-3 px-8 rounded-full shadow-lg transition-transform transform hover:scale-105"
+        >
+          Ver comidas disponibles
+        </a>
+      </div>
+    </div>
+  </div>
 }
 

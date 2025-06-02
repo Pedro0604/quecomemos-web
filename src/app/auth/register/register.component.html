@@ -2,69 +2,71 @@
 
 
 <app-form (submit)="register()" [formGroup]="registerForm" maxWidth="max-w-4xl">
-  <div class="grid grid-cols-2 gap-6">
-    <app-input
-      [abstractControl]="this.registerForm.get('dni')"
-      label="DNI"
-      maxLength="8"
-      minLength="7"
-      placeholder="12345678"
-      type="text"
-    />
-    <app-input
-      [abstractControl]="this.registerForm.get('nombre')"
-      label="Nombre"
-      maxLength="255"
-      minLength="3"
-      placeholder="Ingrese su nombre"
-      type="text"
-    />
-    <app-input
-      [abstractControl]="this.registerForm.get('apellido')"
-      label="Apellido"
-      maxLength="255"
-      minLength="3"
-      placeholder="Ingrese su apellido"
-      type="text"
-    />
-    <app-input
-      [abstractControl]="this.registerForm.get('email')"
-      label="Email"
-      maxLength="255"
-      minLength="3"
-      placeholder="ejemplo@gmail.com"
-      type="email"
-    />
-    <app-input
-      [abstractControl]="this.registerForm.get('urlImagen')"
-      label="URL de la Imagen de Perfil"
-      maxLength="255"
-      minLength="7"
-      placeholder="https://www.ejemplo.com"
-      type="text"
-    />
-    <app-input
-      (input)="this.registerForm.get('confirmClave')?.updateValueAndValidity()"
-      [abstractControl]="this.registerForm.get('clave')"
-      label="Contraseña"
-      maxLength="30"
-      minLength="6"
-      placeholder="************"
-      type="password"
-    />
-    <app-input
-      (input)="this.registerForm.get('clave')?.updateValueAndValidity()"
-      [abstractControl]="this.registerForm.get('confirmClave')"
-      label="Confirmación de Contraseña"
-      maxLength="30"
-      minLength="6"
-      placeholder="************"
-      type="password"
-    />
-    <div class="col-span-2">
-      <app-submit-button [disabled]="registerForm.disabled" [form]="registerForm" pendingText="Registrando usuario">
-        Registrar usuario
-      </app-submit-button>
+    <div class="grid grid-cols-2 gap-6">
+        <app-input
+                [abstractControl]="this.registerForm.get('dni')"
+                label="DNI"
+                maxLength="8"
+                minLength="7"
+                placeholder="12345678"
+                type="text"
+        />
+        <app-input
+                [abstractControl]="this.registerForm.get('nombre')"
+                label="Nombre"
+                maxLength="255"
+                minLength="3"
+                placeholder="Ingrese su nombre"
+                type="text"
+        />
+        <app-input
+                [abstractControl]="this.registerForm.get('apellido')"
+                label="Apellido"
+                maxLength="255"
+                minLength="3"
+                placeholder="Ingrese su apellido"
+                type="text"
+        />
+        <app-input
+                [abstractControl]="this.registerForm.get('email')"
+                label="Email"
+                maxLength="255"
+                minLength="3"
+                placeholder="ejemplo@gmail.com"
+                type="email"
+        />
+        <app-input
+                [abstractControl]="this.registerForm.get('urlImagen')"
+                label="URL de la Imagen de Perfil"
+                maxLength="255"
+                minLength="7"
+                placeholder="https://www.ejemplo.com"
+                type="text"
+                [required]="false"
+        />
+        <app-input
+                (input)="this.registerForm.get('confirmClave')?.updateValueAndValidity()"
+                [abstractControl]="this.registerForm.get('clave')"
+                label="Contraseña"
+                maxLength="30"
+                minLength="6"
+                placeholder="************"
+                type="password"
+        />
+        <app-input
+                (input)="this.registerForm.get('clave')?.updateValueAndValidity()"
+                [abstractControl]="this.registerForm.get('confirmClave')"
+                label="Confirmación de Contraseña"
+                maxLength="30"
+                minLength="6"
+                placeholder="************"
+                type="password"
+        />
+        <div class="col-span-2">
+            <app-submit-button [disabled]="registerForm.disabled" [form]="registerForm"
+                               pendingText="Registrando usuario">
+                Registrar usuario
+            </app-submit-button>
+        </div>
     </div>
-  </div>
 </app-form>
