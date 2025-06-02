@@ -1,18 +1,22 @@
 <div class="estadisticas-container px-6 py-8">
-  <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">Estadísticas del Buffet</h2>
 
-  <div class="flex justify-center mb-4">
-    <label class="mr-2 text-gray-700 font-medium">Resumen:</label>
+  <h2
+    class="text-4xl text-center mb-2"
+    style="text-align: center; font-size: 1.8rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 32px; position: relative;">
+    Estadísticas del Buffet
+  </h2>
+
+  <div class="flex justify-center items-center gap-3 mb-6">
+    <label class="text-base font-medium text-gray-800">Resumen:</label>
     <select
       [(ngModel)]="periodoResumen"
       (ngModelChange)="onPeriodoResumenChange($event)"
-      class="border rounded px-3 py-1 text-sm"
+      class="px-4 py-2 rounded-xl text-sm border border-gray-300 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-red-400 transition"
     >
       <option value="diario">Diario</option>
       <option value="semanal">Semanal</option>
       <option value="mensual">Mensual</option>
     </select>
-
   </div>
 
   <div *ngIf="resumen" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
