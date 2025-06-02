@@ -1,4 +1,4 @@
-import {booleanAttribute, Component, EventEmitter, inject, Input, Output} from '@angular/core';
+import {booleanAttribute, Component, EventEmitter, inject, Input, OnInit, Output} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {Comida, tipoComidaToString} from '../comida.model';
 import {MatCard, MatCardContent, MatCardHeader, MatCardSubtitle, MatCardTitle} from '@angular/material/card';
@@ -15,6 +15,7 @@ import {MatIconButton} from '@angular/material/button';
 import {AuthService} from '../../auth/service/auth.service';
 import {MatTooltip} from '@angular/material/tooltip';
 import {DefaultImageDirective} from '../../directives/default-image-directive/default-image.directive';
+import {Pedido} from '../../pedido/pedido.model';
 
 @Component({
   selector: 'app-comida',
@@ -34,18 +35,28 @@ import {DefaultImageDirective} from '../../directives/default-image-directive/de
   ],
 })
 
-export class ComidaComponent {
+export class ComidaComponent implements OnInit {
   dialog = inject(MatDialog);
   @Input({required: true}) comida!: Comida;
   @Input({transform: booleanAttribute}) showButtons: boolean = true;
   @Input({required: true}) permisos!: Partial<Record<Accion, PermissionResult>>;
   @Output() onDelete = new EventEmitter<number>();
 
+  carrito: Pedido | null = null;
+
+  isInCarrito() {
+    return this.carrito && this.carrito.items.some(i => i.item.id === this.comida.id);
+  }
+
   constructor(
     private comidaService: ComidaService,
     protected authService: AuthService,
     protected pedidoService: PedidoService
   ) {
+  }
+
+  ngOnInit() {
+    this.pedidoService.carrito$.subscribe(c => this.carrito = c);
   }
 
   openDialogEliminar(): void {

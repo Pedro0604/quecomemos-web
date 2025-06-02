@@ -1,4 +1,4 @@
-import {booleanAttribute, Component, EventEmitter, inject, Input, Output} from '@angular/core';
+import {booleanAttribute, Component, EventEmitter, inject, Input, OnInit, Output} from '@angular/core';
 import {MatCardAppearance, MatCardModule} from '@angular/material/card';
 import {MatIcon} from '@angular/material/icon';
 import {MatDivider} from '@angular/material/divider';
@@ -17,6 +17,7 @@ import {PedidoService} from '../../pedido/service/pedido.service';
 import {tipoComidaToString} from '../../comida/comida.model';
 import {MatTooltip} from "@angular/material/tooltip";
 import {DefaultImageDirective} from '../../directives/default-image-directive/default-image.directive';
+import {Pedido} from '../../pedido/pedido.model';
 
 @Component({
   selector: 'app-menu',
@@ -25,7 +26,7 @@ import {DefaultImageDirective} from '../../directives/default-image-directive/de
   standalone: true,
 })
 
-export class MenuComponent {
+export class MenuComponent implements OnInit {
   dialog = inject(MatDialog);
   @Input({required: true}) menu!: Menu;
   @Input({transform: booleanAttribute}) showButtons: boolean = true;
@@ -38,12 +39,23 @@ export class MenuComponent {
 
   @Output() onDelete = new EventEmitter<number>();
 
+  carrito: Pedido | null = null;
+
+  isInCarrito() {
+    return this.carrito && this.carrito.items.some(i => i.item.id === this.menu.id);
+  }
+
   constructor(
     private menuService: MenuService,
     protected authService: AuthService,
     protected pedidoService: PedidoService
   ) {
   }
+
+  ngOnInit() {
+    this.pedidoService.carrito$.subscribe(c => this.carrito = c);
+  }
+
 
   openDialogEliminar(): void {
     this.dialog.open(DialogEliminarComponent<Menu, MenuService>, {

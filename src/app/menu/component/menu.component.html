@@ -15,14 +15,18 @@
     <mat-card-subtitle>${{ menu.precio }}</mat-card-subtitle>
     <div>
       @if (authService.hasPermission(Accion.ANIADIR_AL_CARRITO, Entidad.MENU) && (showAniadirAlCarrito || permisos.aniadir_al_carrito?.allowed)) {
+        <span
+          [matTooltip]="isInCarrito() ? 'Este menú ya se encuentra en el carrito' : 'Añadir al carrito'"
+          matTooltipShowDelay="500"
+        >
         <button
           mat-icon-button
           aria-label="Añadir al carrito"
-          matTooltip="Añadir al carrito"
-          matTooltipShowDelay="500"
+          [disabled]="isInCarrito()"
           (click)="pedidoService.addItem({itemId: menu.id, cantidad: 1})">
-          <mat-icon class="text-blue-500">add_shopping_cart</mat-icon>
+          <mat-icon class="{{ isInCarrito() ? 'text-gray-500' : 'text-blue-500' }}">add_shopping_cart</mat-icon>
         </button>
+        </span>
       }
       @if (menu.vegetariano) {
         <mat-icon
