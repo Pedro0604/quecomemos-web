@@ -32,7 +32,8 @@ export class PagoComponent implements OnInit {
     private pagoService: PagoService,
     private notificationService: NotificationService,
     private router: Router,
-  ) {}
+  ) {
+  }
 
   ngOnInit() {
     this.pedidoService.carrito$.subscribe(c => this.carrito = c);
@@ -50,11 +51,11 @@ export class PagoComponent implements OnInit {
 
     // Ejecutar el pago tras 1s
     setTimeout(() => {
-      this.pagoService.create({ metodoPago: this.metodoSeleccionado! }).subscribe({
-        next: async () => {
+      this.pagoService.create({metodoPago: this.metodoSeleccionado!}).subscribe({
+        next: async (pago) => {
           await this.pedidoService.refreshCarrito();
           this.notificationService.show("Pago registrado correctamente");
-          this.router.navigate(['/confirmacion']);
+          await this.router.navigate(['/confirmacion/' + pago.pedidoId]);
         },
         error: error => {
           console.error(error);

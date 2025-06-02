@@ -8,6 +8,7 @@ import {ItemPedidoDTO} from '../item-pedido.model';
 import {NotificationService} from '../../notification/notification.service';
 import {AuthService} from '../../auth/service/auth.service';
 import {Accion} from '../../permiso/accion';
+import {PermissionAware} from '../../permiso/permissionAware';
 
 @Injectable({
   providedIn: 'root'
@@ -40,8 +41,12 @@ export class PedidoService {
     });
   }
 
-  getPedidosDeCliente(): Observable<Pedido[]> {
-    return this.http.get<Pedido[]>(`${this.apiUrl}/`);
+  getPedidos(): Observable<PermissionAware<Pedido>[]> {
+    return this.http.get<PermissionAware<Pedido>[]>(`${this.apiUrl}/`);
+  }
+
+  getMisPedidos(): Observable<PermissionAware<Pedido>[]> {
+    return this.http.get<PermissionAware<Pedido>[]>(`${this.apiUrl}/mis-pedidos`);
   }
 
   private getCarrito(): Observable<Pedido> {
@@ -66,5 +71,13 @@ export class PedidoService {
   async removeItem(id: number | string): Promise<void> {
     await firstValueFrom(this.http.delete<void>(`${this.apiUrlItems}/${id}`));
     await this.refreshCarrito();
+  }
+
+  getPedidoById(id: number | string): Observable<Pedido> {
+    return this.http.get<Pedido>(`${this.apiUrl}/${id}`);
+  }
+
+  marcarComoEntregado(id: number | string): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/${id}/entregar`, {});
   }
 }

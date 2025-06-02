@@ -1,0 +1,25 @@
+<div
+  style="max-width: 500px; margin: 0 auto; padding: 32px; background-color: #fafafa; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); text-align: center;">
+  <h2 style="font-size: 1.8rem; color: #2e7d32; margin-bottom: 16px;">¡Felicitaciones!</h2>
+
+  <p style="font-size: 1.2rem; margin-bottom: 16px;">
+    El pago se realizó con éxito ✅🥳
+  </p>
+
+  <p style="font-size: 1rem; margin-bottom: 32px;">¡Gracias por tu compra!</p>
+
+  <div class="flex flex-col gap-4">
+    <a
+      [routerLink]="'/' + getEntidadLink(Entidad.PEDIDO) + '/' + pedidoId"
+      mat-raised-button
+    >
+      Ver el pedido
+    </a>
+    <a
+      mat-raised-button
+      routerLink="/"
+    >
+      Volver al inicio
+    </a>
+  </div>
+</div>

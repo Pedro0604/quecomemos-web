@@ -23,7 +23,10 @@ import {ResponsableFormComponent} from './responsable/form/responsable-form.comp
 import {EstadisticasComponent} from './estadisticas/estadisticas.component';
 import {CarritoComponent} from './carrito/component/carrito.component';
 import {PagoComponent} from './pago/component/pago.component';
-import {ConfirmacionPagoComponent} from './confirmacion-pago/component/confirmacion-pago.component';
+import {ConfirmacionPagoComponent} from './pago/confirmacion/confirmacion-pago.component';
+import {ViewPedidoComponent} from './pedido/view/view-pedido.component';
+import {PedidoListComponent} from './pedido/list/pedido-list.component';
+import {MisPedidosComponent} from './pedido/mis-pedidos/mis-pedidos.component';
 
 export const appRoutes: Routes = [
   {
@@ -303,7 +306,7 @@ export const appRoutes: Routes = [
     }
   },
   {
-    path: 'confirmacion',
+    path: 'confirmacion/:pedidoId',
     component: ConfirmacionPagoComponent,
     title: 'Confirmación de Pago',
     canActivate: [AuthGuard],
@@ -311,6 +314,43 @@ export const appRoutes: Routes = [
       permiso: {
         accion: Accion.CREAR,
         entidad: Entidad.PAGO
+      }
+    }
+  },
+  {
+    path: `${getEntidadLink(Entidad.PEDIDO)}/:id`,
+    component: ViewPedidoComponent,
+    title: 'Detalle del Pedido',
+    canActivate: [AuthGuard],
+    data: {
+      permiso: {
+        accion: Accion.VER,
+        entidad: Entidad.PEDIDO
+      }
+    }
+  },
+  {
+    path: `${getEntidadLink(Entidad.PEDIDO)}`,
+    component: PedidoListComponent,
+    title: 'Pedidos',
+    canActivate: [AuthGuard],
+    data: {
+      permiso: {
+        accion: Accion.VER_TODOS,
+        entidad: Entidad.PEDIDO
+      },
+      includeInLayout: true
+    }
+  },
+  {
+    path: 'mis-pedidos',
+    component: MisPedidosComponent,
+    title: 'Mis pedidos',
+    canActivate: [AuthGuard],
+    data: {
+      permiso: {
+        accion: Accion.VER_PROPIOS,
+        entidad: Entidad.PEDIDO
       }
     }
   },

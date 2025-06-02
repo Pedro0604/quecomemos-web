@@ -5,6 +5,7 @@ export interface Pedido {
   clienteId: number;
   pagoId: number | null;
   items: ItemPedido[];
-  fecha: Date;
+  fecha: String;
   total: number;
+  entregado: boolean;
 }
