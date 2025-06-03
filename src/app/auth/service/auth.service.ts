@@ -46,7 +46,7 @@ export class AuthService {
     login(token: string) {
         this.setUserFromToken(token);
         this.notificationService.show(`${capitalize(this.usuario?.rolName ?? 'Usuario')} autenticado correctamente`);
-        this.router.navigate(['/carta']);
+        this.router.navigate(['/']);
     }
 
     logout() {
