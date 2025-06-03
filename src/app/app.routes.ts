@@ -198,7 +198,7 @@ export const appRoutes: Routes = [
   {
     path: `${getEntidadLink(Entidad.SUGERENCIA)}/create`,
     component: SugerenciaFormComponent,
-    title: 'Crear una Sugerencia',
+    title: 'Enviá una Sugerencia',
     canActivate: [AuthGuard],
     data: {
       permiso: {
