@@ -19,11 +19,13 @@
         <div style="font-size: 1.1rem; font-weight: 600; margin-bottom: 4px;">
           {{ item.item.nombre }}
         </div>
-        <div style="margin-bottom: 4px;">Cantidad: {{ item.cantidad }}</div>
-        <div style="margin-bottom: 4px;">Precio unitario: {{ item.precioUnitario | currency:'$':'symbol':'1.0-0' }}
-        </div>
-        <div style="font-weight: bold;">
-          Subtotal: {{ item.precioUnitario * item.cantidad | currency:'$':'symbol':'1.0-0' }}
+        <div class="ms-4 w-fit">
+          <div style="margin-bottom: 4px;">Cantidad: {{ item.cantidad }}</div>
+          <div style="margin-bottom: 4px;">Precio unitario: {{ item.precioUnitario | currency:'$':'symbol':'1.0-0' }}
+          </div>
+          <div class="font-bold border-t border-gray-300">
+            Subtotal: {{ item.precioUnitario * item.cantidad | currency:'$':'symbol':'1.0-0' }}
+          </div>
         </div>
       </div>
     }
