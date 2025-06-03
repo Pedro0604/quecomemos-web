@@ -27,12 +27,13 @@ import {ConfirmacionPagoComponent} from './pago/confirmacion/confirmacion-pago.c
 import {ViewPedidoComponent} from './pedido/view/view-pedido.component';
 import {PedidoListComponent} from './pedido/list/pedido-list.component';
 import {MisPedidosComponent} from './pedido/mis-pedidos/mis-pedidos.component';
+import {HomeComponent} from './home/home.component';
 
 export const appRoutes: Routes = [
   {
     path: '',
-    redirectTo: '/carta',
-    pathMatch: 'full'
+    component: HomeComponent,
+    title: '¿Qué Comemos?',
   },
   {
     path: 'estadisticas',
