@@ -4,7 +4,15 @@
                [opened]="(isHandset$ | async) === false"
                class="sidenav"
                fixedInViewport>
-    <mat-toolbar><a routerLink="/">¿Qué Comemos?</a></mat-toolbar>
+    <mat-toolbar>
+      <a
+        routerLink="/"
+        matTooltip="Ir al Inicio"
+        [matTooltipShowDelay]="500"
+      >
+        ¿Qué Comemos?
+      </a>
+    </mat-toolbar>
     <mat-nav-list>
       @for (item of rootRoutes; track $index) {
         <a
@@ -28,6 +36,8 @@
         href="https://www.info.unlp.edu.ar/"
         aria-label="Logo Facultad de Informática UNLP"
         class="flex items-center justify-center"
+        matTooltip="Facultad de Informática - UNLP"
+        [matTooltipShowDelay]="500"
       >
         <img
           src="https://www.info.unlp.edu.ar/wp-content/uploads/2019/12/cropped-logoblanco2-1-192x192.png"
