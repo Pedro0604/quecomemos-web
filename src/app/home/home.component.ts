@@ -5,13 +5,16 @@ import {Comida} from "../comida/comida.model";
 import {ComidaService} from "../comida/service/comida.service";
 import {PermissionAware} from "../permiso/permissionAware";
 import {ComidaComponent} from "../comida/component/comida.component";
+import {FaIconComponent} from "@fortawesome/angular-fontawesome";
+import {faFacebook, faInstagram, faLinkedin, faXTwitter, faYoutube} from "@fortawesome/free-brands-svg-icons";
 
 @Component({
   selector: 'app-home',
   imports: [
     RouterLink,
     MatAnchor,
-    ComidaComponent
+    ComidaComponent,
+    FaIconComponent
   ],
   templateUrl: './home.component.html',
   standalone: true
@@ -32,4 +35,10 @@ export class HomeComponent implements OnInit {
       }
     });
   }
+
+  protected readonly faFacebook = faFacebook;
+  protected readonly faInstagram = faInstagram;
+  protected readonly faXTwitter = faXTwitter;
+  protected readonly faLinkedin = faLinkedin;
+  protected readonly faYoutube = faYoutube;
 }
