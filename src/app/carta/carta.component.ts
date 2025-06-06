@@ -4,7 +4,7 @@ import {MatIcon} from "@angular/material/icon";
 import {MatProgressSpinner} from "@angular/material/progress-spinner";
 import {MenuDiarioComponent} from "../menu-diario/component/menu-diario.component";
 import {RouterLink} from "@angular/router";
-import {MenuDiario, traduccionDiasSemana} from '../menu-diario/menu-diario.model';
+import {getMenuActual, MenuDiario, traduccionDiasSemana} from '../menu-diario/menu-diario.model';
 import {MenuDiarioService} from '../menu-diario/service/menu-diario.service';
 import {MatAccordion, MatExpansionModule} from '@angular/material/expansion';
 import {TitleComponent} from "../components/title/title.component";
@@ -56,4 +56,5 @@ export class CartaComponent implements OnInit {
 
   protected readonly Accion = Accion;
   protected readonly Entidad = Entidad;
+  protected readonly getMenuActual = getMenuActual;
 }

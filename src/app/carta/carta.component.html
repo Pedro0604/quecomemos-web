@@ -25,7 +25,7 @@
     </div>
     <mat-accordion multi>
       @for (menuDiario of menusDiarios; track menuDiario) {
-        <mat-expansion-panel [expanded]="$first">
+        <mat-expansion-panel [expanded]="getMenuActual() === menuDiario.data.dia">
           <mat-expansion-panel-header>
             <mat-panel-title>Menú del {{ traduccionDiasSemana(menuDiario.data.dia) }}</mat-panel-title>
           </mat-expansion-panel-header>
