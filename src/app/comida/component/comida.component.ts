@@ -40,6 +40,7 @@ export class ComidaComponent implements OnInit {
   @Input({required: true}) comida!: Comida;
   @Input({transform: booleanAttribute}) showButtons: boolean = true;
   @Input({required: true}) permisos!: Partial<Record<Accion, PermissionResult>> | null;
+  @Input({transform: booleanAttribute}) showAniadirAlCarrito: boolean = false;
   @Output() onDelete = new EventEmitter<number>();
 
   carrito: Pedido | null = null;

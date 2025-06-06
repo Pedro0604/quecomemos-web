@@ -3,7 +3,7 @@
     <mat-card-title>{{ comida.nombre }}</mat-card-title>
     <mat-card-subtitle>${{ comida.precio }}</mat-card-subtitle>
     <div>
-      @if (permisos?.aniadir_al_carrito?.allowed) {
+      @if (authService.hasPermission(Accion.ANIADIR_AL_CARRITO, Entidad.MENU) && (showAniadirAlCarrito || permisos?.aniadir_al_carrito?.allowed)) {
         <span
           [matTooltip]="isInCarrito() ? 'Esta comida ya se encuentra en el carrito' : 'Añadir al carrito'"
           matTooltipShowDelay="500"
