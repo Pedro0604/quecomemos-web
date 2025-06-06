@@ -33,7 +33,7 @@ export class UserFormComponent extends BaseEntityFormWithPasswordConfirmation<Us
 
   form: FormGroup
 
-  protected override redirectUrlOnCreation: string = '/carta';
+  protected override redirectUrlOnCreation: string = '/';
 
   constructor(
     private fb: FormBuilder,

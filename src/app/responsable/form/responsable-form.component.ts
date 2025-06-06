@@ -70,7 +70,7 @@ export class ResponsableFormComponent extends BaseEntityFormWithPasswordConfirma
 
   protected override extraOnInit(): void {
     if (!!this.entity) {
-      this.redirectUrlOnCreation = '/carta';
+      this.redirectUrlOnCreation = '/';
     }
   }
 
