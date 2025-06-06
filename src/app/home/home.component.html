@@ -1,8 +1,6 @@
 <div class="pt-8">
-  <!-- SECCIÓN HERO -->
   <section id="inicio" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex flex-col-reverse lg:flex-row items-center gap-8 py-12">
-      <!-- Texto de bienvenida -->
       <div class="lg:w-1/2 text-center lg:text-left">
         <h1 class="text-4xl lg:text-5xl font-bold text-rojo mb-4">
           ¡Bienvenidos al Buffet Facultad de Informática - UNLP!
@@ -18,8 +16,6 @@
           Ver Menú de la Semana
         </a>
       </div>
-
-      <!-- Imagen representativa -->
       <div class="lg:w-1/2">
         <img
           src="https://www.info.unlp.edu.ar/wp-content/uploads/2024/05/1-scaled-800x420.jpg"
@@ -30,9 +26,20 @@
     </div>
   </section>
 
+  @if (menuDiario) {
+    <section class="py-12">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl font-bold text-center text-rojo mb-8">
+          Menú del {{ traduccionDiasSemana(menuDiario.data.dia) }}
+        </h2>
+        <app-menu-diario [menuDiario]="menuDiario.data" [showButtons]="false" [showDia]="false"
+                         [permisos]="menuDiario.permisos" [showAniadirAlCarrito]="true"></app-menu-diario>
+      </div>
+    </section>
+  }
 
   @if (comidas.length === 3) {
-    <section id="menu" class="py-12">
+    <section class="py-12">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 class="text-3xl font-bold text-center text-rojo mb-8">
           Comidas Destacadas
@@ -46,10 +53,8 @@
     </section>
   }
 
-  <!-- SECCIÓN CONTACTO -->
   <section id="contacto" class="bg-rojo pt-12 pb-4">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-      <!-- Información / Ubicación -->
       <div class="space-y-2">
         <p>
           <strong class="text-lg mb-4">Buffet Facultad de Informática - UNLP</strong><br/>

@@ -6,6 +6,10 @@ import {ComidaService} from "../comida/service/comida.service";
 import {ComidaComponent} from "../comida/component/comida.component";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {faFacebook, faInstagram, faLinkedin, faXTwitter, faYoutube} from "@fortawesome/free-brands-svg-icons";
+import {PermissionAware} from '../permiso/permissionAware';
+import {getMenuActual, MenuDiario, traduccionDiasSemana} from '../menu-diario/menu-diario.model';
+import {MenuDiarioService} from '../menu-diario/service/menu-diario.service';
+import {MenuDiarioComponent} from '../menu-diario/component/menu-diario.component';
 
 @Component({
   selector: 'app-home',
@@ -13,21 +17,31 @@ import {faFacebook, faInstagram, faLinkedin, faXTwitter, faYoutube} from "@forta
     RouterLink,
     MatAnchor,
     ComidaComponent,
-    FaIconComponent
+    FaIconComponent,
+    MenuDiarioComponent
   ],
   templateUrl: './home.component.html',
   standalone: true
 })
 export class HomeComponent implements OnInit {
   protected comidas: Comida[] = [];
+  protected menuDiario: PermissionAware<MenuDiario> | null = null;
 
-  constructor(private comidaService: ComidaService) {
+  constructor(private comidaService: ComidaService, private menuDiarioService: MenuDiarioService) {
   }
 
   ngOnInit() {
     this.comidaService.getDestacadas().subscribe({
       next: (data) => {
         this.comidas = data.slice(0, 3) ?? [];
+      },
+      error: (error) => {
+        console.error('Error al obtener las comidas', error);
+      }
+    });
+    this.menuDiarioService.getMenusDiariosSemanal().subscribe({
+      next: (data) => {
+        this.menuDiario = data.find(pawm => pawm.data.dia === getMenuActual()) ?? null;
       },
       error: (error) => {
         console.error('Error al obtener las comidas', error);
@@ -40,4 +54,5 @@ export class HomeComponent implements OnInit {
   protected readonly faXTwitter = faXTwitter;
   protected readonly faLinkedin = faLinkedin;
   protected readonly faYoutube = faYoutube;
+  protected readonly traduccionDiasSemana = traduccionDiasSemana;
 }
