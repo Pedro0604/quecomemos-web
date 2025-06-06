@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, TemplateRef} from '@angular/core';
+import {booleanAttribute, Component, Input, OnInit, TemplateRef} from '@angular/core';
 import {TitleComponent} from '../title/title.component';
 import {MatIcon} from '@angular/material/icon';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
@@ -33,6 +33,7 @@ export class ListComponent<T> implements OnInit {
   }>;
   @Input({required: true}) entity!: Entidad;
   @Input() gridCols: string = "grid-cols-1 md:grid-cols-2 xl:grid-cols-3";
+  @Input({transform: booleanAttribute}) showVegetariano: boolean = true;
 
   items: PermissionAware<T>[] = [];
   error = false;
