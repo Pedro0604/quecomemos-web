@@ -8,16 +8,17 @@ import {PedidoService} from '../../pedido/service/pedido.service';
 import {MetodoDePago} from '../pago.model';
 import {PagoService} from '../service/pago.service';
 import {NotificationService} from '../../notification/notification.service';
-import {Router} from '@angular/router';
+import {Router, RouterLink} from '@angular/router';
 import {FormsModule} from '@angular/forms';
 import {MatInput} from '@angular/material/input';
-import {MatProgressSpinner} from '@angular/material/progress-spinner';
+import {SpinnerComponent} from '../../components/spinner/spinner.component';
+import {FormStateComponent} from '../../forms/components/form-state/form-state.component';
 
 @Component({
   selector: 'app-pago',
   templateUrl: './pago.component.html',
   standalone: true,
-  imports: [MatFormFieldModule, MatSelectModule, MatButtonModule, CurrencyPipe, NgForOf, FormsModule, MatInput, NgIf, NgStyle, MatProgressSpinner],
+  imports: [MatFormFieldModule, MatSelectModule, MatButtonModule, CurrencyPipe, NgForOf, FormsModule, MatInput, NgIf, NgStyle, SpinnerComponent, FormStateComponent, RouterLink],
 })
 export class PagoComponent implements OnInit {
   carrito: Pedido | null = null;
@@ -27,7 +28,7 @@ export class PagoComponent implements OnInit {
   mostrarBurbuja = false;
   iconoVisible = false;
   cargando = false;
-  pagoExitoso = false;
+  error = false;
 
   constructor(
     private pedidoService: PedidoService,
@@ -44,30 +45,34 @@ export class PagoComponent implements OnInit {
   pagar() {
     if (!this.metodoSeleccionado) return;
 
-    this.cargando = true; // Mostrar spinner o mensaje
+    this.cargando = true;
     this.iconoVisible = false;
 
-    this.pagoService.create({ metodoPago: this.metodoSeleccionado! }).subscribe({
+    this.pagoService.create({metodoPago: this.metodoSeleccionado!}).subscribe({
       next: async (pago) => {
         await this.pedidoService.refreshCarrito();
         this.cargando = false;
         this.mostrarBurbuja = true;
-        this.pagoExitoso = true;
 
         // Mostrar ícono luego de 800ms
         setTimeout(() => {
           this.iconoVisible = true;
-        }, 800);
 
-        // Redirige después de 1.5s
-        setTimeout(() => {
-          this.router.navigate(['/confirmacion/' + pago.pedidoId]);
-        }, 1500);
+          // Redirige después de 1.5s
+          setTimeout(() => {
+            this.router.navigate(['/confirmacion/' + pago.pedidoId]);
+          }, 1500);
+        }, 800);
       },
       error: (error) => {
         console.error(error);
         this.notificationService.show("Error al pagar el pedido");
         this.cargando = false;
+        this.error = true;
+
+        setTimeout(() => {
+          this.iconoVisible = true;
+        }, 800);
       }
     });
   }

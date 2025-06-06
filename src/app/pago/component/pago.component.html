@@ -1,4 +1,7 @@
-<div style="max-width: 500px; margin: 0 auto; padding: 32px; background-color: #fafafa; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+<div
+  style="box-shadow: 0 2px 8px rgba(0,0,0,0.1);"
+  class="relative rounded-md max-w-lg mx-auto p-8 bg-white"
+>
   <h2 style="text-align: center; margin-bottom: 24px;">Resumen de pago</h2>
 
   <!-- Total -->
@@ -23,12 +26,13 @@
   </div>
 
   <!-- Formulario -->
-  <form #pagoForm="ngForm" style="margin-bottom: 24px;">
+  <form #pagoForm="ngForm" class="mb-6">
+    <app-spinner [loading]="cargando"/>
     <!-- CREDITO o DEBITO -->
     <div *ngIf="metodoSeleccionado === 'CREDITO' || metodoSeleccionado === 'DEBITO'">
       <mat-form-field appearance="fill" style="width: 100%; margin-bottom: 16px;">
         <mat-label>Titular de la tarjeta</mat-label>
-        <input matInput required [(ngModel)]="datosPago.titular" name="titular" #titular="ngModel" />
+        <input matInput required [(ngModel)]="datosPago.titular" name="titular" #titular="ngModel"/>
       </mat-form-field>
 
       <!-- Número de tarjeta -->
@@ -73,7 +77,7 @@
     <div *ngIf="metodoSeleccionado === 'MERCADO_PAGO' || metodoSeleccionado === 'CUENTA_DNI'">
       <mat-form-field appearance="fill" style="width: 100%; margin-bottom: 16px;">
         <mat-label>Titular de la cuenta</mat-label>
-        <input matInput required [(ngModel)]="datosPago.titular" name="titularCuenta" #titularCuenta="ngModel" />
+        <input matInput required [(ngModel)]="datosPago.titular" name="titularCuenta" #titularCuenta="ngModel"/>
       </mat-form-field>
 
       <p style="font-style: italic; color: #555; text-align: center; margin-top: 8px;">
@@ -90,16 +94,9 @@
     (click)="pagar()"
     [disabled]="!metodoSeleccionado || !formularioValido() || cargando"
   >
-    <mat-progress-spinner
-      *ngIf="cargando"
-      diameter="20"
-      strokeWidth="3"
-      mode="indeterminate"
-      style="margin: 0; display: inline-block; vertical-align: middle;"
-    ></mat-progress-spinner>
     <span style="line-height: 1;">{{ cargando ? 'Pagando...' : 'Pagar' }}</span>
   </button>
-
+  <app-form-state [error]="error" [loading]="cargando"/>
 </div>
 
 <!-- Animación de éxito (burbuja verde) -->
@@ -108,12 +105,17 @@
        position: 'fixed',
        bottom: '0',
        left: '50%',
-       transform: 'translateX(-50%) translateY(100%) scale(1)',
+       transform: 'translateX(-50%) translateY(-60px) scale(1)',
        width: '100px',
        height: '100px',
        'border-radius': '50%',
-       'background-color': '#4caf50',
+       'background-color': error ? '#B41010FF' : '#4caf50',
        'z-index': '9999',
+       display: 'flex',
+       'align-items': 'center',
+       'justify-content': 'center',
+       color: 'white',
+       'font-size': '18px',
        animation: 'expandirBurbuja 1s ease-out forwards'
      }">
 </div>
@@ -131,7 +133,19 @@
        opacity: iconoVisible ? 1 : 0,
        transition: 'opacity 0.5s ease-in'
      }">
-  ✔
+  <div
+    class="flex flex-col items-center gap-6">
+    <span>{{ error ? '✖' : '✔' }}</span>
+    <span
+      class="text-2xl text-center font-bold">
+      @if (error) {
+        Ocurrió un error al procesar el pago. Volvé a intentar en unos minutos.
+        <a mat-raised-button routerLink="/">Ir al inicio</a>
+      } @else {
+        Pago realizado con éxito.
+      }
+    </span>
+  </div>
 </div>
 
 <!-- Definición de la animación inline -->
