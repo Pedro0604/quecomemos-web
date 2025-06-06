@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { EstadisticaService } from './grafico-estadistico/estadistica.service';
-import { GraficoEstadisticoComponent } from './grafico-estadistico/grafico-estadistico.component';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import {Component, OnInit} from '@angular/core';
+import {EstadisticaService} from './grafico-estadistico/estadistica.service';
+import {GraficoEstadisticoComponent} from './grafico-estadistico/grafico-estadistico.component';
+import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
+
 type TipoGrafico = 'bar' | 'line' | 'pie' | 'doughnut';
 
 @Component({
@@ -13,17 +14,16 @@ type TipoGrafico = 'bar' | 'line' | 'pie' | 'doughnut';
 })
 
 
-
 export class EstadisticasComponent implements OnInit {
 
   reportesDisponibles: { id: string; titulo: string; tipo: TipoGrafico }[] = [
-    { id: 'ventas', titulo: 'Ventas por día', tipo: 'line' },
-    { id: 'ingresos-metodo-pago', titulo: 'Ingresos por método de pago', tipo: 'bar' },
-    { id: 'menus-dia', titulo: 'Menús por día', tipo: 'bar' },
-    { id: "clientes-frecuentes", titulo: "Clientes frecuentes", tipo: "bar" },
-    { id: 'productos-populares', titulo: 'Productos populares', tipo: 'pie' },
-    { id: 'ventas-hora', titulo: 'Ventas por hora', tipo: 'line' },
-    { id: 'ingresos-mensuales', titulo: 'Ingresos mensuales', tipo: 'bar' }
+    {id: 'ventas', titulo: 'Ventas por día', tipo: 'line'},
+    {id: 'ingresos-metodo-pago', titulo: 'Ingresos por método de pago', tipo: 'bar'},
+    {id: 'menus-dia', titulo: 'Menús por día', tipo: 'bar'},
+    {id: "clientes-frecuentes", titulo: "Clientes frecuentes", tipo: "bar"},
+    {id: 'productos-populares', titulo: 'Productos populares', tipo: 'pie'},
+    {id: 'ventas-hora', titulo: 'Ventas por hora', tipo: 'line'},
+    {id: 'ingresos-mensuales', titulo: 'Ingresos mensuales', tipo: 'bar'}
   ];
 
   filtros: Record<string, { desde: string; hasta: string }> = {};
@@ -51,11 +51,12 @@ export class EstadisticasComponent implements OnInit {
   } | null = null;
 
 
-  constructor(private estadisticasService: EstadisticaService) {}
+  constructor(private estadisticasService: EstadisticaService) {
+  }
 
   ngOnInit(): void {
     this.reportesDisponibles.forEach(r => {
-      this.filtros[r.id] = { desde: '', hasta: '' };
+      this.filtros[r.id] = {desde: '', hasta: ''};
     });
 
     this.cargarResumen();
@@ -98,7 +99,7 @@ export class EstadisticasComponent implements OnInit {
     if (this.cargando.has(reporte.id)) return;
     this.cargando.add(reporte.id);
 
-    const { desde, hasta } = this.filtros[reporte.id];
+    const {desde, hasta} = this.filtros[reporte.id];
 
     if ((desde && isNaN(Date.parse(desde))) || (hasta && isNaN(Date.parse(hasta)))) {
       this.error[reporte.id] = 'Las fechas ingresadas no son válidas.';
@@ -138,7 +139,7 @@ export class EstadisticasComponent implements OnInit {
   }
 
   private generarColoresAleatorios(cantidad: number): string[] {
-    return Array.from({ length: cantidad }, () => {
+    return Array.from({length: cantidad}, () => {
       const r = Math.floor(Math.random() * 156) + 100;
       const g = Math.floor(Math.random() * 156) + 100;
       const b = Math.floor(Math.random() * 156) + 100;
@@ -146,4 +147,16 @@ export class EstadisticasComponent implements OnInit {
     });
   }
 
+  protected getTextoPeriodoResumen(): string {
+    switch (this.periodoResumen) {
+      case 'diario':
+        return ' en el día de hoy';
+      case 'semanal':
+        return ' en la semana actual';
+      case 'mensual':
+        return ' en el mes actual';
+      default:
+        return '';
+    }
+  }
 }
