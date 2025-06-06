@@ -39,7 +39,7 @@ export class ComidaComponent implements OnInit {
   dialog = inject(MatDialog);
   @Input({required: true}) comida!: Comida;
   @Input({transform: booleanAttribute}) showButtons: boolean = true;
-  @Input({required: true}) permisos!: Partial<Record<Accion, PermissionResult>>;
+  @Input({required: true}) permisos!: Partial<Record<Accion, PermissionResult>> | null;
   @Output() onDelete = new EventEmitter<number>();
 
   carrito: Pedido | null = null;

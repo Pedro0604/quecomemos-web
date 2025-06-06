@@ -9,39 +9,39 @@ import {PermissionResult} from '../../permiso/permissionAware';
 import {MatTooltip} from '@angular/material/tooltip';
 
 @Component({
-  selector: 'app-entity-card-actions',
-  imports: [
-    MatCardActions,
-    MatAnchor,
-    RouterLink,
-    MatButton,
-    MatTooltip
-  ],
-  templateUrl: './entity-card-actions.component.html',
-  standalone: true,
-  host: {
-    class: 'mt-auto',
-  }
+    selector: 'app-entity-card-actions',
+    imports: [
+        MatCardActions,
+        MatAnchor,
+        RouterLink,
+        MatButton,
+        MatTooltip
+    ],
+    templateUrl: './entity-card-actions.component.html',
+    standalone: true,
+    host: {
+        class: 'mt-auto',
+    }
 })
 export class EntityCardActionsComponent implements OnInit {
-  @Input({required: true, transform: booleanAttribute}) showButtons!: boolean;
-  @Input({required: true}) entity!: Entidad;
-  @Input({required: true, transform: numberAttribute}) editId!: number;
-  @Input({required: true}) permisos!: Partial<Record<Accion, PermissionResult>>;
+    @Input({required: true, transform: booleanAttribute}) showButtons!: boolean;
+    @Input({required: true}) entity!: Entidad;
+    @Input({required: true, transform: numberAttribute}) editId!: number;
+    @Input({required: true}) permisos!: Partial<Record<Accion, PermissionResult>> | null;
 
-  @Output() deleteClick = new EventEmitter<void>();
+    @Output() deleteClick = new EventEmitter<void>();
 
-  protected puedeEditar = false;
-  protected puedeEliminar = false;
+    protected puedeEditar = false;
+    protected puedeEliminar = false;
 
-  protected editUrl = '';
+    protected editUrl = '';
 
-  constructor(protected authService: AuthService) {
-  }
+    constructor(protected authService: AuthService) {
+    }
 
-  ngOnInit(): void {
-    this.editUrl = `/${getEntidadLink(this.entity)}/edit`;
-    this.puedeEditar = this.authService.hasPermission(Accion.EDITAR, this.entity);
-    this.puedeEliminar = this.authService.hasPermission(Accion.ELIMINAR, this.entity);
-  }
+    ngOnInit(): void {
+        this.editUrl = `/${getEntidadLink(this.entity)}/edit`;
+        this.puedeEditar = this.authService.hasPermission(Accion.EDITAR, this.entity);
+        this.puedeEliminar = this.authService.hasPermission(Accion.ELIMINAR, this.entity);
+    }
 }

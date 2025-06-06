@@ -3,7 +3,6 @@ import {RouterLink} from "@angular/router";
 import {MatAnchor} from "@angular/material/button";
 import {Comida} from "../comida/comida.model";
 import {ComidaService} from "../comida/service/comida.service";
-import {PermissionAware} from "../permiso/permissionAware";
 import {ComidaComponent} from "../comida/component/comida.component";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {faFacebook, faInstagram, faLinkedin, faXTwitter, faYoutube} from "@fortawesome/free-brands-svg-icons";
@@ -20,13 +19,13 @@ import {faFacebook, faInstagram, faLinkedin, faXTwitter, faYoutube} from "@forta
   standalone: true
 })
 export class HomeComponent implements OnInit {
-  protected comidas: PermissionAware<Comida>[] = [];
+  protected comidas: Comida[] = [];
 
   constructor(private comidaService: ComidaService) {
   }
 
   ngOnInit() {
-    this.comidaService.getAll().subscribe({
+    this.comidaService.getDestacadas().subscribe({
       next: (data) => {
         this.comidas = data.slice(0, 3) ?? [];
       },

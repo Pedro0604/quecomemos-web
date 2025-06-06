@@ -38,8 +38,8 @@
           Comidas Destacadas
         </h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          @for (comida of comidas; track comida.data.id) {
-            <app-comida [comida]="comida.data" [permisos]="comida.permisos"/>
+          @for (comida of comidas; track comida.id) {
+            <app-comida [comida]="comida" [permisos]="null" [showButtons]="false"/>
           }
         </div>
       </div>

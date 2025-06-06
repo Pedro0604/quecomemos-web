@@ -1,17 +1,17 @@
 @if (showButtons && (puedeEditar || puedeEliminar)) {
   <mat-card-actions class="mt-auto">
     @if (puedeEditar) {
-      @if (permisos.editar?.allowed) {
+      @if (permisos?.editar?.allowed) {
         <a mat-button [routerLink]="[editUrl, editId]">MODIFICAR</a>
       } @else {
-        <button mat-button disabled disabledInteractive [matTooltip]="permisos.editar?.reason">MODIFICAR</button>
+        <button mat-button disabled disabledInteractive [matTooltip]="permisos?.editar?.reason">MODIFICAR</button>
       }
     }
     @if (puedeEliminar) {
-      @if (permisos.eliminar?.allowed) {
+      @if (permisos?.eliminar?.allowed) {
         <button mat-button class="violet-error" (click)="deleteClick.emit()">ELIMINAR</button>
       } @else {
-        <button mat-button disabled disabledInteractive [matTooltip]="permisos.eliminar?.reason">ELIMINAR</button>
+        <button mat-button disabled disabledInteractive [matTooltip]="permisos?.eliminar?.reason">ELIMINAR</button>
       }
     }
   </mat-card-actions>
