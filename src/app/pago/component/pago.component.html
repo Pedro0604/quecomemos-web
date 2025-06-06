@@ -134,13 +134,13 @@
        transition: 'opacity 0.5s ease-in'
      }">
   <div
-    class="flex flex-col items-center gap-6">
+    class="flex flex-col items-center">
     <span>{{ error ? '✖' : '✔' }}</span>
     <span
       class="text-2xl text-center font-bold">
       @if (error) {
         Ocurrió un error al procesar el pago. Volvé a intentar en unos minutos.
-        <a mat-raised-button routerLink="/">Ir al inicio</a>
+        <a mat-raised-button routerLink="/" class="mt-6">Ir al inicio</a>
       } @else {
         Pago realizado con éxito.
       }

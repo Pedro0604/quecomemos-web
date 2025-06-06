@@ -66,8 +66,8 @@ export class PagoComponent implements OnInit {
       },
       error: (error) => {
         console.error(error);
-        this.notificationService.show("Error al pagar el pedido");
         this.cargando = false;
+        this.mostrarBurbuja = true;
         this.error = true;
 
         setTimeout(() => {
