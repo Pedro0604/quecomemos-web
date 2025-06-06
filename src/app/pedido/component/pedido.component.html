@@ -1,11 +1,12 @@
 <mat-card [routerLink]="'/' + getEntidadLink(Entidad.PEDIDO) + '/' + pedido.id" appearance="outlined"
-          class="w-full h-full cursor-pointer" matTooltip="Ver el pedido">
+          class="w-full h-full cursor-pointer" matTooltip="Ver el pedido" [matTooltipShowDelay]="500">
   <mat-card-header class="flex justify-between">
-    <mat-card-title>
-      Pedido
-    </mat-card-title>
-    <mat-card-subtitle>{{ pedido.fecha }} - {{ pedido.entregado ? 'Entregado' : 'Pendiente de entrega' }}
-    </mat-card-subtitle>
+    <mat-card-title>Pedido</mat-card-title>
+    <mat-card-subtitle>{{ pedido.fecha }}</mat-card-subtitle>
+    <div
+      [class]="(pedido.entregado ? ' bg-green-300 text-green-800 ' : ' bg-orange-300 text-orange-800 ') + 'px-2 py-1 rounded text-sm h-fit'">
+      {{ pedido.entregado ? 'Entregado' : 'Pendiente de entrega' }}
+    </div>
   </mat-card-header>
   <mat-card-content class="my-4">
     <div class="flex flex-col gap-4">
