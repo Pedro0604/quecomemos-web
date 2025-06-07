@@ -27,6 +27,7 @@ export function getMenuActual(): DiasSemana {
 
   if (dia === -1) return 'MONDAY'; // Si es domingo
   if (horaActual < 15) return diasSemanaArray[dia]; // Si es antes de las 15:00, se considera el día actual
+  if (dia === 5) return 'MONDAY'; // Si es sábado después de las 15:00, se considera el lunes
   else return diasSemanaArray[(dia + 1) % 7]; // Si es después de las 15:00, se considera el día siguiente
 }
 
