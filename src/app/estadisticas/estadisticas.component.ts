@@ -21,7 +21,7 @@ export class EstadisticasComponent implements OnInit {
     {id: 'ingresos-metodo-pago', titulo: 'Ingresos por método de pago', tipo: 'bar'},
     {id: 'menus-dia', titulo: 'Menús por día', tipo: 'bar'},
     {id: "clientes-frecuentes", titulo: "Clientes frecuentes", tipo: "bar"},
-    {id: 'productos-populares', titulo: 'Productos populares', tipo: 'pie'},
+    {id: 'productos-populares', titulo: 'Productos populares', tipo: 'bar'},
     {id: 'ventas-hora', titulo: 'Ventas por hora', tipo: 'line'},
     {id: 'ingresos-mensuales', titulo: 'Ingresos mensuales', tipo: 'bar'}
   ];
@@ -49,7 +49,7 @@ export class EstadisticasComponent implements OnInit {
     comidasVendidas: number;
     dineroRecaudado: number;
   } | null = null;
-
+  desplegados = new Set<string>();
 
   constructor(private estadisticasService: EstadisticaService) {
   }
@@ -78,8 +78,6 @@ export class EstadisticasComponent implements OnInit {
       error: () => this.resumen = null
     });
   }
-
-  desplegados = new Set<string>();
 
   toggleDesplegado(id: string) {
     if (this.desplegados.has(id)) {
@@ -122,7 +120,7 @@ export class EstadisticasComponent implements OnInit {
         const color =
           reporte.tipo === 'pie'
             ? this.generarColoresAleatorios(resp.labels.length)
-            : `rgba(54,162,235,0.6)`;
+            : `rgba(54, 162, 235, 0.6)`;
 
         const nuevo = {
           id: reporte.id,
@@ -138,15 +136,6 @@ export class EstadisticasComponent implements OnInit {
       }, () => this.cargando.delete(reporte.id));
   }
 
-  private generarColoresAleatorios(cantidad: number): string[] {
-    return Array.from({length: cantidad}, () => {
-      const r = Math.floor(Math.random() * 156) + 100;
-      const g = Math.floor(Math.random() * 156) + 100;
-      const b = Math.floor(Math.random() * 156) + 100;
-      return `rgba(${r}, ${g}, ${b}, 0.6)`;
-    });
-  }
-
   protected getTextoPeriodoResumen(): string {
     switch (this.periodoResumen) {
       case 'diario':
@@ -158,5 +147,14 @@ export class EstadisticasComponent implements OnInit {
       default:
         return '';
     }
+  }
+
+  private generarColoresAleatorios(cantidad: number): string[] {
+    return Array.from({length: cantidad}, () => {
+      const r = Math.floor(Math.random() * 156) + 100;
+      const g = Math.floor(Math.random() * 156) + 100;
+      const b = Math.floor(Math.random() * 156) + 100;
+      return `rgba(${r}, ${g}, ${b}, 0.6)`;
+    });
   }
 }
