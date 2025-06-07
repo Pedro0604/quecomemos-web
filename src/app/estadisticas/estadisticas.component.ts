@@ -23,7 +23,7 @@ export class EstadisticasComponent implements OnInit {
     {id: "clientes-frecuentes", titulo: "Clientes frecuentes", tipo: "bar"},
     {id: 'productos-populares', titulo: 'Productos populares', tipo: 'bar'},
     {id: 'ventas-hora', titulo: 'Ventas por hora', tipo: 'line'},
-    {id: 'ingresos-mensuales', titulo: 'Ingresos mensuales', tipo: 'bar'}
+    {id: 'ingresos-mes', titulo: 'Ingresos por mes', tipo: 'bar'}
   ];
 
   filtros: Record<string, { desde: string; hasta: string }> = {};
