@@ -1,7 +1,20 @@
 <mat-card appearance="outlined" class="w-full h-full">
   @if (showDia) {
     <mat-card-header class="flex justify-between">
-      <mat-card-title>{{ traduccionDiasSemana(menuDiario.dia) }}</mat-card-title>
+      <mat-card-title>
+        {{ traduccionDiasSemana(menuDiario.dia) }}
+      </mat-card-title>
+      @if (menuDiario.activo) {
+        <div>
+          <mat-icon
+            class="text-blue-600 ml-2"
+            matTooltip="Está activo"
+            matTooltipShowDelay="500"
+          >
+            task_alt
+          </mat-icon>
+        </div>
+      }
     </mat-card-header>
   }
   <mat-card-content class="my-4">
@@ -20,5 +33,15 @@
     [showButtons]="showButtons"
     [entity]="Entidad.MENU_DIARIO"
     [permisos]="permisos"
-  />
+  >
+    @if (this.authService.hasPermission(Accion.EDITAR, Entidad.MENU_DIARIO)) {
+      @if (permisos?.editar?.allowed) {
+        <button mat-button class="blue ml-auto" (click)="activar()">ACTIVAR</button>
+      } @else {
+        <button mat-button class="blue ml-auto" disabled disabledInteractive [matTooltip]="permisos?.editar?.reason">
+          ACTIVAR
+        </button>
+      }
+    }
+  </app-entity-card-actions>
 </mat-card>

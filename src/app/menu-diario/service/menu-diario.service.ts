@@ -17,4 +17,8 @@ export class MenuDiarioService extends CrudService<MenuDiario, MenuDiarioDTO> {
   getMenusDiariosSemanal(): Observable<PermissionAware<MenuDiario>[]> {
     return this.http.get<PermissionAware<MenuDiario>[]>(this.apiUrl + "/semanal");
   }
+
+  activarMenuDiario(id: number): Observable<number> {
+    return this.http.post<number>(`${this.apiUrl}/${id}/activar`, {});
+  }
 }

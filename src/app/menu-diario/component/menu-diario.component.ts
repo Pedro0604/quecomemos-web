@@ -10,6 +10,11 @@ import {EntityCardActionsComponent} from '../../components/entity-card-actions/e
 import {Entidad} from '../../permiso/entidad';
 import {Accion} from '../../permiso/accion';
 import {PermissionResult} from '../../permiso/permissionAware';
+import {MatButton} from '@angular/material/button';
+import {AuthService} from '../../auth/service/auth.service';
+import {MatTooltip} from '@angular/material/tooltip';
+import {NotificationService} from '../../notification/notification.service';
+import {MatIcon} from '@angular/material/icon';
 
 @Component({
   selector: 'app-menu-diario',
@@ -19,7 +24,10 @@ import {PermissionResult} from '../../permiso/permissionAware';
     MatCardHeader,
     MatCardTitle,
     MenuComponent,
-    EntityCardActionsComponent
+    EntityCardActionsComponent,
+    MatButton,
+    MatTooltip,
+    MatIcon
   ],
   templateUrl: './menu-diario.component.html',
   standalone: true,
@@ -35,7 +43,7 @@ export class MenuDiarioComponent {
   @Output() onDelete = new EventEmitter<number>();
   protected readonly traduccionDiasSemana = traduccionDiasSemana;
 
-  constructor(private menuDiarioService: MenuDiarioService) {
+  constructor(private menuDiarioService: MenuDiarioService, protected authService: AuthService, private notificationService: NotificationService) {
   }
 
   openDialogEliminar(): void {
@@ -53,5 +61,18 @@ export class MenuDiarioComponent {
     });
   }
 
+  activar() {
+    this.menuDiarioService.activarMenuDiario(this.menuDiario.id).subscribe({
+      next: () => {
+        window.location.reload();
+      },
+      error: (error) => {
+        console.error('Error al activar el menú diario:', error);
+        this.notificationService.show("Error al activar el menú diario");
+      }
+    });
+  }
+
   protected readonly Entidad = Entidad;
+  protected readonly Accion = Accion;
 }

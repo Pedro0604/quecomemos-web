@@ -33,11 +33,12 @@ export function getMenuActual(): DiasSemana {
 
 export const diasSemanaArray: DiasSemana[] = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
 
-export type MenuDiario = {
+export interface MenuDiario {
   id: number;
   dia: DiasSemana;
   menuVegetariano: PermissionAware<Menu>;
   menuNoVegetariano: PermissionAware<Menu>;
+  activo: boolean;
 }
 
 export type MenuDiarioDTO = {

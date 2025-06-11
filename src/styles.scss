@@ -45,6 +45,16 @@ app-input {
   ));
 }
 
+.blue {
+  @include mat.theme((
+    color: (
+      primary: mat.$azure-palette,
+    ),
+    typography: Roboto,
+    density: 0,
+  ));
+}
+
 .image-container {
   border-color: var(--mat-sys-outline-variant);
 }
