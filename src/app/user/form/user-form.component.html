@@ -44,6 +44,7 @@
     minLength="7"
     placeholder="https://www.ejemplo.com"
     type="text"
+    [required]="false"
   />
   <app-form-state [error]="error" [loading]="loading"/>
   <app-submit-button [disabled]="form.disabled" [error]="error" [form]="form" [pendingText]="'Modificando Usuario'">
