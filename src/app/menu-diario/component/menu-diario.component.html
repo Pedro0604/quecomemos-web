@@ -35,10 +35,10 @@
     [permisos]="permisos"
   >
     @if (this.authService.hasPermission(Accion.EDITAR, Entidad.MENU_DIARIO)) {
-      @if (permisos?.editar?.allowed) {
+      @if (permisos.editar?.allowed) {
         <button mat-button class="blue ml-auto" (click)="activar()">ACTIVAR</button>
       } @else {
-        <button mat-button class="blue ml-auto" disabled disabledInteractive [matTooltip]="permisos?.editar?.reason">
+        <button mat-button class="blue ml-auto" disabled disabledInteractive [matTooltip]="permisos.editar?.reason">
           ACTIVAR
         </button>
       }

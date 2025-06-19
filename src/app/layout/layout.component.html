@@ -35,7 +35,7 @@
       <a
         href="https://www.info.unlp.edu.ar/"
         aria-label="Logo Facultad de Informática UNLP"
-        class="flex items-center justify-center"
+        class="hidden md:flex items-center justify-center"
         matTooltip="Facultad de Informática - UNLP"
         [matTooltipShowDelay]="500"
       >
@@ -60,7 +60,7 @@
         </div>
         <div>
           @if (authService.isLoggedIn && authService.usuario) {
-            <div class="flex items-center gap-4">
+            <div class="flex items-center gap-1 sm:gap-2 md:gap-4">
               @if (!(isHandset$ | async)) {
                 <span>
                 Bienvenido {{ authService.usuario.nombre }}

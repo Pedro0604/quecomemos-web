@@ -9,12 +9,22 @@
           “¿Qué Comemos?” es tu guía rápida para encargar los menús diarios y comidas
           del buffet de la Facultad de Informática.
         </p>
-        <a
-          routerLink="/carta"
-          mat-flat-button
-        >
-          Ver Menú de la Semana
-        </a>
+        <div class="flex flex-col md:flex-row gap-4 justify-between">
+          <a
+            routerLink="/carta"
+            mat-flat-button
+            class="w-full"
+          >
+            Ver Menú de la Semana
+          </a>
+          <a
+            routerLink="/comida"
+            mat-flat-button
+            class="w-full"
+          >
+            Ver Comidas Disponibles
+          </a>
+        </div>
       </div>
       <div class="lg:w-1/2">
         <img

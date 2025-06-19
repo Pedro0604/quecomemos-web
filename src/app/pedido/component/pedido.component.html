@@ -9,13 +9,14 @@
         {{ pedido.entregado ? 'Entregado' : 'Pendiente de entrega' }}
       </div>
     </mat-card-header>
-    <mat-card-content class="my-4">
+    <mat-card-content class="mt-4">
       <div class="flex flex-col gap-4">
-        <div class="flex justify-between gap-2">
-          <div>
-            <p>Total: ${{ pedido.total }}</p>
-          </div>
+        <div>
+          <p>Total: ${{ pedido.total }}</p>
         </div>
+        <button class="block md:!hidden" mat-flat-button
+                [routerLink]="'/' + getEntidadLink(Entidad.PEDIDO) + '/' + pedido.id">Ver el pedido
+        </button>
       </div>
     </mat-card-content>
   </mat-card>

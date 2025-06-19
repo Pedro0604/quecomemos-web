@@ -47,7 +47,7 @@
     </div>
 
     <div *ngIf="estaDesplegado(reporte.id)" class="p-4">
-      <div class="flex gap-4 items-end">
+      <div class="flex flex-col md:flex-row gap-4 items-stretch md:items-end">
         <div>
           <label class="block text-sm">Desde:</label>
           <input type="date" [(ngModel)]="filtros[reporte.id].desde" class="border rounded px-2 py-1"/>

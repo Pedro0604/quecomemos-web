@@ -6,6 +6,7 @@ import {Entidad, getEntidadLink} from '../../permiso/entidad';
 import {MatCard, MatCardContent, MatCardHeader, MatCardSubtitle, MatCardTitle} from '@angular/material/card';
 import {RouterLink} from '@angular/router';
 import {MatTooltip} from '@angular/material/tooltip';
+import {MatButton} from '@angular/material/button';
 
 @Component({
   selector: 'app-pedido',
@@ -16,7 +17,8 @@ import {MatTooltip} from '@angular/material/tooltip';
     MatCardSubtitle,
     MatCardTitle,
     RouterLink,
-    MatTooltip
+    MatTooltip,
+    MatButton
   ],
   templateUrl: './pedido.component.html'
 })
