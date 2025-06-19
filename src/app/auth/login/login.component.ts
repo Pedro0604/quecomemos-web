@@ -1,15 +1,17 @@
 import {ChangeDetectionStrategy, Component, signal} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {Router} from '@angular/router';
-import {NgIf} from '@angular/common';
+import {FormBuilder, FormGroup, ReactiveFormsModule} from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {NotificationService} from '../../notification/notification.service';
-import {MatCard, MatCardContent, MatCardHeader} from '@angular/material/card';
-import {AuthService} from './services/auth.service';
+import {AuthService} from '../service/auth.service';
+import {InputComponent} from '../../forms/components/fields/input/input.component';
+import {FormService, onlyNumbersValidator} from "../../forms/service/form.service";
+import {SubmitButtonComponent} from '../../forms/components/submit-button/submit-button.component';
+import {TitleComponent} from '../../components/title/title.component';
+import {FormComponent} from '../../forms/components/form/form.component';
+import {Credenciales} from '../../user/user.model';
 
 @Component({
   selector: 'app-login',
@@ -17,107 +19,58 @@ import {AuthService} from './services/auth.service';
   standalone: true,
   imports: [
     ReactiveFormsModule,
-    NgIf,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
     MatIconModule,
-    MatCard,
-    MatCardContent,
-    MatCardHeader,
+    InputComponent,
+    SubmitButtonComponent,
+    TitleComponent,
+    FormComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginComponent {
   loginForm: FormGroup;
-  hide = signal(true);
-  loginError = false;
+  loginError = signal(false);
 
-  constructor(private fb: FormBuilder, private http: HttpClient, private router: Router, private notificationService: NotificationService, private authService: AuthService) {
+  constructor(
+    private fb: FormBuilder,
+    private notificationService: NotificationService,
+    private authService: AuthService,
+    protected formService: FormService
+  ) {
     this.loginForm = this.fb.group({
-      dni: ['', [Validators.required, Validators.minLength(7), Validators.maxLength(8), Validators.pattern(/^\d+$/)]],
-      clave: ['', [Validators.required, Validators.minLength(6)]],
+      dni: ['', [onlyNumbersValidator]],
+      clave: [''],
     });
-  }
-
-  toggleHide() {
-    this.hide.set(!this.hide());
   }
 
   onSubmit() {
     if (this.loginForm.valid) {
-      let encontrado = false;
-      const credenciales = {
-        dni: this.loginForm.get('dni')?.value,
-        clave: this.loginForm.get('clave')?.value,
-      };
-      this.http
-        .post('http://localhost:8080/clientes/autenticacion', credenciales, {observe: 'response'})
-        .subscribe({
-            next: (response) => {
-              const token = response.headers.get('authorization');
-              if (token) {
-                encontrado = true;
-                this.authService.login(token);
-                this.router.navigate(['/carta']);
-              }
-            },
-            error: (error) => {
-              console.error('Error al autenticar cliente', error);
-              this.notificationService.show('Error al autenticar el cliente');
-            },
-            complete: () => {
-              this.notificationService.show('Cliente autenticado correctamente');
-            }
+      const credenciales: Credenciales = this.loginForm.value;
+
+      this.authService.authenticate(credenciales).subscribe({
+        next: (response) => {
+          console.log(response);
+          if (response && response.headers && response.headers.get("Authorization")) {
+            const token = response.headers.get('Authorization');
+            this.authService.login(token);
+          } else {
+            this.notificationService.show('Error en la autenticación. Vuelva a intentarlo');
           }
-        );
-      if (!encontrado) {
-        this.http
-          .post('http://localhost:8080/responsables/autenticacion', credenciales, {observe: 'response'})
-          .subscribe({
-              next: (response) => {
-                const token = response.headers.get('Authorization');
-                if (token) {
-                  encontrado = true;
-                  this.authService.login(token);
-                  this.router.navigate(['/home']);
-                }
-              },
-              error: (error) => {
-                console.error('Error al autenticar responsable', error);
-                this.notificationService.show('Error al autenticar el responsable');
-              },
-              complete: () => {
-                this.notificationService.show('Responsable autenticado correctamente');
-              }
-            }
-          );
-      }
-      if (!encontrado) {
-        this.http
-          .post('http://localhost:8080/administradores/autenticacion', credenciales, {observe: 'response'})
-          .subscribe({
-            next: (response) => {
-              const token = response.headers.get('Authorization');
-              if (token) {
-                encontrado = true;
-                this.authService.login(token);
-                this.router.navigate(['/home']);
-              }
-            },
-            error: (error) => {
-              console.error('Error al autenticar administrador', error);
-              this.notificationService.show('Error al autenticar el administrador');
-            },
-            complete: () => {
-              this.notificationService.show('Administrador autenticado correctamente');
-            }
-          });
-      }
-      if (!encontrado) {
-        this.loginError = true;
-      }
+        },
+        error: error => {
+          if (error.status === 401) {
+            this.loginError.set(true);
+            this.notificationService.show('Credenciales incorrectas');
+          } else {
+            this.notificationService.show('Error en la autenticación. Vuelva a intentarlo');
+          }
+        }
+      });
+    } else {
+      this.formService.validateAllFields(this.loginForm);
     }
   }
-
 }

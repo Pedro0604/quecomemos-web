@@ -1,4 +1,4 @@
-import {Component, inject, Injector, OnInit, TemplateRef} from '@angular/core';
+import {Component, inject, Injector, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 import {AsyncPipe, NgTemplateOutlet} from '@angular/common';
 import {MatToolbarModule} from '@angular/material/toolbar';
@@ -8,11 +8,19 @@ import {MatListModule} from '@angular/material/list';
 import {MatIconModule} from '@angular/material/icon';
 import {Observable} from 'rxjs';
 import {map, shareReplay} from 'rxjs/operators';
-import {RouterLink, RouterLinkActive, Routes} from '@angular/router';
+import {ActivatedRouteSnapshot, RouterLink, RouterLinkActive, Routes} from '@angular/router';
 import {appRoutes} from '../app.routes';
 import {LayoutService} from './layout.service';
 import {AuthGuard} from '../auth/guards/auth.guards';
-import {AuthService} from '../auth/login/services/auth.service';
+import {AuthService} from '../auth/service/auth.service';
+import {DefaultImageDirective} from '../directives/default-image-directive/default-image.directive';
+import {Entidad, getEntidadLink} from '../permiso/entidad';
+import {Accion} from '../permiso/accion';
+import {MatMenu, MatMenuItem, MatMenuTrigger} from '@angular/material/menu';
+import {MatBadge} from '@angular/material/badge';
+import {Pedido} from '../pedido/pedido.model';
+import {PedidoService} from '../pedido/service/pedido.service';
+import {MatTooltip} from '@angular/material/tooltip';
 
 
 @Component({
@@ -29,59 +37,37 @@ import {AuthService} from '../auth/login/services/auth.service';
     AsyncPipe,
     RouterLink,
     RouterLinkActive,
-    NgTemplateOutlet
+    NgTemplateOutlet,
+    DefaultImageDirective,
+    MatBadge,
+    MatMenu,
+    MatMenuItem,
+    MatMenuTrigger,
+    MatTooltip,
   ]
 })
 export class LayoutComponent implements OnInit {
-  private breakpointObserver = inject(BreakpointObserver);
-
-  isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
-    .pipe(
-      map(result => result.matches),
-      shareReplay()
-    );
-
-  excludedRoutes = ['login', '**', 'menu/edit/:id', 'comida/edit/:id', 'register', 'menu-diario/edit/:id'];
   rootRoutes: Routes = [];
-
   title: string = '';
   extra: TemplateRef<any> | null = null;
 
-  constructor(private layoutService: LayoutService, private injector: Injector, protected authService: AuthService) {
-  }
+  @ViewChild(MatMenuTrigger) carritoTrigger!: MatMenuTrigger;
 
-  filtrarRutas() {
-    this.rootRoutes = appRoutes.filter(route => {
-      if (!route.path) {
-        return false;
-      }
-      if (this.excludedRoutes.includes(route.path)) {
-        return false;
-      }
+  isHandset$: Observable<boolean>;
 
-      if (Array.isArray(route.canActivate)) {
-        return route.canActivate?.every(guardClass => {
-          const guardInstance: AuthGuard = this.injector.get(guardClass, null);
+  carrito: Pedido | null = null;
 
-          if (!guardInstance) {
-            console.error('No se pudo obtener el guardia:', guardClass);
-            return false;
-          }
-
-          if (typeof guardInstance.canActivate === 'function') {
-            guardInstance.redirectToLogin.set(false);
-            const canActivateReturnValue = guardInstance.canActivate();
-            guardInstance.redirectToLogin.set(true);
-            return canActivateReturnValue;
-          }
-
-          console.warn('Guard no tiene un método canActivate válido:', guardClass);
-          return false;
-        });
-      }
-
-      return true;
-    });
+  constructor(
+    private layoutService: LayoutService,
+    private injector: Injector,
+    protected authService: AuthService,
+    private pedidoService: PedidoService,
+  ) {
+    const breakpointObserver = inject(BreakpointObserver);
+    this.isHandset$ = breakpointObserver.observe(Breakpoints.Handset).pipe(
+      map(result => result.matches),
+      shareReplay()
+    );
   }
 
   ngOnInit(): void {
@@ -93,10 +79,48 @@ export class LayoutComponent implements OnInit {
       this.extra = extra;
     });
 
-    this.authService.isLoggedIn$.subscribe(() => {
+    this.authService.usuario$.subscribe(() => {
       this.filtrarRutas();
     });
 
-    this.filtrarRutas();
+    this.pedidoService.carrito$.subscribe(c => this.carrito = c);
   }
+
+  filtrarRutas() {
+    this.rootRoutes = appRoutes.filter(route => {
+      if (!route.path || route.path.includes(':') || !route.data?.['includeInLayout']) {
+        return false;
+      }
+
+      if (Array.isArray(route.canActivate)) {
+        return route.canActivate.every(guardClass => {
+          const guardInstance: AuthGuard = this.injector.get(guardClass, null);
+          if (!guardInstance) {
+            console.error('No se pudo obtener el guardia:', guardClass);
+            return false;
+          }
+
+          guardInstance.allowAccessWithoutRedirect();
+
+          const mockActivatedRouteSnapshot = new ActivatedRouteSnapshot();
+          mockActivatedRouteSnapshot.params = {};
+          mockActivatedRouteSnapshot.queryParams = {};
+          mockActivatedRouteSnapshot.url = [];
+          if (route.data) {
+            mockActivatedRouteSnapshot.data = route.data;
+          }
+
+          const canActivate = guardInstance.canActivate(mockActivatedRouteSnapshot);
+          guardInstance.resetRedirect();
+          return canActivate;
+        });
+      }
+
+      return true;
+    });
+  }
+
+  protected readonly Accion = Accion;
+  protected readonly Entidad = Entidad;
+  protected readonly getEntidadLink = getEntidadLink;
 }

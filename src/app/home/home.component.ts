@@ -1,60 +1,58 @@
-import {Component, TemplateRef, viewChild, ViewChild} from '@angular/core';
-import {MatAnchor, MatButton} from "@angular/material/button";
-import {MatIcon} from "@angular/material/icon";
-import {MatProgressSpinner} from "@angular/material/progress-spinner";
-import {MenuDiarioComponent} from "../menu-diario/component/menu-diario.component";
+import {Component, OnInit} from '@angular/core';
 import {RouterLink} from "@angular/router";
-import {MenuDiario, traduccionDiasSemana} from '../menu-diario/menu-diario.model';
-import {LayoutService} from '../layout/layout.service';
+import {MatAnchor} from "@angular/material/button";
+import {Comida} from "../comida/comida.model";
+import {ComidaService} from "../comida/service/comida.service";
+import {ComidaComponent} from "../comida/component/comida.component";
+import {FaIconComponent} from "@fortawesome/angular-fontawesome";
+import {faFacebook, faInstagram, faLinkedin, faXTwitter, faYoutube} from "@fortawesome/free-brands-svg-icons";
+import {PermissionAware} from '../permiso/permissionAware';
+import {getMenuActual, MenuDiario, traduccionDiasSemana} from '../menu-diario/menu-diario.model';
 import {MenuDiarioService} from '../menu-diario/service/menu-diario.service';
-import {MatAccordion, MatExpansionModule} from '@angular/material/expansion';
+import {MenuDiarioComponent} from '../menu-diario/component/menu-diario.component';
 
 @Component({
   selector: 'app-home',
   imports: [
-    MatAnchor,
-    MatIcon,
-    MatProgressSpinner,
-    MenuDiarioComponent,
     RouterLink,
-    MatButton,
-    MatExpansionModule
+    MatAnchor,
+    ComidaComponent,
+    FaIconComponent,
+    MenuDiarioComponent
   ],
   templateUrl: './home.component.html',
-  standalone: true,
-  styleUrl: './home.component.css'
+  standalone: true
 })
-export class HomeComponent {
-  accordion = viewChild.required(MatAccordion);
-  menusDiarios: MenuDiario[] = [];
+export class HomeComponent implements OnInit {
+  protected comidas: Comida[] = [];
+  protected menuDiario: PermissionAware<MenuDiario> | null = null;
 
-  error = false;
-  loading = true;
-
-  constructor(private layoutService: LayoutService, private menuDiarioService: MenuDiarioService) {
+  constructor(private comidaService: ComidaService, private menuDiarioService: MenuDiarioService) {
   }
 
-  ngOnInit(): void {
-    this.menuDiarioService.getMenusDiariosSemanal().subscribe({
+  ngOnInit() {
+    this.comidaService.getDestacadas().subscribe({
       next: (data) => {
-        this.menusDiarios = data ?? [];
+        this.comidas = data.slice(0, 3) ?? [];
       },
       error: (error) => {
-        console.error('Error al obtener el menu semanal', error);
-        this.error = true;
+        console.error('Error al obtener las comidas', error);
+      }
+    });
+    this.menuDiarioService.getMenusDiariosSemanal().subscribe({
+      next: (data) => {
+        this.menuDiario = data.find(pawm => pawm.data.dia === getMenuActual()) ?? null;
       },
-      complete: () => {
-        this.loading = false;
+      error: (error) => {
+        console.error('Error al obtener las comidas', error);
       }
     });
   }
 
-  @ViewChild('extra') extraTemplate!: TemplateRef<any> | null;
-
-  ngAfterViewInit(): void {
-    this.layoutService.setTitle('Menú semanal');
-    this.layoutService.setExtra(this.extraTemplate);
-  }
-
+  protected readonly faFacebook = faFacebook;
+  protected readonly faInstagram = faInstagram;
+  protected readonly faXTwitter = faXTwitter;
+  protected readonly faLinkedin = faLinkedin;
+  protected readonly faYoutube = faYoutube;
   protected readonly traduccionDiasSemana = traduccionDiasSemana;
 }

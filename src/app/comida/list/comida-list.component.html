@@ -1,30 +1,9 @@
-<ng-template #extra>
-      <span class="flex items-center justify-end mr-6">
-        <mat-icon class="text-green-600">eco</mat-icon> = Vegetariano
-      </span>
-</ng-template>
+<app-list
+  [itemTemplate]="comidaTemplate"
+  [fetchItems]="fetchItems"
+  [entity]="Entidad.COMIDA"
+/>
 
-@if (error || loading || comidas.length === 0) {
-  <div class="flex justify-center items-center mt-20 text-2xl">
-    @if (error) {
-      <mat-icon class="error">error</mat-icon>
-      <span class="ml-2">Error al cargar las comidas</span>
-    } @else if (loading) {
-      <mat-spinner></mat-spinner>
-    } @else if (comidas.length === 0) {
-      <mat-icon class="error">warning</mat-icon>
-      <span class="ml-2">No hay comidas disponibles</span>
-    }
-  </div>
-  @if (!error && !loading && comidas.length === 0) {
-    <span class="flex justify-center mt-4">
-      <a mat-button routerLink="/comida/create">Creá una ahora</a>
-    </span>
-  }
-} @else {
-  <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-    @for (comida of comidas; track comida) {
-      <app-comida [comida]="comida" (onDelete)="handleDeleteComida(comida.id)"></app-comida>
-    }
-  </div>
-}
+<ng-template #comidaTemplate let-comida let-onDelete="onDelete" let-permisos="permisos">
+  <app-comida (onDelete)="onDelete(comida.id)" [comida]="comida" [permisos]="permisos"></app-comida>
+</ng-template>

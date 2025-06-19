@@ -1,9 +1,18 @@
 <mat-sidenav-container class="sidenav-container">
-  <mat-sidenav #drawer class="sidenav" fixedInViewport
-               [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+  <mat-sidenav #drawer [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
                [mode]="(isHandset$ | async) ? 'over' : 'side'"
-               [opened]="(isHandset$ | async) === false">
-    <mat-toolbar><a routerLink="/carta">¿Qué Comemos?</a></mat-toolbar>
+               [opened]="(isHandset$ | async) === false"
+               class="sidenav"
+               fixedInViewport>
+    <mat-toolbar>
+      <a
+        routerLink="/"
+        matTooltip="Ir al Inicio"
+        [matTooltipShowDelay]="500"
+      >
+        ¿Qué Comemos?
+      </a>
+    </mat-toolbar>
     <mat-nav-list>
       @for (item of rootRoutes; track $index) {
         <a
@@ -13,6 +22,8 @@
           routerLinkActive
           [activated]="link.isActive"
           [routerLinkActiveOptions]="{exact: true}"
+          [matTooltip]="item.title?.toString()"
+          [matTooltipShowDelay]="500"
         >
           {{ item.title }}
         </a>
@@ -21,6 +32,20 @@
   </mat-sidenav>
   <mat-sidenav-content>
     <mat-toolbar color="primary">
+      <a
+        href="https://www.info.unlp.edu.ar/"
+        aria-label="Logo Facultad de Informática UNLP"
+        class="hidden md:flex items-center justify-center"
+        matTooltip="Facultad de Informática - UNLP"
+        [matTooltipShowDelay]="500"
+      >
+        <img
+          src="https://www.info.unlp.edu.ar/wp-content/uploads/2019/12/cropped-logoblanco2-1-192x192.png"
+          alt="Logo de la Facultad de Informática de la UNLP"
+          width="50"
+          height="50"
+        >
+      </a>
       <div class="flex justify-between w-full">
         <div>
           @if (isHandset$ | async) {
@@ -34,23 +59,138 @@
           }
         </div>
         <div>
-          @if (authService.isLoggedIn()) {
-            <span class="hidden md:block">
-              <button
-                mat-button
-                (click)="authService.logout()"
-              >
-                Cerrar sesión
-              </button>
-            </span>
-            <span class="block md:hidden">
-              <button
-                mat-icon-button
-                (click)="authService.logout()"
-              >
-                <mat-icon aria-label="Logout icon">logout</mat-icon>
-              </button>
-            </span>
+          @if (authService.isLoggedIn && authService.usuario) {
+            <div class="flex items-center gap-1 sm:gap-2 md:gap-4">
+              @if (!(isHandset$ | async)) {
+                <span>
+                Bienvenido {{ authService.usuario.nombre }}
+              </span>
+              }
+              <mat-nav-list>
+                @if (authService.hasPermission(Accion.VER_PROPIOS, Entidad.PEDIDO)) {
+                  <a
+                    mat-list-item
+                    routerLink="mis-pedidos"
+                    aria-label="Ícono de mis pedidos"
+                    routerLinkActive
+                    #link="routerLinkActive"
+                    [activated]="link.isActive"
+                    [routerLinkActiveOptions]="{exact: true}"
+                    matTooltip="Tus pedidos"
+                  >
+                    <mat-icon class="!m-0">shopping_bag</mat-icon>
+                  </a>
+                }
+              </mat-nav-list>
+              <mat-nav-list>
+                @if (authService.hasPermission(Accion.VER_BUZON, Entidad.CLIENTE)) {
+                  <a
+                    mat-list-item
+                    routerLink="buzon"
+                    aria-label="Ícono de buzón"
+                    routerLinkActive
+                    #link="routerLinkActive"
+                    [activated]="link.isActive"
+                    [routerLinkActiveOptions]="{exact: true}"
+                    matTooltip="Tus sugerencias"
+                  >
+                    <mat-icon class="!m-0">mail</mat-icon>
+                  </a>
+                }
+              </mat-nav-list>
+
+              @if (authService.hasPermission(Accion.VER_CARRITO, Entidad.CLIENTE)) {
+                <button
+                  mat-icon-button
+                  aria-label="Carrito de compras"
+                  [matMenuTriggerFor]="carritoMenu"
+                  #carritoTrigger="matMenuTrigger"
+                  matBadge="{{ carrito ? carrito.items.length : 0 }}"
+                  matBadgeColor="accent"
+                  matTooltip="Tu carrito"
+                >
+                  <mat-icon>shopping_cart</mat-icon>
+                </button>
+
+                <mat-menu #carritoMenu="matMenu" yPosition="below">
+                  @if (carrito && carrito.items.length > 0) {
+                    @for (item of carrito.items.slice(0, 3); track item.id) {
+                      <button mat-menu-item disabled>
+                        <span class="flex justify-between gap-2">
+                          <span>{{ item.item.nombre }}</span>
+                          <span>{{ item.cantidad }}</span>
+                        </span>
+                      </button>
+                    }
+                    @if (carrito.items.length > 3) {
+                      <button mat-menu-item disabled>
+                        Y {{ carrito.items.length - 3 }} productos más...
+                      </button>
+                    }
+                    <a
+                      mat-menu-item
+                      (click)="this.carritoTrigger.closeMenu()"
+                      [routerLink]="['/carrito']">
+                      Ver carrito completo
+                    </a>
+                    <a
+                      mat-menu-item
+                      (click)="this.carritoTrigger.closeMenu()"
+                      [routerLink]="['/pagar']">
+                      Finalizar la compra
+                    </a>
+                  } @else {
+                    <button mat-menu-item disabled>El carrito está vacío</button>
+                  }
+                </mat-menu>
+              }
+
+              <mat-nav-list>
+                <span>
+                @if (authService.hasPermission(Accion.EDITAR, authService.usuario.rolName)) {
+                  <a
+                    mat-list-item
+                    routerLink="{{getEntidadLink(authService.usuario.rolName)}}/{{ authService.usuario.id }}"
+                    routerLinkActive
+                    #link="routerLinkActive"
+                    [activated]="link.isActive"
+                    matTooltip="Tu perfil"
+                  >
+                      <img
+                        class="w-10 h-10 p-1 m-1 rounded-full ring-2 ring-gray-300 dark:ring-gray-500"
+                        [src]="authService.usuario.imagen"
+                        alt="Avatar"
+                        defaultImage
+                      >
+                    </a>
+                } @else {
+                  <img
+                    class="w-10 h-10 p-1 m-1 rounded-full ring-2 ring-gray-300 dark:ring-gray-500"
+                    [src]="authService.usuario.imagen"
+                    alt="Avatar"
+                    defaultImage
+                  >
+                }
+                </span>
+              </mat-nav-list>
+              <span class="hidden md:block">
+                <button
+                  mat-button
+                  (click)="authService.logout()"
+                >
+                  Cerrar sesión
+                </button>
+              </span>
+              <span class="block md:hidden">
+                <button
+                  mat-icon-button
+                  (click)="authService.logout()"
+                  matTooltip="Cerrar sesión"
+                >
+                  <mat-icon aria-label="Logout icon">logout</mat-icon>
+                </button>
+              </span>
+            </div>
           } @else {
             <div class="flex items-center">
               <span class="hidden md:block">
@@ -67,6 +207,7 @@
                   mat-icon-button
                   routerLink="login"
                   routerLinkActive
+                  matTooltip="Iniciar sesión"
                 >
                   <mat-icon aria-label="Login icon">login</mat-icon>
                 </a>

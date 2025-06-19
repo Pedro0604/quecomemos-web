@@ -1,8 +1,9 @@
 import {Menu} from '../menu/menu.model';
+import {PermissionAware} from '../permiso/permissionAware';
 
-export type diasSemana = 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY';
+export type DiasSemana = 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY' | 'SATURDAY';
 
-export function traduccionDiasSemana(dia: diasSemana): string {
+export function traduccionDiasSemana(dia: DiasSemana): string {
   switch (dia) {
     case 'MONDAY':
       return 'Lunes';
@@ -14,26 +15,34 @@ export function traduccionDiasSemana(dia: diasSemana): string {
       return 'Jueves';
     case 'FRIDAY':
       return 'Viernes';
+    case 'SATURDAY':
+      return 'Sábado';
   }
 }
 
-export const diasSemanaArray: diasSemana[] = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY'];
+export function getMenuActual(): DiasSemana {
+  const now = new Date();
+  const horaActual = now.getHours();
+  const dia = now.getDay() - 1; // -1 (domingo) - 5 (sábado)
 
-export type MenuDiario = {
+  if (dia === -1) return 'MONDAY'; // Si es domingo
+  if (horaActual < 15) return diasSemanaArray[dia]; // Si es antes de las 15:00, se considera el día actual
+  if (dia === 5) return 'MONDAY'; // Si es sábado después de las 15:00, se considera el lunes
+  else return diasSemanaArray[(dia + 1) % 7]; // Si es después de las 15:00, se considera el día siguiente
+}
+
+export const diasSemanaArray: DiasSemana[] = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
+
+export interface MenuDiario {
   id: number;
-  dia: diasSemana;
-  menuVegetariano: Menu;
-  menuNoVegetariano: Menu;
+  dia: DiasSemana;
+  menuVegetariano: PermissionAware<Menu>;
+  menuNoVegetariano: PermissionAware<Menu>;
+  activo: boolean;
 }
 
 export type MenuDiarioDTO = {
-  dia: diasSemana;
+  dia: DiasSemana;
   menuVegetarianoId: number;
   menuNoVegetarianoId: number;
-}
-
-export type MenuDiarioFormData = {
-  dia: diasSemana;
-  menuVegetariano: Menu;
-  menuNoVegetariano: Menu;
 }

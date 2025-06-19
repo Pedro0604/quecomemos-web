@@ -1,32 +1,57 @@
-<mat-card class="w-full h-full" appearance="outlined">
+<mat-card appearance="outlined" class="w-full h-full">
   <mat-card-header class="flex justify-between">
     <mat-card-title>{{ comida.nombre }}</mat-card-title>
     <mat-card-subtitle>${{ comida.precio }}</mat-card-subtitle>
-    @if (comida.vegetariana) {
-      <mat-icon class="text-green-600">eco</mat-icon>
-    }
+    <div>
+      @if (authService.hasPermission(Accion.ANIADIR_AL_CARRITO, Entidad.MENU) && (showAniadirAlCarrito || permisos?.aniadir_al_carrito?.allowed)) {
+        <span
+          [matTooltip]="isInCarrito() ? 'Esta comida ya se encuentra en el carrito' : 'Añadir al carrito'"
+          matTooltipShowDelay="500"
+        >
+        <button
+          mat-icon-button
+          aria-label="Añadir al carrito"
+          [disabled]="isInCarrito()"
+          (click)="pedidoService.addItem({itemId: comida.id, cantidad: 1})">
+          <mat-icon class="{{ isInCarrito() ? 'text-gray-500' : 'text-blue-500' }}">add_shopping_cart</mat-icon>
+        </button>
+        </span>
+      }
+      @if (comida.vegetariana) {
+        <mat-icon
+          class="text-green-600 ml-2"
+          matTooltip="Es vegetariana"
+          matTooltipShowDelay="500"
+        >
+          eco
+        </mat-icon>
+      }
+    </div>
   </mat-card-header>
   <mat-card-content class="my-4">
     <div class="flex flex-col gap-4">
       <div class="flex justify-between gap-2">
         <div>
-          <p class="text-sm">{{ comida.tipoComida.replace("_", " ") }}</p>
+          <p class="text-sm">{{ tipoComidaToString(comida.tipoComida) }}</p>
           <p class="text-lg">{{ comida.nombre }}</p>
         </div>
         <div class="flex justify-center items-center w-20 h-20 border image-container">
-          @if (comida.urlImagen) {
-            <img class="object-cover aspect-square" [src]="comida.urlImagen" [alt]="comida.nombre">
-          } @else {
-            <mat-icon class="text-5xl !w-fit !h-fit">no_photography</mat-icon>
-          }
+          <img
+            [alt]="comida.nombre"
+            [src]="comida.urlImagen"
+            class="object-cover aspect-square w-full h-full"
+            defaultImage
+            matTooltip
+          />
         </div>
       </div>
     </div>
   </mat-card-content>
-  @if (showButtons) {
-    <mat-card-actions class="mt-auto">
-      <a mat-button [routerLink]="['/comida/edit/', comida.id]">MODIFICAR</a>
-      <button mat-button class="error" (click)="openDialogEliminar()">ELIMINAR</button>
-    </mat-card-actions>
-  }
+  <app-entity-card-actions
+    (deleteClick)="openDialogEliminar()"
+    [editId]="comida.id"
+    [showButtons]="showButtons"
+    [entity]="Entidad.COMIDA"
+    [permisos]="permisos"
+  />
 </mat-card>

@@ -1,41 +1,123 @@
-<ng-template #extra>
-      <span class="flex items-center justify-end mr-6">
-        <mat-icon class="text-green-600">eco</mat-icon> = Vegetariano
-      </span>
-</ng-template>
-
-@if (error || loading || menusDiarios.length === 0) {
-  <div class="flex justify-center items-center mt-20 text-2xl">
-    @if (error) {
-      <mat-icon class="error">error</mat-icon>
-      <span class="ml-2">Error al cargar el menú semanal</span>
-    } @else if (loading) {
-      <mat-spinner></mat-spinner>
-    } @else if (menusDiarios.length === 0) {
-      <mat-icon class="error">warning</mat-icon>
-      <span class="ml-2">No hay menú semanal</span>
-    }
-  </div>
-  @if (!error && !loading && menusDiarios.length === 0) {
-    <span class="flex justify-center mt-4">
-      <a mat-button routerLink="/menu-diario/create">Creá un menú diario ahora</a>
-    </span>
-  }
-} @else {
-  <div class="flex flex-col xl:mx-20 gap-4 xl:gap-8">
-    <div class="example-action-buttons">
-      <button mat-button (click)="accordion().openAll()">Mostrar todos</button>
-      <button mat-button (click)="accordion().closeAll()">Ocultar todos</button>
+<div class="pt-8">
+  <section id="inicio" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-col-reverse lg:flex-row items-center gap-8 py-12">
+      <div class="lg:w-1/2 text-center lg:text-left">
+        <h1 class="text-4xl lg:text-5xl font-bold text-rojo mb-4">
+          ¡Bienvenidos al Buffet Facultad de Informática - UNLP!
+        </h1>
+        <p class="text-lg mb-6">
+          “¿Qué Comemos?” es tu guía rápida para encargar los menús diarios y comidas
+          del buffet de la Facultad de Informática.
+        </p>
+        <div class="flex flex-col md:flex-row gap-4 justify-between">
+          <a
+            routerLink="/carta"
+            mat-flat-button
+            class="w-full"
+          >
+            Ver Menú de la Semana
+          </a>
+          <a
+            routerLink="/comida"
+            mat-flat-button
+            class="w-full"
+          >
+            Ver Comidas Disponibles
+          </a>
+        </div>
+      </div>
+      <div class="lg:w-1/2">
+        <img
+          src="https://www.info.unlp.edu.ar/wp-content/uploads/2024/05/1-scaled-800x420.jpg"
+          alt="Buffet FI-UNLP"
+          class="rounded-xl shadow-2xl object-cover w-full h-64 lg:h-80"
+        />
+      </div>
     </div>
-    <mat-accordion multi>
-      @for (menuDiario of menusDiarios; track menuDiario) {
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <mat-panel-title>Menú del {{ traduccionDiasSemana(menuDiario.dia) }}</mat-panel-title>
-          </mat-expansion-panel-header>
-          <app-menu-diario [menuDiario]="menuDiario" [showButtons]="false" [showDia]="false"></app-menu-diario>
-        </mat-expansion-panel>
-      }
-    </mat-accordion>
-  </div>
-}
+  </section>
+
+  @if (menuDiario) {
+    <section class="py-12">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl font-bold text-center text-rojo mb-8">
+          Menú del {{ traduccionDiasSemana(menuDiario.data.dia) }}
+        </h2>
+        <app-menu-diario [menuDiario]="menuDiario.data" [showButtons]="false" [showDia]="false"
+                         [permisos]="menuDiario.permisos" [showAniadirAlCarrito]="true"></app-menu-diario>
+      </div>
+    </section>
+  }
+
+  @if (comidas.length === 3) {
+    <section class="py-12">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl font-bold text-center text-rojo mb-8">
+          Comidas Destacadas
+        </h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          @for (comida of comidas; track comida.id) {
+            <app-comida [comida]="comida" [permisos]="null" [showButtons]="false" [showAniadirAlCarrito]="true"/>
+          }
+        </div>
+      </div>
+    </section>
+  }
+
+  <section id="contacto" class="bg-rojo pt-12 pb-4">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <div class="space-y-2">
+        <p>
+          <strong class="text-lg mb-4">Buffet Facultad de Informática - UNLP</strong><br/>
+          Calle 50 y 120, La Plata, Argentina<br/>
+          Horarios: Lunes a Viernes, 8:00 – 18:00 y Sábados, 9:00 – 13:00<br/>
+          Teléfonos: (0221) 427-7270 / 427-7271
+        </p>
+        <div class="flex justify-center space-x-4">
+          <a
+            href="https://www.info.unlp.edu.ar/"
+            aria-label="Logo Facultad de Informática UNLP"
+            class="flex items-center justify-center"
+          >
+            <img
+              src="https://www.info.unlp.edu.ar/wp-content/uploads/2019/12/cropped-logoblanco2-1-192x192.png"
+              alt="Logo Facultad de Informática UNLP"
+              width="20"
+              height="20"
+            >
+          </a>
+          <a
+            href="https://www.facebook.com/groups/27731378924/"
+            aria-label="Facebook"
+          >
+            <fa-icon [icon]="faFacebook"/>
+          </a>
+          <a
+            href="https://www.instagram.com/informaticaunlp/"
+            aria-label="Instagram"
+          >
+            <fa-icon [icon]="faInstagram"/>
+          </a>
+          <a
+            href="https://x.com/i/flow/login?redirect_after_login=%2Finformaticaunlp"
+            aria-label="Twitter"
+          >
+            <fa-icon [icon]="faXTwitter"/>
+          </a>
+          <a
+            href="https://www.linkedin.com/school/facultad-de-inform%C3%A1tica-within-universidad-nacional-de-la-plata/"
+            aria-label="LinkedIn"
+          >
+            <fa-icon [icon]="faLinkedin"/>
+          </a>
+          <a
+            href="https://www.youtube.com/channel/UCXjJ1_zkLiA5eFHddLpoQRw"
+            aria-label="YouTube"
+          >
+            <fa-icon [icon]="faYoutube"/>
+          </a>
+        </div>
+        <p class="text-sm">Copyright © 2025 Facultad de Informática - UNLP</p>
+      </div>
+    </div>
+  </section>
+</div>

@@ -1,0 +1,53 @@
+<app-title [showVolver]="true" title="Modificar Usuario"/>
+
+<app-form (submit)="onSubmit()" [formGroup]="form">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <app-input
+      [abstractControl]="this.form.get('dni')"
+      [readonly]="true"
+      label="DNI"
+      maxLength="8"
+      minLength="7"
+      placeholder="12345678"
+      tooltipMessage="El DNI no puede ser modificado"
+      type="text"
+    />
+    <app-input
+      [abstractControl]="form.get('nombre')"
+      label="Nombre"
+      maxLength="255"
+      minLength="3"
+      placeholder="Ingrese su nombre"
+      type="text"
+    />
+    <app-input
+      [abstractControl]="this.form.get('apellido')"
+      label="Apellido"
+      maxLength="255"
+      minLength="3"
+      placeholder="Ingrese su apellido"
+      type="text"
+    />
+    <app-input
+      [abstractControl]="this.form.get('email')"
+      label="Email"
+      maxLength="255"
+      minLength="3"
+      placeholder="ejemplo@gmail.com"
+      type="email"
+    />
+  </div>
+  <app-input
+    [abstractControl]="this.form.get('urlImagen')"
+    label="URL de la Imagen de Perfil"
+    maxLength="255"
+    minLength="7"
+    placeholder="https://www.ejemplo.com"
+    type="text"
+    [required]="false"
+  />
+  <app-form-state [error]="error" [loading]="loading"/>
+  <app-submit-button [disabled]="form.disabled" [error]="error" [form]="form" [pendingText]="'Modificando Usuario'">
+    Modificar Usuario
+  </app-submit-button>
+</app-form>

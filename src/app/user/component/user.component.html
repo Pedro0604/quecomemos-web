@@ -1,0 +1,27 @@
+<mat-card appearance="outlined" class="w-full h-full">
+  <mat-card-header class="flex justify-between">
+    <mat-card-title>{{ user.nombre }}</mat-card-title>
+  </mat-card-header>
+  <mat-card-content class="my-4">
+    <div class="flex flex-col gap-4">
+      <div class="flex justify-between gap-2">
+        <div>
+          <p class="text-sm">{{ user.dni }}</p>
+          <p class="text-lg">{{ user.email }}</p>
+        </div>
+        <div class="flex justify-center items-center w-20 h-20 border image-container">
+          @if (user.urlImagen) {
+            <img class="object-cover aspect-square" [src]="user.urlImagen" [alt]="user.dni" defaultImage matTooltip>
+          } @else {
+            <mat-icon class="text-5xl !w-fit !h-fit">no_photography</mat-icon>
+          }
+        </div>
+      </div>
+    </div>
+  </mat-card-content>
+  @if (showButtons) {
+    <mat-card-actions class="mt-auto">
+      <a mat-button [routerLink]="['/user/edit/', user.id]">MODIFICAR</a>
+    </mat-card-actions>
+  }
+</mat-card>

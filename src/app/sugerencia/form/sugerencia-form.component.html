@@ -1,0 +1,22 @@
+<app-title [title]="title()" showVolver/>
+
+<app-form (submit)="onSubmit()" [formGroup]="form">
+  <app-select
+    [abstractControl]="form.get('tipo')"
+    [opciones]="tiposSugerenciasOptions"
+    label="Tipo de sugerencia"
+    placeholder="Seleccione un tipo de sugerencia"
+  />
+  <app-text-area
+    [abstractControl]="form.get('descripcion')"
+    label="Descripción de la sugerencia"
+    maxLength="255"
+    minLength="5"
+    placeholder="Descripción"
+    type="text"
+  />
+  <app-form-state [error]="error" [loading]="loading"/>
+  <app-submit-button [disabled]="form.disabled" [error]="error" [form]="form" [loading]="loading"
+                     [pendingText]="submittingText()">{{ title() }}
+  </app-submit-button>
+</app-form>

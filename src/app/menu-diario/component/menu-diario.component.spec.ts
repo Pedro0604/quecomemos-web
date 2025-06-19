@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { MenuDiarioComponent } from './menu-diario.component';
+import {MenuDiarioComponent} from './menu-diario.component';
 
 describe('MenuDiarioComponent', () => {
   let component: MenuDiarioComponent;
@@ -10,7 +10,7 @@ describe('MenuDiarioComponent', () => {
     await TestBed.configureTestingModule({
       imports: [MenuDiarioComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(MenuDiarioComponent);
     component = fixture.componentInstance;

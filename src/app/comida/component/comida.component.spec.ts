@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { ComidaComponent } from './comida.component';
+import {ComidaComponent} from './comida.component';
 
 describe('ComidaComponent', () => {
   let component: ComidaComponent;
@@ -10,7 +10,7 @@ describe('ComidaComponent', () => {
     await TestBed.configureTestingModule({
       imports: [ComidaComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(ComidaComponent);
     component = fixture.componentInstance;

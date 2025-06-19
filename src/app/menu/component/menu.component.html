@@ -1,25 +1,68 @@
-<mat-card class="w-full h-full {{straightLeftBorder ? '!rounded-l-none' : ''}} {{straightRightBorder ? '!rounded-r-none' : ''}}" [appearance]="appearance">
+<mat-card
+  [appearance]="appearance"
+  class="w-full h-full {{straightLeftBorder ? '!rounded-l-none' : ''}} {{straightRightBorder ? '!rounded-r-none' : ''}}">
   <mat-card-header class="flex justify-between">
-    <mat-card-title>{{ menu.nombre }}</mat-card-title>
+    <mat-card-title>
+      @if (hasLink && permisos.editar?.allowed) {
+        <!--        TODO - EL LINK Y EL PERMISO DEBERÍAN SER A UNA VISTA DEL MENÚ Y NO A LA EDICIÓN(?-->
+        <a [routerLink]="['/menu/edit/', menu.id]" class="hover:underline hover:text-blue-600">
+          {{ menu.nombre }}
+        </a>
+      } @else {
+        {{ menu.nombre }}
+      }
+    </mat-card-title>
     <mat-card-subtitle>${{ menu.precio }}</mat-card-subtitle>
-    @if (menu.vegetariano) {
-      <mat-icon class="text-green-600">eco</mat-icon>
-    }
+    <div>
+      @if (authService.hasPermission(Accion.ANIADIR_AL_CARRITO, Entidad.MENU) && (showAniadirAlCarrito || permisos.aniadir_al_carrito?.allowed)) {
+        <span
+          [matTooltip]="isInCarrito() ? 'Este menú ya se encuentra en el carrito' : 'Añadir al carrito'"
+          matTooltipShowDelay="500"
+        >
+        <button
+          mat-icon-button
+          aria-label="Añadir al carrito"
+          [disabled]="isInCarrito()"
+          (click)="pedidoService.addItem({itemId: menu.id, cantidad: 1})">
+          <mat-icon class="{{ isInCarrito() ? 'text-gray-500' : 'text-blue-500' }}">add_shopping_cart</mat-icon>
+        </button>
+        </span>
+      }
+      @if (menu.vegetariano) {
+        <mat-icon
+          class="text-green-600 ml-2"
+          matTooltip="Es vegetariano"
+          matTooltipShowDelay="500"
+        >
+          eco
+        </mat-icon>
+      }
+    </div>
   </mat-card-header>
   <mat-card-content class="my-4">
     <div class="flex flex-col gap-4">
-      @for (comida of menu.comidas; track comida.id) {
+      @for (comidaPermissionAware of menu.comidas; track comidaPermissionAware.data.id) {
+        @let comida = comidaPermissionAware.data;
         <div class="flex justify-between gap-2">
           <div>
-            <p class="text-sm">{{ comida.tipoComida.replace("_", " ") }}</p>
-            <p class="text-lg">{{ comida.nombre }}</p>
+            <p class="text-sm">{{ tipoComidaToString(comida.tipoComida) }}</p>
+            @if (comidaPermissionAware.permisos.editar?.allowed) {
+              <!--        TODO - EL LINK Y EL PERMISO DEBERÍA SER A UNA VISTA DE LA COMIDA Y NO A LA EDICIÓN(?-->
+              <a [routerLink]="['/comida/edit/', comida.id]" class="hover:underline hover:text-blue-600">
+                <p class="text-lg">{{ comida.nombre }}</p>
+              </a>
+            } @else {
+              <p class="text-lg">{{ comida.nombre }}</p>
+            }
           </div>
           <div class="flex justify-center items-center w-20 h-20 border image-container">
-            @if (comida.urlImagen) {
-              <img class="object-cover aspect-square" [src]="comida.urlImagen" [alt]="comida.nombre">
-            } @else {
-              <mat-icon class="text-5xl !w-fit !h-fit">no_photography</mat-icon>
-            }
+            <img
+              class="object-cover aspect-square w-full h-full"
+              [src]="comida.urlImagen"
+              [alt]="comida.nombre"
+              defaultImage
+              matTooltip
+            />
           </div>
         </div>
         @if (!$last) {
@@ -28,10 +71,11 @@
       }
     </div>
   </mat-card-content>
-  @if (showButtons) {
-    <mat-card-actions class="mt-auto">
-      <a mat-button [routerLink]="['/menu/edit/', menu.id]">MODIFICAR</a>
-      <button mat-button class="error" (click)="openDialogEliminar()">ELIMINAR</button>
-    </mat-card-actions>
-  }
+  <app-entity-card-actions
+    (deleteClick)="openDialogEliminar()"
+    [editId]="menu.id"
+    [showButtons]="showButtons"
+    [entity]="Entidad.MENU"
+    [permisos]="permisos"
+  />
 </mat-card>

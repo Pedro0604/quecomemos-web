@@ -1,0 +1,79 @@
+<div class="estadisticas-container px-6 py-8">
+
+  <h2
+    class="text-4xl text-center mb-2"
+    style="text-align: center; font-size: 1.8rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 32px; position: relative;">
+    Estadísticas del Buffet
+  </h2>
+
+  <div class="flex justify-center items-center gap-3 mb-6">
+    <label class="text-base font-medium text-gray-800">Resumen:</label>
+    <select
+      [(ngModel)]="periodoResumen"
+      (ngModelChange)="onPeriodoResumenChange($event)"
+      class="px-4 py-2 rounded-md text-sm border border-gray-300 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-red-800 focus:border-red-800 transition"
+    >
+      <option value="diario">Diario</option>
+      <option value="semanal">Semanal</option>
+      <option value="mensual">Mensual</option>
+    </select>
+  </div>
+
+  <div *ngIf="resumen" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+    <div class="bg-white p-4 rounded-md shadow text-center">
+      <h4 class="text-gray-600 font-semibold mb-1">Menús Vendidos {{ getTextoPeriodoResumen() }}</h4>
+      <div class="text-lg text-blue-600">{{ resumen.menusVendidos }}</div>
+    </div>
+    <div class="bg-white p-4 rounded-md shadow text-center">
+      <h4 class="text-gray-600 font-semibold mb-1">Comidas Vendidas {{ getTextoPeriodoResumen() }}</h4>
+      <div class="text-lg text-green-600">{{ resumen.comidasVendidas }}</div>
+    </div>
+    <div class="bg-white p-4 rounded-md shadow text-center">
+      <h4 class="text-gray-600 font-semibold mb-1">Dinero Recaudado {{ getTextoPeriodoResumen() }}</h4>
+      <div class="text-lg text-emerald-600">${{ resumen.dineroRecaudado }}</div>
+    </div>
+  </div>
+
+
+  <div *ngFor="let reporte of reportesDisponibles" class="mb-4 border rounded-md shadow-sm bg-white">
+    <div class="flex justify-between items-center px-4 py-3 border-b bg-gray-50 rounded-t-md">
+      <h3 class="text-lg font-medium text-gray-700">{{ reporte.titulo }}</h3>
+      <button
+        (click)="toggleDesplegado(reporte.id)"
+        class="text-sm px-3 py-1 rounded-md transition-colors duration-200 bg-blue-500 text-white hover:bg-blue-600 focus:outline-none"
+      >
+        {{ estaDesplegado(reporte.id) ? 'Ocultar' : 'Ver' }}
+      </button>
+    </div>
+
+    <div *ngIf="estaDesplegado(reporte.id)" class="p-4">
+      <div class="flex flex-col md:flex-row gap-4 items-stretch md:items-end">
+        <div>
+          <label class="block text-sm">Desde:</label>
+          <input type="date" [(ngModel)]="filtros[reporte.id].desde" class="border rounded px-2 py-1"/>
+        </div>
+        <div>
+          <label class="block text-sm">Hasta:</label>
+          <input type="date" [(ngModel)]="filtros[reporte.id].hasta" class="border rounded px-2 py-1"/>
+        </div>
+        <button (click)="generarGraficoConFiltro(reporte)"
+                class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50">
+          Cargar gráfico
+        </button>
+      </div>
+      <div *ngIf="error[reporte.id]" class="text-red-700 mt-2">
+        {{ error[reporte.id] }}
+      </div>
+
+      <ng-container *ngIf="getGrafico(reporte.id) as grafico">
+        <app-grafico-estadistico
+          [titulo]="grafico.titulo"
+          [tipo]="grafico.tipo"
+          [labels]="grafico.labels"
+          [data]="grafico.data"
+          [color]="grafico.color"
+        ></app-grafico-estadistico>
+      </ng-container>
+    </div>
+  </div>
+</div>

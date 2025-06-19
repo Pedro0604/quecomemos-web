@@ -1,0 +1,26 @@
+<mat-form-field [floatLabel]="floatLabel" appearance="fill" class="w-full">
+  <mat-label>{{ label }}</mat-label>
+  <mat-select
+    (focus)="matSelect.open()"
+    (selectionChange)="matSelect.close()"
+    [formControl]="control"
+    [placeholder]="placeholder"
+    [required]="required"
+  >
+    @if (this.clearable) {
+      <mat-option>Ninguno</mat-option>
+    }
+    @for (opcion of opciones; track opcion.value) {
+      <mat-option [value]="opcion.value">{{ opcion.name }}</mat-option>
+    }
+  </mat-select>
+  @if (textPrefix) {
+    <span matTextPrefix>{{ textPrefix }}</span>
+  }
+  @if (hint) {
+    <mat-hint align="end">{{ hint }}</mat-hint>
+  }
+  @if (errorMessage) {
+    <mat-error>{{ errorMessage }}</mat-error>
+  }
+</mat-form-field>

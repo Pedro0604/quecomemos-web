@@ -1,0 +1,71 @@
+<app-title [title]="title()" showVolver/>
+
+<app-form (submit)="onSubmit()" [formGroup]="form">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <app-input
+      [abstractControl]="this.form.get('dni')"
+      [readonly]="!!this.entity"
+      label="DNI"
+      maxLength="8"
+      minLength="7"
+      placeholder="12345678"
+      [tooltipMessage]="!!this.entity ? 'El DNI no puede ser modificado' : ''"
+      type="text"
+    />
+    <app-input
+      [abstractControl]="form.get('nombre')"
+      label="Nombre"
+      maxLength="255"
+      minLength="3"
+      placeholder="Ingrese su nombre"
+      type="text"
+    />
+    <app-input
+      [abstractControl]="this.form.get('apellido')"
+      label="Apellido"
+      maxLength="255"
+      minLength="3"
+      placeholder="Ingrese su apellido"
+      type="text"
+    />
+    <app-select
+      [abstractControl]="this.form.get('turno')"
+      [opciones]="turnosOptions"
+      label="Turno del responsable"
+      placeholder="Seleccione un turno para el responsable"
+    />
+    @if (!this.entity) {
+      <app-input
+        (input)="this.form.get('confirmClave')?.updateValueAndValidity()"
+        [abstractControl]="this.form.get('clave')"
+        label="Contraseña"
+        maxLength="30"
+        minLength="6"
+        placeholder="************"
+        type="password"
+      />
+      <app-input
+        (input)="this.form.get('clave')?.updateValueAndValidity()"
+        [abstractControl]="this.form.get('confirmClave')"
+        label="Confirmación de Contraseña"
+        maxLength="30"
+        minLength="6"
+        placeholder="************"
+        type="password"
+      />
+    }
+  </div>
+  <app-input
+    [abstractControl]="this.form.get('urlImagen')"
+    label="URL de la Imagen de Perfil"
+    maxLength="255"
+    minLength="7"
+    placeholder="https://www.ejemplo.com"
+    type="text"
+    [required]="false"
+  />
+  <app-form-state [error]="error" [loading]="loading"/>
+  <app-submit-button [disabled]="form.disabled" [error]="error" [form]="form" [loading]="loading"
+                     [pendingText]="submittingText()">{{ title() }}
+  </app-submit-button>
+</app-form>

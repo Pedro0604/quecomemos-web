@@ -1,0 +1,14 @@
+<button
+  [disabled]="form.invalid || !form.dirty || error || loading || disabled"
+  [matTooltip]="formService.getTooltipMessage(this.form, error, loading, tooltipMessage)"
+  class="w-full"
+  disabledInteractive
+  mat-raised-button
+  type="submit"
+>
+  @if (form.pending) {
+    {{ pendingText }}...
+  } @else {
+    <ng-content/>
+  }
+</button>
